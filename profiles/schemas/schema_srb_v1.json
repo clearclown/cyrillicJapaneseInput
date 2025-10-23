@@ -16,6 +16,7 @@
   "ПА": { "kana_key": "pa" }, "ПИ": { "kana_key": "pi" }, "ПУ": { "kana_key": "pu" }, "ПЕ": { "kana_key": "pe" }, "ПО": { "kana_key": "po" },
   "КЈА": { "kana_key": "kya" }, "КЈУ": { "kana_key": "kyu" }, "КЈО": { "kana_key": "kyo" },
   "СЈА": { "kana_key": "sha" }, "СЈУ": { "kana_key": "shu" }, "СЈО": { "kana_key": "sho" },
+  "ЋА": { "kana_key": "cha" }, "ЋУ": { "kana_key": "chu" }, "ЋО": { "kana_key": "cho" },
   "Њ": { "kana_key": "nya" }, "ЊА": { "kana_key": "nya" }, "ЊУ": { "kana_key": "nyu" }, "ЊО": { "kana_key": "nyo" },
   "ХЈА": { "kana_key": "hya" }, "ХЈУ": { "kana_key": "hyu" }, "ХЈО": { "kana_key": "hyo" },
   "МЈА": { "kana_key": "mya" }, "МЈУ": { "kana_key": "myu" }, "МЈО": { "kana_key": "myo" },
