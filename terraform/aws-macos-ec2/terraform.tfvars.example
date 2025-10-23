@@ -1,0 +1,37 @@
+# AWS Configuration
+aws_region        = "us-east-1"
+availability_zone = "us-east-1a"
+environment       = "dev"
+
+# Instance Configuration
+mac_instance_type = "mac2.metal" # mac2.metal (M2) or mac1.metal (Intel)
+
+# Find latest macOS AMI ID using:
+# aws ec2 describe-images --owners amazon \
+#   --filters "Name=name,Values=amzn-ec2-macos-*" \
+#   --query 'Images[*].[ImageId,Name,CreationDate]' \
+#   --region us-east-1 --output table
+macos_ami_id = "ami-xxxxxxxxxxxxxxxxx" # Replace with actual AMI ID
+
+# Network Configuration
+vpc_id    = "vpc-xxxxxxxxxxxxxxxxx" # Replace with your VPC ID
+subnet_id = "subnet-xxxxxxxxxxxxxxxxx" # Replace with your subnet ID
+
+# Security Configuration
+allowed_ssh_cidr_blocks = [
+  "YOUR_IP_ADDRESS/32" # Replace with your IP address for security
+]
+
+# SSH Key
+# Generate with: ssh-keygen -t rsa -b 4096 -f ~/.ssh/cyrillic-ime-macos-key
+ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQD..." # Replace with your public key
+
+# Storage
+root_volume_size = 200 # GB
+
+# Elastic IP
+use_elastic_ip = true
+
+# GitHub Actions Runner (optional)
+github_runner_token = "" # Get from: GitHub Repo → Settings → Actions → Runners → New self-hosted runner
+github_repo_url     = "https://github.com/clearclown/cyrillicJapaneseInput"
