@@ -16,7 +16,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "CyrillicIME"
 
-// Modules will be added as implementation progresses
-// include(":app")
-// include(":ime")
-// include(":core")
+include(":app")
+include(":ime")
+include(":core")
