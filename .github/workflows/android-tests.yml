@@ -1,0 +1,176 @@
+name: Android Tests
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+      - 'mobile/android'
+    paths:
+      - 'mobile/android/**'
+      - 'rust_core/**'
+      - '.github/workflows/android-tests.yml'
+
+jobs:
+  unit-tests:
+    name: Run Android Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android, armv7-linux-androideabi, i686-linux-android, x86_64-linux-android
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust_core/target
+          key: ${{ runner.os }}-cargo-android-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install cargo-ndk
+        run: cargo install cargo-ndk
+
+      - name: Build Rust Core for Android
+        working-directory: rust_core
+        run: |
+          cargo ndk --target aarch64-linux-android --platform 29 -- build --release
+          cargo ndk --target armv7-linux-androideabi --platform 29 -- build --release
+          cargo ndk --target i686-linux-android --platform 29 -- build --release
+          cargo ndk --target x86_64-linux-android --platform 29 -- build --release
+
+      - name: Copy native libraries
+        run: |
+          mkdir -p mobile/android/core/src/main/jniLibs/arm64-v8a
+          mkdir -p mobile/android/core/src/main/jniLibs/armeabi-v7a
+          mkdir -p mobile/android/core/src/main/jniLibs/x86
+          mkdir -p mobile/android/core/src/main/jniLibs/x86_64
+          cp rust_core/target/aarch64-linux-android/release/libcyrillic_ime_core.so mobile/android/core/src/main/jniLibs/arm64-v8a/
+          cp rust_core/target/armv7-linux-androideabi/release/libcyrillic_ime_core.so mobile/android/core/src/main/jniLibs/armeabi-v7a/
+          cp rust_core/target/i686-linux-android/release/libcyrillic_ime_core.so mobile/android/core/src/main/jniLibs/x86/
+          cp rust_core/target/x86_64-linux-android/release/libcyrillic_ime_core.so mobile/android/core/src/main/jniLibs/x86_64/
+
+      - name: Grant execute permission for gradlew
+        working-directory: mobile/android
+        run: chmod +x gradlew
+
+      - name: Run unit tests
+        working-directory: mobile/android
+        run: ./gradlew test --stacktrace
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-unit-test-reports
+          path: mobile/android/**/build/reports/tests/
+
+  instrumented-tests:
+    name: Run Android Instrumented Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android, armv7-linux-androideabi, i686-linux-android, x86_64-linux-android
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust_core/target
+          key: ${{ runner.os }}-cargo-android-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install cargo-ndk
+        run: cargo install cargo-ndk
+
+      - name: Build Rust Core for Android
+        working-directory: rust_core
+        run: |
+          cargo ndk --target aarch64-linux-android --platform 29 -- build --release
+          cargo ndk --target armv7-linux-androideabi --platform 29 -- build --release
+          cargo ndk --target i686-linux-android --platform 29 -- build --release
+          cargo ndk --target x86_64-linux-android --platform 29 -- build --release
+
+      - name: Copy native libraries
+        run: |
+          mkdir -p mobile/android/core/src/main/jniLibs/arm64-v8a
+          mkdir -p mobile/android/core/src/main/jniLibs/armeabi-v7a
+          mkdir -p mobile/android/core/src/main/jniLibs/x86
+          mkdir -p mobile/android/core/src/main/jniLibs/x86_64
+          cp rust_core/target/aarch64-linux-android/release/libcyrillic_ime_core.so mobile/android/core/src/main/jniLibs/arm64-v8a/
+          cp rust_core/target/armv7-linux-androideabi/release/libcyrillic_ime_core.so mobile/android/core/src/main/jniLibs/armeabi-v7a/
+          cp rust_core/target/i686-linux-android/release/libcyrillic_ime_core.so mobile/android/core/src/main/jniLibs/x86/
+          cp rust_core/target/x86_64-linux-android/release/libcyrillic_ime_core.so mobile/android/core/src/main/jniLibs/x86_64/
+
+      - name: Grant execute permission for gradlew
+        working-directory: mobile/android
+        run: chmod +x gradlew
+
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run instrumented tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          arch: x86_64
+          target: default
+          script: cd mobile/android && ./gradlew connectedAndroidTest --stacktrace
+
+      - name: Upload instrumented test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-instrumented-test-reports
+          path: mobile/android/**/build/reports/androidTests/
