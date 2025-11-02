@@ -50,7 +50,8 @@ cargo test
 
 ```c
 // iOS (C/Swift)
-uint8_t rust_init_engine(const char* profiles_json, const char* kana_engine_json);
+// Returns NULL on success, error message on failure (must free with rust_free_string)
+char* rust_init_engine(const char* profiles_json, const char* kana_engine_json);
 ```
 
 ```kotlin
@@ -62,7 +63,8 @@ NativeLib.initEngine(profilesJson: String, kanaEngineJson: String): Boolean
 
 ```c
 // iOS
-uint8_t rust_load_schema(const char* schema_json, const char* schema_id);
+// Returns NULL on success, error message on failure (must free with rust_free_string)
+char* rust_load_schema(const char* schema_json, const char* schema_id);
 ```
 
 ```kotlin

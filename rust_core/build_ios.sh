@@ -47,15 +47,17 @@ extern "C" {
 
 /**
  * Initialize the IME engine with profiles and kana engine JSON.
- * Returns 1 on success, 0 on failure.
+ * Returns NULL on success, error message C string on failure.
+ * Error message must be freed with rust_free_string() if not NULL.
  */
-uint8_t rust_init_engine(const char* profiles_json, const char* kana_engine_json);
+char* rust_init_engine(const char* profiles_json, const char* kana_engine_json);
 
 /**
  * Load a schema into the engine.
- * Returns 1 on success, 0 on failure.
+ * Returns NULL on success, error message C string on failure.
+ * Error message must be freed with rust_free_string() if not NULL.
  */
-uint8_t rust_load_schema(const char* schema_json, const char* schema_id);
+char* rust_load_schema(const char* schema_json, const char* schema_id);
 
 /**
  * Process a key press and return conversion result as JSON string.

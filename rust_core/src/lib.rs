@@ -1,6 +1,6 @@
 pub mod engine;
 pub mod models;
-pub mod ffi;
+pub mod ffi;  // Public for testing
 
 #[cfg(target_os = "android")]
 pub mod jni;

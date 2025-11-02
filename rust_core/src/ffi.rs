@@ -7,68 +7,106 @@ use std::panic;
 ///
 /// # Safety
 /// - `profiles_json` and `kana_engine_json` must be valid UTF-8 C strings
-/// - Returns 1 on success, 0 on failure
+/// - Returns null pointer on success, error message C string on failure
+/// - Error message must be freed with `rust_free_string` if not null
 #[no_mangle]
 pub unsafe extern "C" fn rust_init_engine(
     profiles_json: *const c_char,
     kana_engine_json: *const c_char,
-) -> u8 {
+) -> *mut c_char {
     let result = panic::catch_unwind(|| {
         if profiles_json.is_null() || kana_engine_json.is_null() {
-            return 0;
+            let error = CString::new("Null pointer provided").unwrap();
+            return error.into_raw();
         }
 
         let profiles_str = match CStr::from_ptr(profiles_json).to_str() {
             Ok(s) => s,
-            Err(_) => return 0,
+            Err(_) => {
+                let error = CString::new("Invalid UTF-8 in profiles_json").unwrap();
+                return error.into_raw();
+            }
         };
 
         let kana_engine_str = match CStr::from_ptr(kana_engine_json).to_str() {
             Ok(s) => s,
-            Err(_) => return 0,
+            Err(_) => {
+                let error = CString::new("Invalid UTF-8 in kana_engine_json").unwrap();
+                return error.into_raw();
+            }
         };
 
         match IMEEngine::init(profiles_str, kana_engine_str) {
-            Ok(_) => 1,
-            Err(_) => 0,
+            Ok(_) => std::ptr::null_mut(),
+            Err(e) => {
+                match CString::new(e) {
+                    Ok(error_str) => error_str.into_raw(),
+                    Err(_) => {
+                        let error = CString::new("Failed to initialize engine").unwrap();
+                        error.into_raw()
+                    }
+                }
+            }
         }
     });
 
-    result.unwrap_or(0)
+    result.unwrap_or_else(|_| {
+        let error = CString::new("Panic occurred during initialization").unwrap();
+        error.into_raw()
+    })
 }
 
 /// Load a schema into the engine
 ///
 /// # Safety
 /// - `schema_json` and `schema_id` must be valid UTF-8 C strings
-/// - Returns 1 on success, 0 on failure
+/// - Returns null pointer on success, error message C string on failure
+/// - Error message must be freed with `rust_free_string` if not null
 #[no_mangle]
 pub unsafe extern "C" fn rust_load_schema(
     schema_json: *const c_char,
     schema_id: *const c_char,
-) -> u8 {
+) -> *mut c_char {
     let result = panic::catch_unwind(|| {
         if schema_json.is_null() || schema_id.is_null() {
-            return 0;
+            let error = CString::new("Null pointer provided").unwrap();
+            return error.into_raw();
         }
 
         let schema_str = match CStr::from_ptr(schema_json).to_str() {
             Ok(s) => s,
-            Err(_) => return 0,
+            Err(_) => {
+                let error = CString::new("Invalid UTF-8 in schema_json").unwrap();
+                return error.into_raw();
+            }
         };
 
         let schema_id_str = match CStr::from_ptr(schema_id).to_str() {
             Ok(s) => s,
-            Err(_) => return 0,
+            Err(_) => {
+                let error = CString::new("Invalid UTF-8 in schema_id").unwrap();
+                return error.into_raw();
+            }
         };
 
         match IMEEngine::load_schema(schema_str, schema_id_str) {
-            Ok(_) => 1,
-            Err(_) => 0,
+            Ok(_) => std::ptr::null_mut(),
+            Err(e) => {
+                match CString::new(e) {
+                    Ok(error_str) => error_str.into_raw(),
+                    Err(_) => {
+                        let error = CString::new("Failed to load schema").unwrap();
+                        error.into_raw()
+                    }
+                }
+            }
         }
     });
 
-    result.unwrap_or(0)
+    result.unwrap_or_else(|_| {
+        let error = CString::new("Panic occurred during schema loading").unwrap();
+        error.into_raw()
+    })
 }
 
 /// Process a key press and return conversion result as JSON
@@ -156,7 +194,10 @@ mod tests {
             let result = rust_init_engine(profiles.as_ptr(), kana.as_ptr());
             // May fail if engine is already initialized by other tests
             // This is expected behavior
-            assert!(result == 1 || result == 0);
+            // Result is now null on success, error message on failure
+            if !result.is_null() {
+                let _ = CString::from_raw(result); // Free error message
+            }
         }
     }
 }

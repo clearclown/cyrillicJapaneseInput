@@ -9,17 +9,19 @@ import Foundation
 
 /// Rust Core FFI関数の宣言
 /// 実際のバインディングはXcodeプロジェクトでlibcyrillic_ime_core.aをリンクする必要がある
+///
+/// 戻り値: null = 成功, non-null = エラーメッセージ（rust_free_stringで解放が必要）
 @_silgen_name("rust_init_engine")
-func rust_init_engine(_ profiles_json: UnsafePointer<CChar>, _ kana_engine_json: UnsafePointer<CChar>) -> UnsafePointer<CChar>?
+func rust_init_engine(_ profiles_json: UnsafePointer<CChar>, _ kana_engine_json: UnsafePointer<CChar>) -> UnsafeMutablePointer<CChar>?
 
 @_silgen_name("rust_load_schema")
-func rust_load_schema(_ schema_json: UnsafePointer<CChar>, _ schema_id: UnsafePointer<CChar>) -> UnsafePointer<CChar>?
+func rust_load_schema(_ schema_json: UnsafePointer<CChar>, _ schema_id: UnsafePointer<CChar>) -> UnsafeMutablePointer<CChar>?
 
 @_silgen_name("rust_process_key")
-func rust_process_key(_ cyrillic_key: UnsafePointer<CChar>, _ current_buffer: UnsafePointer<CChar>, _ profile_id: UnsafePointer<CChar>) -> UnsafePointer<CChar>?
+func rust_process_key(_ cyrillic_key: UnsafePointer<CChar>, _ current_buffer: UnsafePointer<CChar>, _ profile_id: UnsafePointer<CChar>) -> UnsafeMutablePointer<CChar>?
 
 @_silgen_name("rust_free_string")
-func rust_free_string(_ ptr: UnsafePointer<CChar>)
+func rust_free_string(_ ptr: UnsafeMutablePointer<CChar>)
 
 @_silgen_name("rust_get_version")
 func rust_get_version() -> UnsafePointer<CChar>?
@@ -36,7 +38,9 @@ class RustCoreFFI {
     // MARK: - Helper: CString処理
 
     /// Rustから返されたC文字列をSwift Stringに変換してメモリ解放
-    private func consumeRustString(_ ptr: UnsafePointer<CChar>?) -> String? {
+    /// - Parameter ptr: nullの場合はnilを返す（成功を意味する）
+    /// - Returns: エラーメッセージ文字列、nilの場合は成功
+    private func consumeRustString(_ ptr: UnsafeMutablePointer<CChar>?) -> String? {
         guard let ptr = ptr else { return nil }
         defer { rust_free_string(ptr) }
         return String(cString: ptr)
@@ -54,14 +58,14 @@ class RustCoreFFI {
             return "Engine already initialized"
         }
 
-        let result = profilesJSON.withCString { profilesPtr in
+        let errorPtr = profilesJSON.withCString { profilesPtr in
             kanaEngineJSON.withCString { kanaPtr in
                 rust_init_engine(profilesPtr, kanaPtr)
             }
         }
 
-        if let errorMessage = consumeRustString(result) {
-            // エラーメッセージが返された場合
+        // null = 成功, non-null = エラーメッセージ
+        if let errorMessage = consumeRustString(errorPtr) {
             return errorMessage
         }
 
@@ -79,13 +83,14 @@ class RustCoreFFI {
             return "Engine not initialized"
         }
 
-        let result = schemaJSON.withCString { schemaPtr in
+        let errorPtr = schemaJSON.withCString { schemaPtr in
             schemaId.withCString { idPtr in
                 rust_load_schema(schemaPtr, idPtr)
             }
         }
 
-        return consumeRustString(result)
+        // null = 成功, non-null = エラーメッセージ
+        return consumeRustString(errorPtr)
     }
 
     /// キー入力を処理
@@ -100,7 +105,7 @@ class RustCoreFFI {
             return nil
         }
 
-        let resultPtr = cyrillicKey.withCString { keyPtr in
+        let jsonPtr = cyrillicKey.withCString { keyPtr in
             currentBuffer.withCString { bufferPtr in
                 profileId.withCString { profilePtr in
                     rust_process_key(keyPtr, bufferPtr, profilePtr)
@@ -108,7 +113,7 @@ class RustCoreFFI {
             }
         }
 
-        guard let jsonString = consumeRustString(resultPtr) else {
+        guard let jsonString = consumeRustString(jsonPtr) else {
             print("[RustCoreFFI] Error: Failed to get result from Rust")
             return nil
         }
@@ -135,7 +140,8 @@ class RustCoreFFI {
         guard let versionPtr = rust_get_version() else {
             return "unknown"
         }
-        return consumeRustString(versionPtr) ?? "unknown"
+        // rust_get_versionは静的文字列を返すため、free不要
+        return String(cString: versionPtr)
     }
 
     /// エンジンが初期化済みかどうか

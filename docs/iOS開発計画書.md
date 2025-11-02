@@ -1,4 +1,8 @@
-# iOS開発計画書 (v1.0)
+# iOS開発計画書 (v1.1)
+
+**更新履歴**:
+- v1.1 (2024年11月): FFI関数の戻り値型を更新（エラーメッセージ返却方式に変更）、JSONファイル名を `japaneseKanaEngine.json` に統一
+- v1.0: 初版
 
 ## 1. プロジェクト概要
 
@@ -98,49 +102,95 @@ xcodebuild -create-xcframework \
 import Foundation
 
 // C言語インターフェース（bridge.hで定義）
+// 戻り値: null = 成功, non-null = エラーメッセージ（rust_free_stringで解放が必要）
 @_silgen_name("rust_init_engine")
-func rustInitEngine(profilesJson: UnsafePointer<CChar>, kanaEngineJson: UnsafePointer<CChar>) -> Bool
+func rust_init_engine(_ profiles_json: UnsafePointer<CChar>, _ kana_engine_json: UnsafePointer<CChar>) -> UnsafeMutablePointer<CChar>?
+
+@_silgen_name("rust_load_schema")
+func rust_load_schema(_ schema_json: UnsafePointer<CChar>, _ schema_id: UnsafePointer<CChar>) -> UnsafeMutablePointer<CChar>?
 
 @_silgen_name("rust_process_key")
-func rustProcessKey(
-    key: UnsafePointer<CChar>,
-    buffer: UnsafePointer<CChar>,
-    profileId: UnsafePointer<CChar>
-) -> UnsafePointer<CChar>?
+func rust_process_key(_ cyrillic_key: UnsafePointer<CChar>, _ current_buffer: UnsafePointer<CChar>, _ profile_id: UnsafePointer<CChar>) -> UnsafeMutablePointer<CChar>?
 
 @_silgen_name("rust_free_string")
-func rustFreeString(ptr: UnsafeMutablePointer<CChar>)
+func rust_free_string(_ ptr: UnsafeMutablePointer<CChar>)
+
+@_silgen_name("rust_get_version")
+func rust_get_version() -> UnsafePointer<CChar>?
 
 // Swift ラッパークラス
-class RustCoreEngine {
-    static let shared = RustCoreEngine()
+class RustCoreFFI {
+    static let shared = RustCoreFFI()
+    private var isInitialized = false
 
-    func initialize(profilesJson: String, kanaEngineJson: String) -> Bool {
-        return profilesJson.withCString { profilesPtr in
-            kanaEngineJson.withCString { kanaPtr in
-                rustInitEngine(profilesJson: profilesPtr, kanaEngineJson: kanaPtr)
+    /// エンジンを初期化
+    /// - Returns: 成功時はnil、エラー時はエラーメッセージ
+    func initEngine(profilesJSON: String, kanaEngineJSON: String) -> String? {
+        guard !isInitialized else {
+            return "Engine already initialized"
+        }
+
+        let errorPtr = profilesJSON.withCString { profilesPtr in
+            kanaEngineJSON.withCString { kanaPtr in
+                rust_init_engine(profilesPtr, kanaPtr)
             }
         }
+
+        // null = 成功, non-null = エラーメッセージ
+        if let errorMessage = consumeRustString(errorPtr) {
+            return errorMessage
+        }
+
+        isInitialized = true
+        return nil
     }
 
-    func processKey(key: String, buffer: String, profileId: String) -> String? {
-        return key.withCString { keyPtr in
-            buffer.withCString { bufferPtr in
-                profileId.withCString { profilePtr in
-                    guard let resultPtr = rustProcessKey(
-                        key: keyPtr,
-                        buffer: bufferPtr,
-                        profileId: profilePtr
-                    ) else { return nil }
+    /// スキーマをロード
+    func loadSchema(schemaJSON: String, schemaId: String) -> String? {
+        guard isInitialized else {
+            return "Engine not initialized"
+        }
 
-                    defer { rustFreeString(UnsafeMutablePointer(mutating: resultPtr)) }
-                    return String(cString: resultPtr)
+        let errorPtr = schemaJSON.withCString { schemaPtr in
+            schemaId.withCString { idPtr in
+                rust_load_schema(schemaPtr, idPtr)
+            }
+        }
+
+        return consumeRustString(errorPtr)
+    }
+
+    /// キー入力を処理
+    func processKey(cyrillicKey: String, currentBuffer: String, profileId: String) -> ConversionResult? {
+        guard isInitialized else { return nil }
+
+        let jsonPtr = cyrillicKey.withCString { keyPtr in
+            currentBuffer.withCString { bufferPtr in
+                profileId.withCString { profilePtr in
+                    rust_process_key(keyPtr, bufferPtr, profilePtr)
                 }
             }
         }
+
+        guard let jsonString = consumeRustString(jsonPtr) else { return nil }
+        guard let jsonData = jsonString.data(using: .utf8) else { return nil }
+
+        return try? JSONDecoder().decode(ConversionResult.self, from: jsonData)
+    }
+
+    /// Rustから返されたC文字列をSwift Stringに変換してメモリ解放
+    private func consumeRustString(_ ptr: UnsafeMutablePointer<CChar>?) -> String? {
+        guard let ptr = ptr else { return nil }
+        defer { rust_free_string(ptr) }
+        return String(cString: ptr)
     }
 }
 ```
+
+**注意**:
+- `rust_init_engine` と `rust_load_schema` は、成功時は `null`、失敗時はエラーメッセージのC文字列を返します。
+- エラーメッセージは `rust_free_string` で解放する必要があります。
+- この設計により、詳細なエラー情報を取得できるようになりました（2024年11月修正）。
 
 ---
 
@@ -234,11 +284,11 @@ class KeyboardViewController: UIInputViewController {
         let profilesJson = loadBundledJSON("profiles")
         let kanaEngineJson = loadBundledJSON("japaneseKanaEngine")
 
-        guard RustCoreEngine.shared.initialize(
-            profilesJson: profilesJson,
-            kanaEngineJson: kanaEngineJson
-        ) else {
-            fatalError("Failed to initialize Rust Core")
+        if let error = RustCoreFFI.shared.initEngine(
+            profilesJSON: profilesJson,
+            kanaEngineJSON: kanaEngineJson
+        ) {
+            fatalError("Failed to initialize Rust Core: \(error)")
         }
     }
 
@@ -246,20 +296,30 @@ class KeyboardViewController: UIInputViewController {
         guard let profile = profileManager.currentProfile else { return }
 
         // Rust Coreで変換処理
-        guard let result = RustCoreEngine.shared.processKey(
-            key: key,
-            buffer: inputBuffer,
+        guard let result = RustCoreFFI.shared.processKey(
+            cyrillicKey: key,
+            currentBuffer: inputBuffer,
             profileId: profile.id
         ) else { return }
 
-        // 結果をパース（JSON形式: {"output": "きゃ", "buffer": "", "action": "commit"}）
-        let decoded = try? JSONDecoder().decode(ConversionResult.self, from: result.data(using: .utf8)!)
+        // 結果に応じて処理
+        switch result.action {
+        case "commit":
+            if !result.output.isEmpty {
+                textDocumentProxy.insertText(result.output)
+            }
+            inputBuffer = result.buffer
 
-        if let output = decoded?.output {
-            textDocumentProxy.insertText(output)
+        case "composing":
+            inputBuffer = result.buffer
+            // 入力中の文字列表示（必要に応じて実装）
+
+        case "clear":
+            inputBuffer = ""
+
+        default:
+            break
         }
-
-        inputBuffer = decoded?.buffer ?? ""
     }
 
     @objc private func profileDidChange() {

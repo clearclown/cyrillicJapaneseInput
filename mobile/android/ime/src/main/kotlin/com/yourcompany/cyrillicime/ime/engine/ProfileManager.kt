@@ -40,13 +40,13 @@ class ProfileManager(
                 .bufferedReader().use { it.readText() }
 
             _profiles.value = json.decodeFromString<List<Profile>>(profilesJson)
-            
+
             // Load current profile from SharedPreferences
             val savedProfileId = sharedPreferences.getString(
                 PREF_KEY_CURRENT_PROFILE_ID,
                 DEFAULT_PROFILE_ID
             )
-            
+
             _currentProfile.value = _profiles.value.find { it.id == savedProfileId }
                 ?: _profiles.value.firstOrNull()
 
@@ -65,7 +65,7 @@ class ProfileManager(
         val profile = _profiles.value.find { it.id == profileId } ?: return false
 
         _currentProfile.value = profile
-        
+
         // Persist selection
         sharedPreferences.edit()
             .putString(PREF_KEY_CURRENT_PROFILE_ID, profileId)
@@ -98,17 +98,17 @@ class ProfileManager(
             val profilesJson = context.assets.open("profiles/profiles.json")
                 .bufferedReader().use { it.readText() }
 
-            val kanaEngineJson = context.assets.open("profiles/kana_engine.json")
+            val kanaEngineJson = context.assets.open("profiles/japaneseKanaEngine.json")
                 .bufferedReader().use { it.readText() }
 
             val success = RustCoreEngine.instance.initialize(profilesJson, kanaEngineJson)
-            
+
             if (success) {
                 android.util.Log.i("ProfileManager", "Rust Core initialized successfully")
                 // Load schema for current profile
                 _currentProfile.value?.let { loadSchemaForProfile(it) }
             }
-            
+
             success
         } catch (e: Exception) {
             android.util.Log.e("ProfileManager", "Failed to initialize engine", e)

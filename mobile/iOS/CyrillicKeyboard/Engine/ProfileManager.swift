@@ -34,8 +34,8 @@ class ProfileManager {
         }
 
         // 2. かなエンジンJSONをロード
-        guard let kanaEngineJSON = loadBundledJSON(filename: "kana_engine") else {
-            return "Failed to load kana_engine.json"
+        guard let kanaEngineJSON = loadBundledJSON(filename: "japaneseKanaEngine") else {
+            return "Failed to load japaneseKanaEngine.json"
         }
 
         // 3. プロファイル配列をパース
