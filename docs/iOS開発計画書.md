@@ -573,7 +573,286 @@ git push origin ios/phase2-keyboard-ui
 
 ---
 
-## 9. 参考資料
+## 9. App Store Connect 申請用説明文
+
+### 9.1. アプリ基本情報
+
+**アプリ名（App Name）**:
+- 日本語: `PISMO (Письмо)`
+- 英語: `PISMO (Письмо)`
+
+**サブタイトル（Subtitle）**:
+- 日本語: `キリル文字で日本語入力`
+- 英語: `Type Japanese with Cyrillic`
+
+**バンドルID（Bundle Identifier）**: `com.yourcompany.cyrillicime`
+- メインアプリ: `com.yourcompany.cyrillicime`
+- キーボード拡張: `com.yourcompany.cyrillicime.keyboard`
+
+**カテゴリ（Primary Category）**: `Utilities`
+**カテゴリ（Secondary Category）**: `Education`
+
+### 9.2. アプリ説明文（日本語版）
+
+**タイトル**: PISMO - キリル文字で日本語を書く
+
+**説明文（4,000文字以内）**:
+
+```
+PISMO（Письмо、Писмо、Письмо）は、キリル文字キーボード配列を用いて日本語（ひらがな）を入力する、革新的なiOSカスタムキーボードです。
+
+【特徴】
+✨ キリル文字で日本語を書く
+ロシア語、セルビア語、ウクライナ語など、様々なキリル文字配列を使って、日本語のひらがなを入力できます。キリル文字を学習中の方や、言語学に興味のある方に最適です。
+
+🌍 複数のプロファイル対応
+・ロシア語標準配列
+・セルビア語配列（Њ, Љ, Ђ, Ћ, Џ対応）
+・ウクライナ語配列
+・ロシア語分析モード
+
+各プロファイルは、設定画面から簡単に切り替えられます。キーボード上にもプロファイル表示があり、現在の配列を常に確認できます。
+
+⚡ 高速で正確な変換
+Rust Coreエンジンによる、高パフォーマンスな変換処理を実現。OS標準の日本語キーボードと同等のレスポンス性を提供します。
+
+🔒 完全オフライン動作
+すべてのデータは端末内に保存されており、インターネット接続は一切不要です。プライバシーを完全に保護します。
+
+📱 iPhone・iPad対応
+ユニバーサルアプリとして、iPhoneとiPadの両方で最適化された表示を提供します。iPadの大きな画面でも快適に利用できます。
+
+【使い方】
+1. アプリを開いて、システム設定でキーボードを有効化します
+2. プロファイル（ロシア語、セルビア語など）を選択します
+3. 任意のアプリでキーボードを切り替えて、キリル文字で日本語を入力開始！
+
+【技術仕様】
+・正規化マッピング方式により、将来的な拡張が容易
+・プロファイル追加は、スキーマファイル1つの追加のみで完了
+・メモリ効率的な遅延ロード方式を採用
+
+【プライバシー】
+・ネットワークアクセス: なし
+・データ収集: なし
+・外部送信: なし
+完全にオフラインで動作するため、入力データが外部に送信されることは一切ありません。
+
+【対象ユーザー】
+・キリル文字を学習している方
+・言語学・文字体系に興味のある方
+・新しい入力方法を試したい方
+・日本語入力の多様性を体験したい方
+
+キリル文字と日本語をつなぐ、新しい体験をお楽しみください。
+
+PISMO（Письмо）= 文字、書くこと、コミュニケーション
+```
+
+### 9.3. アプリ説明文（英語版）
+
+**Title**: PISMO - Write Japanese with Cyrillic
+
+**Description (up to 4,000 characters)**:
+
+```
+PISMO (Письмо, Писмо, Письмо) is an innovative iOS custom keyboard that allows you to type Japanese hiragana using Cyrillic keyboard layouts.
+
+【Features】
+✨ Type Japanese with Cyrillic
+Use Russian, Serbian, Ukrainian, and other Cyrillic keyboard layouts to input Japanese hiragana characters. Perfect for Cyrillic language learners and linguistics enthusiasts.
+
+🌍 Multiple Profile Support
+・Russian Standard Layout
+・Serbian Layout (supporting Њ, Љ, Ђ, Ћ, Џ)
+・Ukrainian Layout
+・Russian Analytical Mode
+
+Switch between profiles easily from the settings screen. Visual profile indicator on the keyboard always shows your current layout.
+
+⚡ Fast and Accurate Conversion
+Powered by a high-performance Rust Core engine, providing response time comparable to iOS native Japanese keyboard.
+
+🔒 Fully Offline Operation
+All data is stored locally on your device. No internet connection required. Complete privacy protection.
+
+📱 iPhone & iPad Support
+Universal app optimized for both iPhone and iPad. Enjoy comfortable typing on iPad's larger screen.
+
+【How to Use】
+1. Open the app and enable the keyboard in System Settings
+2. Select your profile (Russian, Serbian, etc.)
+3. Switch to PISMO keyboard in any app and start typing Japanese with Cyrillic!
+
+【Technical Specifications】
+・Normalized mapping architecture for easy future expansion
+・Adding new profiles requires only adding one schema file
+・Memory-efficient lazy loading system
+
+【Privacy】
+・Network Access: None
+・Data Collection: None
+・External Transmission: None
+Completely offline operation ensures your input data never leaves your device.
+
+【Target Users】
+・Cyrillic language learners
+・Linguistics and writing system enthusiasts
+・Users who want to try new input methods
+・Those interested in experiencing the diversity of Japanese input
+
+Experience the new connection between Cyrillic and Japanese.
+
+PISMO (Письмо) = writing, letter, communication
+```
+
+### 9.4. キーワード
+
+**キーワード（Keywords）**（100文字以内）:
+```
+キリル文字,日本語入力,ロシア語,セルビア語,ウクライナ語,IME,キーボード,ひらがな,多言語,言語学習,キリル,Cyrillic,Japanese,input,keyboard,hiragana,Russian,Serbian,Ukrainian
+```
+
+### 9.5. プロモーション用テキスト
+
+**プロモーション用テキスト（Promotional Text）**（170文字以内）:
+
+**日本語版**:
+```
+キリル文字で日本語を書く、革新的なカスタムキーボード。ロシア語・セルビア語・ウクライナ語の配列に対応。完全オフライン動作でプライバシー保護。無料。
+```
+
+**英語版**:
+```
+Innovative custom keyboard to type Japanese with Cyrillic. Supports Russian, Serbian, and Ukrainian layouts. Fully offline for privacy. Free.
+```
+
+### 9.6. プライバシー説明（Privacy Description）
+
+**プライバシー説明（日本語版）**:
+
+```
+【データ収集】
+本アプリは、いかなるデータも収集しません。
+
+【ネットワークアクセス】
+本アプリは、ネットワークアクセス権限を一切要求しません。完全にオフラインで動作します。
+
+【データ送信】
+入力データ、位置情報、個人情報など、あらゆるデータを外部に送信することはありません。
+
+【必要な権限】
+・「フルアクセス」: カスタムキーボード拡張機能の動作に必要です。この権限は、システムがキーボード拡張機能に要求する標準的な権限であり、本アプリではネットワークアクセスには使用しません。
+
+【プライバシーポリシー】
+本アプリは完全にオフラインで動作し、ユーザーの入力データを外部に送信することは一切ありません。すべてのデータは端末内で処理され、インターネットへの接続は行いません。
+```
+
+**プライバシー説明（英語版）**:
+
+```
+【Data Collection】
+This app does not collect any data.
+
+【Network Access】
+This app does not request any network access permissions. It operates completely offline.
+
+【Data Transmission】
+We do not transmit any data externally, including input data, location information, or personal information.
+
+【Required Permissions】
+・"Full Access": Required for custom keyboard extension functionality. This is a standard permission required by the system for keyboard extensions. This app does not use this permission for network access.
+
+【Privacy Policy】
+This app operates completely offline and does not transmit user input data externally. All data is processed on-device, and no internet connection is established.
+```
+
+### 9.7. App Store カテゴリ設定
+
+**Primary Category**: Utilities
+**Secondary Category**: Education
+
+**App Age Rating**: 4+ (Everyone)
+
+**理由**:
+- 教育的な価値がある（キリル文字学習、言語学）
+- ユーティリティ機能（カスタムキーボード）
+- 不適切なコンテンツを含まない
+- データ収集・広告なし
+
+### 9.8. レビュー用ノート（Review Notes）
+
+**レビュー用ノート（Review Notes）**（日本語・英語）:
+
+```
+【日本語】
+テスト用アカウント情報:
+- なし（オフライン動作のため、アカウントは不要です）
+
+テスト方法:
+1. アプリをインストール後、「設定」→「一般」→「キーボード」→「キーボードを追加」で「PISMO」を選択してください
+2. 「フルアクセスを許可」を有効化してください（プライバシー説明参照）
+3. 任意のアプリ（メモ帳など）を開き、キーボードを切り替えて「PISMO」を選択してください
+4. キリル文字キーを入力すると、日本語のひらがなが表示されます
+
+【English】
+Test Account Information:
+- None (no account required as the app operates offline)
+
+Testing Instructions:
+1. After installing the app, go to Settings → General → Keyboard → Keyboards → Add New Keyboard and select "PISMO"
+2. Enable "Allow Full Access" (see Privacy Description)
+3. Open any app (e.g., Notes) and switch to the "PISMO" keyboard
+4. Type Cyrillic keys to see Japanese hiragana output
+```
+
+### 9.9. スクリーンショット推奨内容
+
+**必須スクリーンショット**:
+
+1. **メイン画面（設定画面）**
+   - プロファイル選択画面
+   - 各プロファイル（ロシア語、セルビア語、ウクライナ語）の一覧表示
+
+2. **キーボード画面（実使用例）**
+   - iPhone向け: キーボード表示、入力例（例: "ア" → "А"）
+   - iPad向け: キーボード表示、大きな画面でのレイアウト
+
+3. **変換デモ画面**
+   - キリル文字入力 → ひらがな変換の流れを表示
+   - 複数文字の組み合わせ例（例: "КЯ" → "きゃ"）
+
+4. **プロファイル切替デモ**
+   - プロファイルインジケーター
+   - 切り替えの簡単さを示す
+
+**スクリーンショットサイズ要件**:
+- iPhone 6.7インチ（iPhone 14 Pro Max等）: 1290 x 2796 pixels
+- iPhone 6.5インチ（iPhone 11 Pro Max等）: 1242 x 2688 pixels
+- iPhone 5.5インチ（iPhone 8 Plus等）: 1242 x 2208 pixels
+- iPad Pro 12.9インチ: 2048 x 2732 pixels
+
+### 9.10. 申請時のチェックリスト
+
+**必須項目**:
+- [ ] アプリアイコン（1024×1024 pixels, PNG形式、透明度なし）
+- [ ] スクリーンショット（最低3枚、推奨5枚以上）
+- [ ] アプリ説明文（日本語・英語）
+- [ ] プライバシー説明
+- [ ] Privacy Manifest（Info.plistに追加）
+- [ ] 年齢レーティング設定（4+）
+- [ ] カテゴリ設定（Utilities / Education）
+- [ ] TestFlightテスト（内部テストで動作確認）
+
+**オプション項目**:
+- [ ] App Preview（動画、30秒以内）
+- [ ] ローカライゼーション（他の言語への対応）
+- [ ] サポートURL（ウェブサイトがあれば）
+- [ ] マーケティングURL（プレスリリース等）
+
+---
+
+## 10. 参考資料
 
 - [Creating a Custom Keyboard - Apple Developer](https://developer.apple.com/documentation/uikit/keyboards_and_input/creating_a_custom_keyboard)
 - [The Rust FFI Omnibus](http://jakegoulding.com/rust-ffi-omnibus/)
