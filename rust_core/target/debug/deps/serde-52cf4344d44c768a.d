@@ -1,0 +1,14 @@
+/home/ablaze/Desktop/cyrillicJapaneseInput/rust_core/target/debug/deps/serde-52cf4344d44c768a.d: /home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/ablaze/Desktop/cyrillicJapaneseInput/rust_core/target/debug/build/serde-95cfafae6651c2ea/out/private.rs
+
+/home/ablaze/Desktop/cyrillicJapaneseInput/rust_core/target/debug/deps/libserde-52cf4344d44c768a.rlib: /home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/ablaze/Desktop/cyrillicJapaneseInput/rust_core/target/debug/build/serde-95cfafae6651c2ea/out/private.rs
+
+/home/ablaze/Desktop/cyrillicJapaneseInput/rust_core/target/debug/deps/libserde-52cf4344d44c768a.rmeta: /home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/ablaze/Desktop/cyrillicJapaneseInput/rust_core/target/debug/build/serde-95cfafae6651c2ea/out/private.rs
+
+/home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs:
+/home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs:
+/home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs:
+/home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs:
+/home/ablaze/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs:
+/home/ablaze/Desktop/cyrillicJapaneseInput/rust_core/target/debug/build/serde-95cfafae6651c2ea/out/private.rs:
+
+# env-dep:OUT_DIR=/home/ablaze/Desktop/cyrillicJapaneseInput/rust_core/target/debug/build/serde-95cfafae6651c2ea/out
