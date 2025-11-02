@@ -1,0 +1,124 @@
+# Rust
+rust_core/target/
+rust_core/Cargo.lock
+**/*.rs.bk
+*.pdb
+
+# iOS
+mobile/iOS/build/
+mobile/iOS/DerivedData/
+mobile/iOS/*.xcodeproj/xcuserdata/
+mobile/iOS/*.xcworkspace/xcuserdata/
+mobile/iOS/*.xcodeproj/project.xcworkspace/xcuserdata/
+mobile/iOS/Pods/
+mobile/iOS/.DS_Store
+*.swp
+*.lock
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Android
+mobile/android/.gradle/
+mobile/android/build/
+mobile/android/app/build/
+mobile/android/local.properties
+mobile/android/.idea/
+mobile/android/*.iml
+mobile/android/.DS_Store
+mobile/android/captures/
+mobile/android/.externalNativeBuild/
+mobile/android/.cxx/
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+
+# Android keystore (NEVER commit these!)
+*.jks
+*.keystore
+keystore.properties
+
+# Terraform
+terraform/**/.terraform/
+terraform/**/.terraform.lock.hcl
+terraform/**/*.tfstate
+terraform/**/*.tfstate.backup
+terraform/**/*.tfvars
+terraform/**/crash.log
+terraform/**/override.tf
+terraform/**/override.tf.json
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*.orig
+
+# Build artifacts
+dist/
+out/
+bin/
+obj/
+
+# Node (if used for tooling)
+node_modules/
+package-lock.json
+yarn.lock
