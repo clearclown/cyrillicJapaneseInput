@@ -1,0 +1,60 @@
+name: Rust Core Tests
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+      - 'mobile/**'
+    paths:
+      - 'rust_core/**'
+      - '.github/workflows/rust-core-tests.yml'
+
+jobs:
+  test:
+    name: Run Rust Core Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache cargo registry
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache cargo index
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/git
+          key: ${{ runner.os }}-cargo-git-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache target directory
+        uses: actions/cache@v4
+        with:
+          path: rust_core/target
+          key: ${{ runner.os }}-cargo-target-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Run cargo fmt check
+        working-directory: rust_core
+        run: cargo fmt -- --check
+
+      - name: Run cargo clippy
+        working-directory: rust_core
+        run: cargo clippy -- -D warnings
+
+      - name: Run cargo test
+        working-directory: rust_core
+        run: cargo test --verbose
+
+      - name: Run cargo test with all features
+        working-directory: rust_core
+        run: cargo test --all-features --verbose
