@@ -96,18 +96,30 @@ test result: ok. 83 passed; 0 failed
 
 ### 🔄 CI/CD 状況
 
-**GitHub Actions**: ✅ 設定済み（`.github/workflows/`）
+**GitHub Actions**: ✅ 完全設定済み（`.github/workflows/`）
 
 | ワークフロー | 対象 | トリガー | 状態 |
 |-------------|------|---------|------|
 | `rust-core-tests.yml` | Rust Core | push時 | ✅ 動作確認済み |
 | `ios-tests.yml` | iOS | push時 | ✅ 設定済み |
 | `android-tests.yml` | Android | push時 | ✅ 設定済み |
+| `docs-lint.yml` | ドキュメント | push時 | ✅ 設定済み |
+| `security.yml` | セキュリティ | push時 / 週次 | ✅ 設定済み |
+| `release.yml` | リリース自動化 | tag push時 | ✅ 設定済み |
 
 **実行環境**:
 - Rust: `ubuntu-latest`
 - iOS: `macos-latest` (GitHub hosted)
 - Android: `ubuntu-latest` + Android Emulator
+- Docs/Security: `ubuntu-latest`
+
+**CI/CDの詳細機能**:
+- ✅ 自動ビルド・テスト（Rust、iOS、Android）
+- ✅ コードフォーマット・リント（rustfmt、clippy）
+- ✅ ドキュメントリント（markdownlint、リンクチェック）
+- ✅ セキュリティスキャン（cargo-audit、secret-scanning、依存関係レビュー）
+- ✅ リリース自動化（タグpush時に自動ビルド＆リリース）
+- ✅ ライセンスコンプライアンスチェック
 
 **コスト**: GitHub Actionsの無料枠内で運用可能（詳細は`docs/iOS開発環境コスト比較.md`）
 
@@ -222,4 +234,53 @@ cd mobile/android
 
 ## 6. 貢献 (Contribution)
 
-変換スキーマ（`schemas/*.json`）の改善、新しい言語プロファイル（例: ブルガリア語、モンゴル語）の追加、ローカルな入力方法に関するフィードバックは、GitHubのIssuesにて歓迎する。
+このプロジェクトへの貢献を歓迎します！
+
+### 貢献方法
+
+詳細は[CONTRIBUTING.md](CONTRIBUTING.md)を参照してください。
+
+**主な貢献の種類**:
+- 🐛 バグ報告
+- ✨ 機能提案
+- 📝 ドキュメント改善
+- 🌍 新しい言語プロファイルの追加（ブルガリア語、モンゴル語等）
+- 🧪 テストの追加
+
+### 行動規範
+
+このプロジェクトは[Code of Conduct](CODE_OF_CONDUCT.md)を遵守しています。
+
+### コミュニティ
+
+- **Issue**: バグ報告・機能提案
+- **Pull Request**: コードの貢献
+- **Discussions**: 質問・議論
+
+---
+
+## 7. ドキュメント
+
+プロジェクトの詳細なドキュメントは[docs/](docs/)ディレクトリにあります。
+
+### 📚 ドキュメント索引
+
+全てのドキュメントの一覧は[docs/README.md](docs/README.md)を参照してください。
+
+**初心者向けガイド**:
+- [iOS デプロイ 初心者向けコマンドライン完全ガイド](docs/iOS_デプロイ_初心者向けコマンドライン完全ガイド.md)
+- [Android デプロイ 初心者向けコマンドライン完全ガイド](docs/Android_デプロイ_初心者向けコマンドライン完全ガイド.md)
+
+**開発計画書**:
+- [iOS開発計画書](docs/iOS開発計画書.md)
+- [Android開発計画書](docs/Android開発計画書.md)
+
+**設計書**:
+- [要件定義書](docs/要件定義書.md)
+- [アプリ設計書](docs/アプリ設計書.md)
+
+---
+
+## 8. ライセンス
+
+このプロジェクトは[MIT License](LICENSE)の下でライセンスされています。

@@ -1,0 +1,288 @@
+name: Security Scan
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+  schedule:
+    # Run weekly on Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
+
+jobs:
+  rust-security-audit:
+    name: Rust Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust_core/target
+          key: ${{ runner.os }}-cargo-audit-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+
+      - name: Run cargo audit
+        working-directory: rust_core
+        run: cargo audit --deny warnings
+
+      - name: Check for known vulnerabilities
+        working-directory: rust_core
+        run: |
+          echo "Checking for vulnerabilities in dependencies..."
+          cargo audit --json > audit-report.json || true
+          cat audit-report.json
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-audit-report
+          path: rust_core/audit-report.json
+
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate
+
+  codeql-analysis:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['javascript']  # Add other languages as needed
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+  secret-scanning:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install detect-secrets
+        run: pip install detect-secrets
+
+      - name: Run detect-secrets
+        run: |
+          echo "Scanning for secrets..."
+          detect-secrets scan --all-files --force-use-all-plugins > secrets-report.json || true
+
+      - name: Check for secrets
+        run: |
+          if [ -s secrets-report.json ]; then
+            echo "⚠️ Potential secrets detected!"
+            cat secrets-report.json
+            # Don't fail the build, just warn
+            exit 0
+          else
+            echo "✅ No secrets detected"
+          fi
+
+      - name: Upload secrets report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: secrets-scan-report
+          path: secrets-report.json
+
+  android-security-scan:
+    name: Android Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Check for hardcoded secrets in Android
+        run: |
+          echo "Checking for hardcoded secrets in Android code..."
+
+          # Check for API keys
+          if grep -r "api_key\|apiKey\|API_KEY" mobile/android/app/src --include="*.kt" --include="*.xml"; then
+            echo "⚠️ Potential API keys found"
+          fi
+
+          # Check for passwords
+          if grep -r "password\|Password\|PASSWORD" mobile/android/app/src --include="*.kt" --include="*.xml"; then
+            echo "⚠️ Potential passwords found"
+          fi
+
+          # Check for keystore info
+          if grep -r "keystore\|storePassword\|keyPassword" mobile/android/app/src --include="*.kt" --include="*.gradle*"; then
+            echo "⚠️ Potential keystore credentials found"
+          fi
+
+          echo "✅ Security scan completed"
+
+      - name: Check Android manifest permissions
+        run: |
+          echo "Checking Android manifest for unnecessary permissions..."
+
+          manifest_file="mobile/android/app/src/main/AndroidManifest.xml"
+
+          if [ -f "$manifest_file" ]; then
+            echo "Analyzing: $manifest_file"
+
+            # Check for dangerous permissions
+            dangerous_perms=(
+              "android.permission.READ_CONTACTS"
+              "android.permission.READ_SMS"
+              "android.permission.CAMERA"
+              "android.permission.RECORD_AUDIO"
+              "android.permission.ACCESS_FINE_LOCATION"
+              "android.permission.READ_CALENDAR"
+            )
+
+            for perm in "${dangerous_perms[@]}"; do
+              if grep -q "$perm" "$manifest_file"; then
+                echo "⚠️ Found potentially unnecessary permission: $perm"
+              fi
+            done
+
+            echo "✅ Manifest check completed"
+          else
+            echo "ℹ️ Android manifest not found (project not yet set up)"
+          fi
+
+  ios-security-scan:
+    name: iOS Security Scan
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for hardcoded secrets in iOS
+        run: |
+          echo "Checking for hardcoded secrets in iOS code..."
+
+          # Check for API keys
+          if find mobile/iOS -name "*.swift" -exec grep -H "apiKey\|api_key\|API_KEY" {} \; 2>/dev/null; then
+            echo "⚠️ Potential API keys found"
+          fi
+
+          # Check for passwords
+          if find mobile/iOS -name "*.swift" -exec grep -H "password\|Password\|PASSWORD" {} \; 2>/dev/null; then
+            echo "⚠️ Potential passwords found"
+          fi
+
+          echo "✅ Security scan completed"
+
+      - name: Check Info.plist for security settings
+        run: |
+          echo "Checking Info.plist for security settings..."
+
+          info_plist="mobile/iOS/CyrillicIME/Info.plist"
+
+          if [ -f "$info_plist" ]; then
+            echo "Analyzing: $info_plist"
+
+            # Check for App Transport Security
+            if ! grep -q "NSAppTransportSecurity" "$info_plist"; then
+              echo "✅ No App Transport Security exceptions (good)"
+            else
+              echo "⚠️ App Transport Security exceptions found"
+            fi
+
+            # Check for arbitrary loads
+            if grep -q "NSAllowsArbitraryLoads" "$info_plist"; then
+              echo "⚠️ Arbitrary loads allowed (security risk)"
+            else
+              echo "✅ Arbitrary loads not allowed (good)"
+            fi
+
+            echo "✅ Info.plist check completed"
+          else
+            echo "ℹ️ Info.plist not found (project not yet set up)"
+          fi
+
+  license-compliance:
+    name: License Compliance Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-license
+        run: cargo install cargo-license
+
+      - name: Check Rust dependencies licenses
+        working-directory: rust_core
+        run: |
+          echo "Checking Rust dependencies licenses..."
+          cargo license --json > licenses.json
+          cat licenses.json
+
+          # Check for incompatible licenses
+          if grep -qi "GPL" licenses.json; then
+            echo "⚠️ GPL license detected - may be incompatible with MIT"
+          fi
+
+          echo "✅ License check completed"
+
+      - name: Upload license report
+        uses: actions/upload-artifact@v4
+        with:
+          name: license-report
+          path: rust_core/licenses.json
