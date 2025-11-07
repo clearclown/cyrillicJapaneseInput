@@ -1,0 +1,263 @@
+name: Android Play Store Deploy
+
+on:
+  push:
+    tags:
+      - 'android-v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version_name:
+        description: 'Version name (e.g., 1.0.0)'
+        required: true
+        type: string
+      version_code:
+        description: 'Version code (e.g., 1)'
+        required: true
+        type: string
+
+env:
+  RUST_VERSION: stable
+  JAVA_VERSION: '17'
+  ANDROID_SDK_VERSION: '34'
+  NDK_VERSION: '26.1.10909125'
+
+jobs:
+  deploy-android:
+    name: Build and Deploy Android App
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      #############################################
+      # 1. セットアップ
+      #############################################
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android NDK
+        run: |
+          echo "Installing Android NDK $NDK_VERSION..."
+          sdkmanager --install "ndk;$NDK_VERSION"
+          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/$NDK_VERSION" >> $GITHUB_ENV
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust_core/target
+          key: ${{ runner.os }}-cargo-android-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-android-
+            ${{ runner.os }}-cargo-
+
+      - name: Install cargo-ndk
+        run: cargo install cargo-ndk
+
+      #############################################
+      # 2. Rust Coreビルド（Android用）
+      #############################################
+
+      - name: Build Rust Core for Android
+        working-directory: rust_core
+        run: |
+          echo "Building Rust Core for all Android architectures..."
+
+          # arm64-v8a (most common)
+          cargo ndk --target aarch64-linux-android --platform 29 build --release
+
+          # armeabi-v7a (older 32-bit devices)
+          cargo ndk --target armv7-linux-androideabi --platform 29 build --release
+
+          # x86 (emulator)
+          cargo ndk --target i686-linux-android --platform 29 build --release
+
+          # x86_64 (emulator)
+          cargo ndk --target x86_64-linux-android --platform 29 build --release
+
+          # Create jniLibs directory structure
+          JNI_LIBS_DIR="../mobile/android/core/src/main/jniLibs"
+          mkdir -p "$JNI_LIBS_DIR"/{arm64-v8a,armeabi-v7a,x86,x86_64}
+
+          # Copy .so files
+          cp target/aarch64-linux-android/release/libcyrillic_ime_core.so "$JNI_LIBS_DIR/arm64-v8a/"
+          cp target/armv7-linux-androideabi/release/libcyrillic_ime_core.so "$JNI_LIBS_DIR/armeabi-v7a/"
+          cp target/i686-linux-android/release/libcyrillic_ime_core.so "$JNI_LIBS_DIR/x86/"
+          cp target/x86_64-linux-android/release/libcyrillic_ime_core.so "$JNI_LIBS_DIR/x86_64/"
+
+          echo "✅ Rust Core built successfully for all architectures"
+
+          # Display library sizes
+          echo "📊 Library sizes:"
+          du -h "$JNI_LIBS_DIR"/*/libcyrillic_ime_core.so
+
+      #############################################
+      # 3. バージョン番号の更新
+      #############################################
+
+      - name: Update version numbers
+        working-directory: mobile/android
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION_NAME="${{ inputs.version_name }}"
+            VERSION_CODE="${{ inputs.version_code }}"
+          else
+            # タグからバージョンを抽出 (android-v1.0.0 -> 1.0.0)
+            VERSION_NAME="${GITHUB_REF#refs/tags/android-v}"
+            VERSION_CODE="${GITHUB_RUN_NUMBER}"
+          fi
+
+          echo "Setting version to $VERSION_NAME (code $VERSION_CODE)"
+
+          # build.gradle.kts を更新
+          sed -i "s/versionCode = [0-9]\+/versionCode = $VERSION_CODE/" app/build.gradle.kts
+          sed -i "s/versionName = \".*\"/versionName = \"$VERSION_NAME\"/" app/build.gradle.kts
+
+      #############################################
+      # 4. 署名設定
+      #############################################
+
+      - name: Decode Keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > $RUNNER_TEMP/release.keystore
+          echo "✅ Keystore decoded"
+
+      - name: Create keystore.properties
+        working-directory: mobile/android
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          cat > keystore.properties << EOF
+          storeFile=$RUNNER_TEMP/release.keystore
+          storePassword=$KEYSTORE_PASSWORD
+          keyAlias=$KEY_ALIAS
+          keyPassword=$KEY_PASSWORD
+          EOF
+          echo "✅ keystore.properties created"
+
+      #############################################
+      # 5. Gradleビルド（AAB）
+      #############################################
+
+      - name: Grant execute permission for gradlew
+        working-directory: mobile/android
+        run: chmod +x gradlew
+
+      - name: Build Release AAB
+        working-directory: mobile/android
+        run: |
+          echo "Building release AAB..."
+          ./gradlew bundleRelease --stacktrace
+
+          # AABの確認
+          if [ ! -f "app/build/outputs/bundle/release/app-release.aab" ]; then
+            echo "❌ AAB build failed"
+            exit 1
+          fi
+
+          echo "✅ AAB built successfully"
+
+          # AABサイズを表示
+          ls -lh app/build/outputs/bundle/release/app-release.aab
+
+      #############################################
+      # 6. Google Play Console へアップロード
+      #############################################
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.pismo.pismo
+          releaseFiles: mobile/android/app/build/outputs/bundle/release/app-release.aab
+          track: internal
+          status: completed
+          inAppUpdatePriority: 2
+
+      #############################################
+      # 7. クリーンアップ
+      #############################################
+
+      - name: Cleanup keystore
+        if: always()
+        run: |
+          rm -f $RUNNER_TEMP/release.keystore
+          rm -f mobile/android/keystore.properties
+
+      #############################################
+      # 8. アーティファクトのアップロード
+      #############################################
+
+      - name: Upload AAB as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Pismo-${{ github.run_number }}.aab
+          path: mobile/android/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 30
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-build-logs
+          path: mobile/android/app/build/reports/
+          retention-days: 7
+
+      #############################################
+      # 9. 通知
+      #############################################
+
+      - name: Create deployment summary
+        if: success()
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY << 'EOF'
+          # 🎉 Android App Deployed Successfully
+
+          ## Build Information
+          - **Version**: `${{ inputs.version_name || 'from tag' }}`
+          - **Version Code**: `${{ inputs.version_code || github.run_number }}`
+          - **Package**: `com.pismo.pismo`
+          - **Commit**: `${GITHUB_SHA:0:7}`
+          - **Runner**: `${{ runner.os }} ${{ runner.arch }}`
+
+          ## Libraries Built
+          - ✅ arm64-v8a (ARM 64-bit)
+          - ✅ armeabi-v7a (ARM 32-bit)
+          - ✅ x86 (Emulator 32-bit)
+          - ✅ x86_64 (Emulator 64-bit)
+
+          ## Deployment
+          - **Track**: Internal Testing
+          - **Status**: Completed
+          - **AAB**: Available in artifacts
+
+          ## Next Steps
+          1. ⏳ Wait for Google Play processing (5-30 minutes)
+          2. 🧪 Test on internal track
+          3. 📱 Promote to beta/production when ready
+
+          ## Useful Links
+          - [Google Play Console](https://play.google.com/console)
+          - [Build Artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          EOF
