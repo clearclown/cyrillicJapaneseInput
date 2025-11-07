@@ -10,7 +10,7 @@ import Foundation
 extension UserDefaults {
     /// App Group識別子
     /// Main AppとKeyboard Extension間でデータを共有するために使用
-    static let appGroupIdentifier = "group.com.yourcompany.cyrillicime"
+    static let appGroupIdentifier = "group.com.pismo"
 
     /// Shared UserDefaults instance
     static var shared: UserDefaults {
