@@ -10,7 +10,7 @@ settings:
   base:
     MARKETING_VERSION: "1.0"
     CURRENT_PROJECT_VERSION: "1"
-    DEVELOPMENT_TEAM: ""  # Will be set via xcodebuild or Xcode
+    DEVELOPMENT_TEAM: "Q9DB95D8L9"
     CODE_SIGN_STYLE: Automatic
     SWIFT_VERSION: "5.0"
 
@@ -26,9 +26,12 @@ targets:
         name: Shared
       - path: CyrillicKeyboard/Engine
         name: Engine
+    resources:
+      - CyrillicIME/Assets.xcassets
     info:
       path: CyrillicIME/Info.plist
       properties:
+        CFBundleIconName: AppIcon
         CFBundleDisplayName: Pismo
         CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
         CFBundleInfoDictionaryVersion: "6.0"

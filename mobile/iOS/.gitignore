@@ -91,3 +91,4 @@ iOSInjectionProject/
 # Rust build artifacts
 *.a
 *.xcframework/
+*.cer
