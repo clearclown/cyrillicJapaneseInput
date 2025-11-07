@@ -1,0 +1,321 @@
+name: iOS App Store Deploy
+
+on:
+  push:
+    tags:
+      - 'ios-v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'App version (e.g., 1.0.1)'
+        required: true
+        type: string
+      build_number:
+        description: 'Build number (e.g., 2)'
+        required: true
+        type: string
+
+env:
+  XCODE_VERSION: "15.4"
+  IOS_DEPLOYMENT_TARGET: "16.0"
+  RUST_VERSION: stable
+
+jobs:
+  deploy-ios:
+    name: Build and Deploy iOS App
+    runs-on: macos-14  # macOS Sonoma with Xcode 15.4
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      #############################################
+      # 1. セットアップ
+      #############################################
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust_core/target
+          key: ${{ runner.os }}-cargo-ios-device-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-ios-device-
+            ${{ runner.os }}-cargo-
+
+      - name: Install dependencies
+        run: |
+          brew install xcodegen
+          cargo install cargo-lipo || echo "cargo-lipo already installed"
+
+      #############################################
+      # 2. Rust Coreビルド（実機用）
+      #############################################
+
+      - name: Build Rust Core for iOS Device
+        working-directory: rust_core
+        run: |
+          echo "Building Rust Core for aarch64-apple-ios..."
+          cargo build --release --target aarch64-apple-ios
+
+          # ライブラリをiOSプロジェクトにコピー
+          mkdir -p ../mobile/iOS/CyrillicIMECore
+          cp target/aarch64-apple-ios/release/libcyrillic_ime_core.a \
+             ../mobile/iOS/CyrillicIMECore/
+
+          # ヘッダーファイルもコピー
+          cp -r include ../mobile/iOS/CyrillicIMECore/
+
+          echo "✅ Rust Core built successfully"
+
+      #############################################
+      # 3. Xcodeプロジェクト生成
+      #############################################
+
+      - name: Generate Xcode project
+        working-directory: mobile/iOS
+        run: |
+          echo "Generating Xcode project with xcodegen..."
+          xcodegen generate
+          echo "✅ Xcode project generated"
+
+      - name: Update version and build number
+        working-directory: mobile/iOS
+        run: |
+          # バージョン番号を更新
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+            BUILD_NUMBER="${{ inputs.build_number }}"
+          else
+            # タグからバージョンを抽出 (ios-v1.0.0 -> 1.0.0)
+            VERSION="${GITHUB_REF#refs/tags/ios-v}"
+            BUILD_NUMBER="${GITHUB_RUN_NUMBER}"
+          fi
+
+          echo "Setting version to $VERSION (build $BUILD_NUMBER)"
+
+          # project.ymlを更新
+          sed -i '' "s/MARKETING_VERSION: \".*\"/MARKETING_VERSION: \"$VERSION\"/" project.yml
+          sed -i '' "s/CURRENT_PROJECT_VERSION: \".*\"/CURRENT_PROJECT_VERSION: \"$BUILD_NUMBER\"/" project.yml
+
+          # 再生成
+          xcodegen generate
+
+      #############################################
+      # 4. 証明書とプロビジョニングプロファイル
+      #############################################
+
+      - name: Install Apple Certificate
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.IOS_BUILD_CERTIFICATE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.IOS_P12_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
+        run: |
+          # 証明書をBase64デコード
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+
+          # キーチェーンを作成
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # 証明書をインポート
+          security import $CERTIFICATE_PATH \
+            -P "$P12_PASSWORD" \
+            -A \
+            -t cert \
+            -f pkcs12 \
+            -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          echo "✅ Certificate installed"
+
+      - name: Install Provisioning Profiles
+        env:
+          APP_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_APP_PROVISIONING_PROFILE_BASE64 }}
+          KEYBOARD_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_KEYBOARD_PROVISIONING_PROFILE_BASE64 }}
+        run: |
+          # プロビジョニングプロファイルディレクトリを作成
+          PP_PATH=~/Library/MobileDevice/Provisioning\ Profiles
+          mkdir -p "$PP_PATH"
+
+          # メインアプリのプロファイル
+          echo -n "$APP_PROVISIONING_PROFILE_BASE64" | base64 --decode -o "$PP_PATH/app.mobileprovision"
+
+          # キーボード拡張のプロファイル
+          echo -n "$KEYBOARD_PROVISIONING_PROFILE_BASE64" | base64 --decode -o "$PP_PATH/keyboard.mobileprovision"
+
+          echo "✅ Provisioning profiles installed"
+
+      #############################################
+      # 5. アーカイブとエクスポート
+      #############################################
+
+      - name: Build Archive
+        working-directory: mobile/iOS
+        run: |
+          echo "Creating archive..."
+          xcodebuild archive \
+            -project Pismo.xcodeproj \
+            -scheme Pismo \
+            -configuration Release \
+            -archivePath $RUNNER_TEMP/Pismo.xcarchive \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM=Q9DB95D8L9 \
+            PROVISIONING_PROFILE_SPECIFIER="Pismo App Store" \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            | tee $RUNNER_TEMP/xcodebuild.log
+
+          # アーカイブの確認
+          if [ ! -d "$RUNNER_TEMP/Pismo.xcarchive" ]; then
+            echo "❌ Archive creation failed"
+            cat $RUNNER_TEMP/xcodebuild.log
+            exit 1
+          fi
+
+          echo "✅ Archive created successfully"
+
+      - name: Export IPA
+        run: |
+          # ExportOptions.plistを作成
+          cat > $RUNNER_TEMP/ExportOptions.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store</string>
+              <key>teamID</key>
+              <string>Q9DB95D8L9</string>
+              <key>uploadSymbols</key>
+              <true/>
+              <key>uploadBitcode</key>
+              <false/>
+              <key>signingStyle</key>
+              <string>manual</string>
+              <key>provisioningProfiles</key>
+              <dict>
+                  <key>com.pismo.Pismo</key>
+                  <string>Pismo App Store</string>
+                  <key>com.pismo.Pismo.PismoKeyboard</key>
+                  <string>PismoKeyboard App Store</string>
+              </dict>
+          </dict>
+          </plist>
+          EOF
+
+          echo "Exporting IPA..."
+          xcodebuild -exportArchive \
+            -archivePath $RUNNER_TEMP/Pismo.xcarchive \
+            -exportOptionsPlist $RUNNER_TEMP/ExportOptions.plist \
+            -exportPath $RUNNER_TEMP/export \
+            | tee $RUNNER_TEMP/export.log
+
+          # IPAの確認
+          if [ ! -f "$RUNNER_TEMP/export/Pismo.ipa" ]; then
+            echo "❌ IPA export failed"
+            cat $RUNNER_TEMP/export.log
+            exit 1
+          fi
+
+          echo "✅ IPA exported successfully"
+
+      #############################################
+      # 6. App Store Connectへアップロード
+      #############################################
+
+      - name: Upload to App Store Connect
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+        run: |
+          # API Keyを保存
+          API_KEY_PATH=$RUNNER_TEMP/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
+          echo -n "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 --decode -o $API_KEY_PATH
+
+          echo "Uploading to App Store Connect..."
+          xcrun altool --upload-app \
+            -f $RUNNER_TEMP/export/Pismo.ipa \
+            -t ios \
+            --apiKey $APP_STORE_CONNECT_API_KEY_ID \
+            --apiIssuer $APP_STORE_CONNECT_ISSUER_ID \
+            --apiKeyPath $API_KEY_PATH
+
+          echo "✅ Upload completed successfully"
+          echo "⏳ Build will appear in App Store Connect after processing (5-30 minutes)"
+
+      #############################################
+      # 7. クリーンアップ
+      #############################################
+
+      - name: Cleanup keychain and provisioning profiles
+        if: always()
+        run: |
+          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db || true
+          rm -rf ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision || true
+
+      #############################################
+      # 8. アーティファクトのアップロード
+      #############################################
+
+      - name: Upload IPA as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Pismo-${{ github.run_number }}.ipa
+          path: ${{ runner.temp }}/export/Pismo.ipa
+          retention-days: 30
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build-logs
+          path: |
+            ${{ runner.temp }}/xcodebuild.log
+            ${{ runner.temp }}/export.log
+          retention-days: 7
+
+      #############################################
+      # 9. 通知
+      #############################################
+
+      - name: Create deployment summary
+        if: success()
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY << EOF
+          # 🎉 iOS App Deployed Successfully
+
+          ## Build Information
+          - **Version**: \`${{ inputs.version || 'from tag' }}\`
+          - **Build Number**: \`${{ inputs.build_number || github.run_number }}\`
+          - **Commit**: \`${GITHUB_SHA:0:7}\`
+          - **Runner**: \`${{ runner.os }} ${{ runner.arch }}\`
+
+          ## Next Steps
+          1. ⏳ Wait 5-30 minutes for build processing on App Store Connect
+          2. 🖼️ Add screenshots and metadata in App Store Connect
+          3. 🚀 Submit for review
+
+          ## Useful Links
+          - [App Store Connect](https://appstoreconnect.apple.com/)
+          - [TestFlight](https://appstoreconnect.apple.com/apps/6740203301/testflight)
+          - [Build Artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          EOF

@@ -92,3 +92,11 @@ iOSInjectionProject/
 *.a
 *.xcframework/
 *.cer
+
+# Security sensitive files (certificates, provisioning profiles, API keys)
+*.p12
+*.mobileprovision
+*.p8
+AuthKey_*.p8
+*.certSigningRequest
+*.cer
