@@ -87,28 +87,7 @@ cat << 'EOF'
 
 🤖 Android Studio Integration:
 1. The .so files are now in core/src/main/jniLibs/
-2. Create NativeLib.kt in the core module:
-
-   package com.yourcompany.cyrillicime.core
-
-   object NativeLib {
-       init {
-           System.loadLibrary("cyrillic_ime_core")
-       }
-
-       @JvmStatic
-       external fun initEngine(profilesJson: String, kanaEngineJson: String): Boolean
-
-       @JvmStatic
-       external fun loadSchema(schemaJson: String, schemaId: String): Boolean
-
-       @JvmStatic
-       external fun processKey(key: String, buffer: String, profileId: String): String?
-
-       @JvmStatic
-       external fun getVersion(): String
-   }
-
-3. Sync Gradle and the libraries will be automatically included in your APK
+2. NativeLib.kt is already created in the core module (com.pismo.pismo.core)
+3. Sync Gradle and the libraries will be automatically included in your APK/AAB
 
 EOF

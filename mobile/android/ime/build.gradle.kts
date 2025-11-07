@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.yourcompany.cyrillicime.ime"
+    namespace = "com.pismo.pismo.ime"
     compileSdk = 34
 
     defaultConfig {

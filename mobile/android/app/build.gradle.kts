@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.yourcompany.cyrillicime"
+    namespace = "com.pismo.pismo"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.yourcompany.cyrillicime"
+        applicationId = "com.pismo.pismo"
         minSdk = 29
         targetSdk = 34
         versionCode = 1
