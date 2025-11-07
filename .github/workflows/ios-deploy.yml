@@ -60,7 +60,6 @@ jobs:
       - name: Install dependencies
         run: |
           brew install xcodegen
-          cargo install cargo-lipo || echo "cargo-lipo already installed"
 
       #############################################
       # 2. Rust Coreビルド（実機用）
