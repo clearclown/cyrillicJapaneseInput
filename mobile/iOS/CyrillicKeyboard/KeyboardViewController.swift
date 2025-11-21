@@ -16,6 +16,9 @@ class KeyboardViewController: UIInputViewController {
     /// Manages Cyrillic input and conversion
     private var inputManager: CyrillicInputManager!
 
+    /// Kanji conversion engine (Phase 2)
+    private var conversionEngine: KanjiConversionEngine?
+
     // MARK: - UI Components
 
     /// Keyboard view
@@ -86,15 +89,25 @@ class KeyboardViewController: UIInputViewController {
     // MARK: - Manager Setup
 
     private func setupManagers() {
+        // Phase 2: Initialize conversion engine
+        do {
+            conversionEngine = try KanjiConversionEngine()
+            print("[KeyboardViewController] Kanji conversion engine initialized")
+        } catch {
+            print("[KeyboardViewController] Failed to initialize conversion engine: \(error)")
+            conversionEngine = nil
+        }
+
         // Create DisplayedTextManager
         displayedTextManager = DisplayedTextManager(isMarkedTextEnabled: true)
         displayedTextManager.setTextDocumentProxy(textDocumentProxy)
 
-        // Create CyrillicInputManager
+        // Create CyrillicInputManager (Phase 2: pass conversionEngine)
         inputManager = CyrillicInputManager(
             displayedTextManager: displayedTextManager,
             rustCore: RustCoreFFI.shared,
-            profileManager: ProfileManager.shared
+            profileManager: ProfileManager.shared,
+            conversionEngine: conversionEngine
         )
 
         // Setup callbacks

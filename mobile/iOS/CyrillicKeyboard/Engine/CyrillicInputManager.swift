@@ -21,14 +21,17 @@ final class CyrillicInputManager {
     /// Current profile manager
     private let profileManager: ProfileManager
 
+    /// Kanji conversion engine (Phase 2)
+    private let conversionEngine: KanjiConversionEngine?
+
     /// Current composing text state
     private var composingText: CyrillicComposingText = CyrillicComposingText()
 
     /// Current input mode
     private var currentInputMode: InputMode = .japaneseIME
 
-    /// Conversion candidates (for Phase 2: Kanji conversion)
-    private var candidates: [String] = []
+    /// Conversion candidates (Phase 2: Kanji conversion)
+    private var candidates: [Candidate] = []
 
     /// Whether currently in conversion mode
     private var isConverting: Bool = false
@@ -48,10 +51,12 @@ final class CyrillicInputManager {
 
     init(displayedTextManager: DisplayedTextManager,
          rustCore: RustCoreFFI = .shared,
-         profileManager: ProfileManager = .shared) {
+         profileManager: ProfileManager = .shared,
+         conversionEngine: KanjiConversionEngine? = nil) {
         self.displayedTextManager = displayedTextManager
         self.rustCore = rustCore
         self.profileManager = profileManager
+        self.conversionEngine = conversionEngine
     }
 
     // MARK: - Mode Management
@@ -133,17 +138,14 @@ final class CyrillicInputManager {
 
     /// IME mode: Show hiragana, allow space for conversion (Phase 2)
     private func handleIMEMode(result: ConversionResult) {
-        // For Phase 1: Just show hiragana as composing text
-        // Phase 2 will add kanji conversion here
-
+        // Show hiragana as composing text
         displayedTextManager.updateComposingText(composingText.hiraganaTarget)
         onComposingTextChanged?(composingText.hiraganaTarget)
 
-        // TODO Phase 2: Request kanji candidates
-        // conversionEngine.requestCandidates(composingText.hiraganaTarget) { candidates in
-        //     self.candidates = candidates
-        //     self.onCandidatesUpdated?(candidates)
-        // }
+        // Phase 2: Request kanji candidates for live preview (optional)
+        if !composingText.hiraganaTarget.isEmpty {
+            requestConversionCandidatesAsync()
+        }
     }
 
     // MARK: - Delete Handling
@@ -219,20 +221,41 @@ final class CyrillicInputManager {
     private func startConversion() {
         isConverting = true
 
-        // TODO Phase 2: Get real kanji candidates
-        // For now, just show hiragana and katakana
-        var candidateList = [composingText.hiraganaTarget]
+        // Phase 2: Get real kanji candidates from conversion engine
+        if let engine = conversionEngine {
+            Task {
+                do {
+                    let candidateList = try await engine.requestCandidates(
+                        for: composingText.hiraganaTarget,
+                        maxCount: 10
+                    )
 
-        if let katakana = convertToKatakana(composingText.hiraganaTarget) {
-            candidateList.append(katakana)
+                    await MainActor.run {
+                        self.candidates = candidateList
+                        self.selectedCandidateIndex = 0
+                        self.onCandidatesUpdated?(candidateList.map { $0.text })
+
+                        // Show first candidate as live conversion
+                        if !candidateList.isEmpty {
+                            self.displayedTextManager.updateComposingText(
+                                self.composingText.hiraganaTarget,
+                                liveConversionText: candidateList[0].text
+                            )
+                        }
+
+                        print("[CyrillicInputManager] Started conversion with \(candidateList.count) candidates")
+                    }
+                } catch {
+                    print("[CyrillicInputManager] Conversion error: \(error)")
+                    await MainActor.run {
+                        self.showFallbackCandidates()
+                    }
+                }
+            }
+        } else {
+            // Fallback: No conversion engine, show hiragana and katakana only
+            showFallbackCandidates()
         }
-
-        candidates = candidateList
-        selectedCandidateIndex = 0
-
-        onCandidatesUpdated?(candidates)
-
-        print("[CyrillicInputManager] Started conversion with \(candidates.count) candidates")
     }
 
     /// Cycles to next candidate
@@ -245,10 +268,10 @@ final class CyrillicInputManager {
         // Update display with selected candidate
         displayedTextManager.updateComposingText(
             composingText.hiraganaTarget,
-            liveConversionText: selected
+            liveConversionText: selected.text
         )
 
-        print("[CyrillicInputManager] Cycled to candidate: '\(selected)'")
+        print("[CyrillicInputManager] Cycled to candidate: '\(selected.text)'")
     }
 
     /// Exits conversion mode
@@ -290,10 +313,11 @@ final class CyrillicInputManager {
     /// Commits a candidate
     private func commitCandidate(at index: Int) {
         let selected = candidates[index]
-        commitText(selected)
 
-        // TODO Phase 2: Learn from selection
-        // conversionEngine.learn(composingText.hiraganaTarget, selected: selected)
+        // Phase 2: Learn from selection
+        conversionEngine?.learn(input: composingText.hiraganaTarget, selected: selected)
+
+        commitText(selected.text)
     }
 
     // MARK: - Commit and Clear
@@ -319,6 +343,64 @@ final class CyrillicInputManager {
         candidates = []
         onCandidatesUpdated?([])
         onComposingTextChanged?("")
+    }
+
+    // MARK: - Conversion Helpers (Phase 2)
+
+    /// Requests conversion candidates asynchronously (for live preview)
+    /// Does not enter conversion mode, just prepares candidates
+    private func requestConversionCandidatesAsync() {
+        guard let engine = conversionEngine else { return }
+
+        Task {
+            do {
+                let candidateList = try await engine.requestCandidates(
+                    for: composingText.hiraganaTarget,
+                    maxCount: 5 // Fewer for live preview
+                )
+
+                await MainActor.run {
+                    // Only update if still composing the same text
+                    if !self.composingText.hiraganaTarget.isEmpty {
+                        self.candidates = candidateList
+                        print("[CyrillicInputManager] Live candidates ready: \(candidateList.map { $0.text })")
+                    }
+                }
+            } catch {
+                // Silently fail for live preview
+                print("[CyrillicInputManager] Live conversion failed: \(error)")
+            }
+        }
+    }
+
+    /// Shows fallback candidates (hiragana + katakana only)
+    /// Used when conversion engine is not available or fails
+    private func showFallbackCandidates() {
+        var candidateList = [Candidate]()
+
+        // Hiragana as-is
+        candidateList.append(Candidate(
+            text: composingText.hiraganaTarget,
+            type: .hiragana,
+            score: 1.0,
+            metadata: CandidateMetadata(partOfSpeech: nil, frequency: nil, source: "hiragana")
+        ))
+
+        // Katakana
+        if let katakana = convertToKatakana(composingText.hiraganaTarget) {
+            candidateList.append(Candidate(
+                text: katakana,
+                type: .katakana,
+                score: 0.5,
+                metadata: CandidateMetadata(partOfSpeech: nil, frequency: nil, source: "katakana")
+            ))
+        }
+
+        candidates = candidateList
+        selectedCandidateIndex = 0
+        onCandidatesUpdated?(candidateList.map { $0.text })
+
+        print("[CyrillicInputManager] Fallback candidates: \(candidateList.map { $0.text })")
     }
 
     // MARK: - Utility Methods
