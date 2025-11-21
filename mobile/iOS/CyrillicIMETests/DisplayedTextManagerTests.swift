@@ -364,6 +364,12 @@ class MockUITextDocumentProxy: NSObject, UITextDocumentProxy {
     var mockDocumentContextBeforeInput: String?
     var mockDocumentContextAfterInput: String?
 
+    // MARK: - UIKeyInput Protocol
+
+    var hasText: Bool {
+        return !(mockDocumentContextBeforeInput ?? "").isEmpty
+    }
+
     // MARK: - Reset
 
     func reset() {
