@@ -6,14 +6,15 @@
 //
 
 import Foundation
+import Combine
 
 /// プロファイルとスキーマの管理を担当
-class ProfileManager {
+class ProfileManager: ObservableObject {
     // MARK: - Singleton
     static let shared = ProfileManager()
 
     // MARK: - Properties
-    private(set) var availableProfiles: [Profile] = []
+    @Published private(set) var availableProfiles: [Profile] = []
     private var loadedSchemas: Set<String> = []
     private var schemaCache: [String: Schema] = [:]
 

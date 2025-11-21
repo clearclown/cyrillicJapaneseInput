@@ -1,267 +1,236 @@
 //
 //  SettingsView.swift
-//  Cyrillic IME
+//  CyrillicIME
 //
-//  Main settings screen
+//  Settings screen for Pismo IME
+//  Phase 5: Profile and Settings UI
 //
 
 import SwiftUI
 
 struct SettingsView: View {
-    @StateObject private var viewModel = SettingsViewModel()
+    @StateObject private var profileManager = ProfileManager.shared
+    @AppStorage("enableLiveConversion") private var enableLiveConversion = true
+    @AppStorage("enableHapticFeedback") private var enableHapticFeedback = true
+    @AppStorage("showKeyboardPreview") private var showKeyboardPreview = true
+    @State private var showingProfileSheet = false
 
     var body: some View {
         NavigationView {
-            List {
-                // プロファイル選択セクション
+            Form {
+                // Profile Selection Section
                 Section {
-                    ForEach(viewModel.profiles) { profile in
-                        ProfileRow(
-                            profile: profile,
-                            isSelected: profile.id == viewModel.currentProfileId
-                        )
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            viewModel.selectProfile(profile.id)
+                    Button(action: {
+                        showingProfileSheet = true
+                    }) {
+                        HStack {
+                            Text("キーボードプロファイル")
+                                .foregroundColor(.primary)
+                            Spacer()
+                            if let current = profileManager.currentProfile {
+                                Text(current.nameJa)
+                                    .foregroundColor(.secondary)
+                            }
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.secondary)
+                                .font(.caption)
                         }
                     }
                 } header: {
-                    Text("入力プロファイル")
+                    Text("プロファイル")
                 } footer: {
-                    Text("使用するキリル文字配列を選択してください")
+                    Text("キリル文字配列を選択してください。各配列により同じ日本語音でも異なるキーを使います。")
                 }
 
-                // キーボード設定セクション
+                // Input Settings Section
                 Section {
-                    NavigationLink {
-                        KeyboardSetupGuideView()
-                    } label: {
-                        Label("キーボードの設定方法", systemImage: "keyboard")
+                    Toggle("ライブ変換", isOn: $enableLiveConversion)
+                    Toggle("ハプティックフィードバック", isOn: $enableHapticFeedback)
+                    Toggle("キープレビュー表示", isOn: $showKeyboardPreview)
+                } header: {
+                    Text("入力設定")
+                } footer: {
+                    Text("ライブ変換：入力中に自動的に漢字変換を行います")
+                }
+
+                // User Dictionary Section
+                Section {
+                    NavigationLink(destination: UserDictionaryView()) {
+                        HStack {
+                            Image(systemName: "book.fill")
+                                .foregroundColor(.blue)
+                            Text("ユーザー辞書")
+                        }
                     }
 
-                    if !viewModel.isKeyboardEnabled {
-                        Text("キーボードが有効になっていません")
-                            .foregroundColor(.orange)
-                            .font(.caption)
+                    Button(action: clearLearningData) {
+                        HStack {
+                            Image(systemName: "trash.fill")
+                                .foregroundColor(.red)
+                            Text("学習データをクリア")
+                                .foregroundColor(.red)
+                        }
                     }
                 } header: {
-                    Text("設定")
+                    Text("辞書")
+                } footer: {
+                    Text("学習データには変換履歴と頻度情報が含まれます")
                 }
 
-                // 情報セクション
+                // About Section
                 Section {
                     HStack {
                         Text("バージョン")
                         Spacer()
-                        Text(viewModel.appVersion)
+                        Text("1.0.0")
                             .foregroundColor(.secondary)
                     }
 
-                    HStack {
-                        Text("Rust Core")
-                        Spacer()
-                        Text(viewModel.rustCoreVersion)
-                            .foregroundColor(.secondary)
+                    Link(destination: URL(string: "https://github.com/clearclown/cyrillicJapaneseInput")!) {
+                        HStack {
+                            Image(systemName: "link")
+                                .foregroundColor(.blue)
+                            Text("GitHubで見る")
+                        }
                     }
                 } header: {
-                    Text("情報")
+                    Text("アプリについて")
                 }
 
-                // テストセクション（DEBUG時のみ）
-                #if DEBUG
+                // Keyboard Setup Guide
                 Section {
-                    Button("エンジンを再初期化") {
-                        viewModel.reinitializeEngine()
-                    }
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("キーボードの有効化")
+                            .font(.headline)
 
-                    Button("ログを出力") {
-                        viewModel.printDebugInfo()
+                        Text("1. 設定 > 一般 > キーボード")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+
+                        Text("2. キーボード > 新しいキーボードを追加")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+
+                        Text("3. Pismo を選択")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+
+                        Button(action: openKeyboardSettings) {
+                            HStack {
+                                Image(systemName: "gear")
+                                Text("設定を開く")
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                        }
+                        .padding(.top, 8)
                     }
+                    .padding(.vertical, 8)
                 } header: {
-                    Text("デバッグ")
+                    Text("セットアップ")
                 }
-                #endif
             }
-            .navigationTitle("Cyrillic IME")
-            .alert("エラー", isPresented: $viewModel.showError) {
-                Button("OK", role: .cancel) {}
-            } message: {
-                Text(viewModel.errorMessage)
+            .navigationTitle("設定")
+            .sheet(isPresented: $showingProfileSheet) {
+                ProfileSelectionView()
+            }
+        }
+    }
+
+    // MARK: - Actions
+
+    private func clearLearningData() {
+        // Clear learning data from PredictiveEngine
+        UserDefaults.standard.removeObject(forKey: "PredictiveEngine.BigramMap")
+        UserDefaults.standard.removeObject(forKey: "PredictiveEngine.UnigramMap")
+        UserDefaults.standard.removeObject(forKey: "PredictiveEngine.RecentUsage")
+        print("[SettingsView] Learning data cleared")
+    }
+
+    private func openKeyboardSettings() {
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url)
+        }
+    }
+}
+
+// MARK: - User Dictionary View (Placeholder)
+
+struct UserDictionaryView: View {
+    @State private var userWords: [UserDictionaryEntry] = []
+
+    var body: some View {
+        List {
+            if userWords.isEmpty {
+                VStack(spacing: 16) {
+                    Image(systemName: "book.closed")
+                        .font(.system(size: 48))
+                        .foregroundColor(.secondary)
+
+                    Text("ユーザー辞書は空です")
+                        .font(.headline)
+
+                    Text("よく使う単語を登録すると、変換候補の上位に表示されます")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+            } else {
+                ForEach(userWords) { entry in
+                    VStack(alignment: .leading) {
+                        Text(entry.word)
+                            .font(.headline)
+                        Text(entry.reading)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .onDelete(perform: deleteWords)
+            }
+        }
+        .navigationTitle("ユーザー辞書")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: addWord) {
+                    Image(systemName: "plus")
+                }
             }
         }
         .onAppear {
-            viewModel.loadProfiles()
+            loadUserDictionary()
         }
+    }
+
+    private func loadUserDictionary() {
+        // TODO: Load from UserDefaults or database
+    }
+
+    private func addWord() {
+        // TODO: Show add word sheet
+    }
+
+    private func deleteWords(at offsets: IndexSet) {
+        userWords.remove(atOffsets: offsets)
     }
 }
 
-// MARK: - Profile Row
-
-struct ProfileRow: View {
-    let profile: Profile
-    let isSelected: Bool
-
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(profile.displayName)
-                    .font(.body)
-
-                Text(profile.id)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-
-            Spacer()
-
-            if isSelected {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.accentColor)
-            }
-        }
-        .padding(.vertical, 4)
-    }
-}
-
-// MARK: - Keyboard Setup Guide
-
-struct KeyboardSetupGuideView: View {
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("キーボードの有効化")
-                    .font(.title2)
-                    .fontWeight(.bold)
-
-                VStack(alignment: .leading, spacing: 12) {
-                    StepView(
-                        number: 1,
-                        title: "設定アプリを開く",
-                        description: "iOSの「設定」アプリを開いてください"
-                    )
-
-                    StepView(
-                        number: 2,
-                        title: "一般 > キーボード",
-                        description: "「一般」→「キーボード」の順にタップ"
-                    )
-
-                    StepView(
-                        number: 3,
-                        title: "キーボード",
-                        description: "「キーボード」をタップ"
-                    )
-
-                    StepView(
-                        number: 4,
-                        title: "新しいキーボードを追加",
-                        description: "「新しいキーボードを追加...」をタップ"
-                    )
-
-                    StepView(
-                        number: 5,
-                        title: "Cyrillic IMEを選択",
-                        description: "リストから「Cyrillic IME」を選択"
-                    )
-
-                    StepView(
-                        number: 6,
-                        title: "フルアクセスを許可（任意）",
-                        description: "キーボード設定で「フルアクセスを許可」をオンにすると、より高度な機能が利用できます"
-                    )
-                }
-
-                Divider()
-                    .padding(.vertical, 8)
-
-                Text("使い方")
-                    .font(.title2)
-                    .fontWeight(.bold)
-
-                VStack(alignment: .leading, spacing: 12) {
-                    UsageStepView(
-                        icon: "🌐",
-                        title: "キーボードを切り替え",
-                        description: "キーボードの地球儀ボタンを長押しして「Cyrillic IME」を選択"
-                    )
-
-                    UsageStepView(
-                        icon: "⌨️",
-                        title: "キリル文字で入力",
-                        description: "キリル文字キーを押して日本語ひらがなに変換"
-                    )
-
-                    UsageStepView(
-                        icon: "✨",
-                        title: "プロファイル切り替え",
-                        description: "このアプリで言語プロファイルを変更できます"
-                    )
-                }
-            }
-            .padding()
-        }
-        .navigationTitle("設定方法")
-        .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-struct StepView: View {
-    let number: Int
-    let title: String
-    let description: String
-
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(Color.accentColor)
-                    .frame(width: 28, height: 28)
-
-                Text("\(number)")
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(.white)
-            }
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.headline)
-
-                Text(description)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-        }
-    }
-}
-
-struct UsageStepView: View {
-    let icon: String
-    let title: String
-    let description: String
-
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Text(icon)
-                .font(.system(size: 28))
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.headline)
-
-                Text(description)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-        }
-    }
+struct UserDictionaryEntry: Identifiable {
+    let id = UUID()
+    let word: String
+    let reading: String
+    var frequency: Int = 0
 }
 
 // MARK: - Preview
 
-#if DEBUG
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView()
     }
 }
-#endif

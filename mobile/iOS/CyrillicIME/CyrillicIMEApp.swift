@@ -16,7 +16,7 @@ struct CyrillicIMEApp: App {
 
     var body: some Scene {
         WindowGroup {
-            SettingsView()
+            ContentView()
         }
     }
 
