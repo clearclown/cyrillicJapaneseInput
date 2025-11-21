@@ -2,21 +2,26 @@
 //  KeyboardViewController.swift
 //  CyrillicKeyboard
 //
-//  Main keyboard extension view controller
+//  Main keyboard extension view controller (Refactored for Phase 1)
 //
 
 import UIKit
 
 class KeyboardViewController: UIInputViewController {
-    // MARK: - Properties
+    // MARK: - Managers
 
-    /// 現在の入力バッファ（Rust Coreから返される composing buffer）
-    private var inputBuffer: String = ""
+    /// Manages text display using iOS IME protocols
+    private var displayedTextManager: DisplayedTextManager!
 
-    /// キーボードビュー
+    /// Manages Cyrillic input and conversion
+    private var inputManager: CyrillicInputManager!
+
+    // MARK: - UI Components
+
+    /// Keyboard view
     private var keyboardView: CyrillicKeyboardView?
 
-    /// 初期化エラーメッセージ（デバッグ用）
+    /// Initialization error message (for debugging)
     private var initializationError: String?
 
     // MARK: - Lifecycle
@@ -24,25 +29,32 @@ class KeyboardViewController: UIInputViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // エンジンとプロファイルを初期化
+        print("[KeyboardViewController] viewDidLoad started")
+
+        // Initialize engine and profiles
         initializeEngine()
 
-        // キーボードビューをセットアップ
+        // Setup managers
+        setupManagers()
+
+        // Setup keyboard view
         setupKeyboardView()
 
-        // プロファイル変更通知を購読
+        // Subscribe to profile changes
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleProfileChanged),
             name: .profileDidChange,
             object: nil
         )
+
+        print("[KeyboardViewController] viewDidLoad completed")
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        // プロファイル変更を反映
+        // Update keyboard layout for current profile
         updateKeyboardLayout()
     }
 
@@ -53,14 +65,14 @@ class KeyboardViewController: UIInputViewController {
     // MARK: - Engine Initialization
 
     private func initializeEngine() {
-        // ProfileManagerを初期化
+        // Initialize ProfileManager
         if let error = ProfileManager.shared.initialize() {
             print("[KeyboardViewController] Initialization error: \(error)")
             initializationError = error
             return
         }
 
-        // 現在のプロファイルのスキーマをロード
+        // Load current schema
         if let error = ProfileManager.shared.loadCurrentSchema() {
             print("[KeyboardViewController] Schema load error: \(error)")
             initializationError = error
@@ -71,10 +83,36 @@ class KeyboardViewController: UIInputViewController {
         print("[KeyboardViewController] Rust Core version: \(RustCoreFFI.shared.getVersion())")
     }
 
+    // MARK: - Manager Setup
+
+    private func setupManagers() {
+        // Create DisplayedTextManager
+        displayedTextManager = DisplayedTextManager(isMarkedTextEnabled: true)
+        displayedTextManager.setTextDocumentProxy(textDocumentProxy)
+
+        // Create CyrillicInputManager
+        inputManager = CyrillicInputManager(
+            displayedTextManager: displayedTextManager,
+            rustCore: RustCoreFFI.shared,
+            profileManager: ProfileManager.shared
+        )
+
+        // Setup callbacks
+        inputManager.onCandidatesUpdated = { [weak self] candidates in
+            self?.keyboardView?.showCandidates(candidates)
+        }
+
+        inputManager.onComposingTextChanged = { [weak self] text in
+            self?.keyboardView?.updateBufferDisplay(text)
+        }
+
+        print("[KeyboardViewController] Managers initialized")
+    }
+
     // MARK: - Keyboard View Setup
 
     private func setupKeyboardView() {
-        // 初期化エラーがある場合はエラービューを表示
+        // Show error view if initialization failed
         if let error = initializationError {
             showErrorView(message: error)
             return
@@ -85,7 +123,7 @@ class KeyboardViewController: UIInputViewController {
             return
         }
 
-        // キーボードビューを作成
+        // Create keyboard view
         let keyboard = CyrillicKeyboardView(profile: profile)
         keyboard.delegate = self
         keyboard.translatesAutoresizingMaskIntoConstraints = false
@@ -100,6 +138,8 @@ class KeyboardViewController: UIInputViewController {
         ])
 
         keyboardView = keyboard
+
+        print("[KeyboardViewController] Keyboard view setup completed")
     }
 
     private func showErrorView(message: String) {
@@ -127,130 +167,68 @@ class KeyboardViewController: UIInputViewController {
 
         print("[KeyboardViewController] Profile changed to: \(newProfile.id)")
 
-        // スキーマをロード
+        // Load schema for new profile
         if let error = ProfileManager.shared.loadSchemaForProfile(newProfile) {
             print("[KeyboardViewController] Failed to load schema: \(error)")
             return
         }
 
-        // キーボードレイアウトを更新
+        // Update keyboard layout
         updateKeyboardLayout()
-
-        // バッファをクリア
-        inputBuffer = ""
-        updateComposingText()
     }
 
     private func updateKeyboardLayout() {
         guard let profile = ProfileManager.shared.currentProfile else { return }
         keyboardView?.updateLayout(for: profile)
     }
-
-    // MARK: - Text Output
-
-    /// 確定文字列をテキストフィールドに挿入
-    private func commitText(_ text: String) {
-        textDocumentProxy.insertText(text)
-        inputBuffer = ""
-        updateComposingText()
-    }
-
-    /// 入力中の文字列（composing text）を更新
-    private func updateComposingText() {
-        // iOS標準のcomposing text表示は制限があるため、
-        // キーボードビュー内にバッファを表示する
-        keyboardView?.updateBufferDisplay(inputBuffer)
-    }
-
-    /// バッファをクリア
-    private func clearBuffer() {
-        inputBuffer = ""
-        updateComposingText()
-    }
 }
 
 // MARK: - CyrillicKeyboardViewDelegate
 
 extension KeyboardViewController: CyrillicKeyboardViewDelegate {
-    /// キリル文字キーが押された
+    /// Cyrillic key pressed
     func keyboardView(_ view: CyrillicKeyboardView, didPressCyrillicKey key: String) {
-        guard let profile = ProfileManager.shared.currentProfile else {
-            print("[KeyboardViewController] Error: No current profile")
+        // Handle mode-specific logic
+        if view.currentMode != .cyrillic {
+            // Numbers/symbols mode: insert directly
+            inputManager.commitIfNeeded()
+            textDocumentProxy.insertText(key)
             return
         }
 
-        // Rust Coreで変換処理
-        guard let result = RustCoreFFI.shared.processKey(
-            cyrillicKey: key,
-            currentBuffer: inputBuffer,
-            profileId: profile.id
-        ) else {
-            print("[KeyboardViewController] Error: Failed to process key")
-            return
-        }
+        // Update input mode in manager
+        inputManager.setInputMode(view.currentInputMode)
 
-        // 結果に応じて処理
-        handleConversionResult(result)
+        // Process key through manager
+        inputManager.processKey(key)
     }
 
-    /// Deleteキーが押された
+    /// Delete key pressed
     func keyboardViewDidPressDelete(_ view: CyrillicKeyboardView) {
-        if !inputBuffer.isEmpty {
-            // バッファがある場合はバッファから削除
-            inputBuffer = String(inputBuffer.dropLast())
-            updateComposingText()
-        } else {
-            // バッファが空の場合はテキストフィールドから削除
-            textDocumentProxy.deleteBackward()
-        }
+        inputManager.processDelete()
     }
 
-    /// Returnキーが押された
+    /// Return key pressed
     func keyboardViewDidPressReturn(_ view: CyrillicKeyboardView) {
-        // バッファがあれば確定
-        if !inputBuffer.isEmpty {
-            commitText(inputBuffer)
-        }
-        // 改行を挿入
+        inputManager.processReturn()
         textDocumentProxy.insertText("\n")
     }
 
-    /// Spaceキーが押された
+    /// Space key pressed
     func keyboardViewDidPressSpace(_ view: CyrillicKeyboardView) {
-        // バッファがあれば確定
-        if !inputBuffer.isEmpty {
-            commitText(inputBuffer)
-        }
-        // スペースを挿入
-        textDocumentProxy.insertText(" ")
+        inputManager.processSpace()
     }
 
-    /// Globe（キーボード切り替え）キーが押された
+    /// Globe (keyboard switcher) key pressed
     func keyboardViewDidPressGlobe(_ view: CyrillicKeyboardView) {
         advanceToNextInputMode()
     }
 
-    // MARK: - Conversion Result Handling
-
-    private func handleConversionResult(_ result: ConversionResult) {
-        switch result.action {
-        case "commit":
-            // 確定：outputを挿入し、バッファをクリア
-            if !result.output.isEmpty {
-                commitText(result.output)
-            }
-
-        case "composing":
-            // 入力中：バッファを更新
-            inputBuffer = result.buffer
-            updateComposingText()
-
-        case "clear":
-            // クリア：バッファをクリア
-            clearBuffer()
-
-        default:
-            print("[KeyboardViewController] Warning: Unknown action: \(result.action)")
-        }
+    /// Candidate selected
+    func keyboardView(_ view: CyrillicKeyboardView, didSelectCandidate candidate: String) {
+        // Find index of selected candidate
+        // For now, just commit it (proper index tracking in Phase 2)
+        inputManager.commitIfNeeded()
+        textDocumentProxy.insertText(candidate)
     }
 }
