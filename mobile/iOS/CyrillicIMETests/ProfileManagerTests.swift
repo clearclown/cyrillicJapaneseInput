@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import CyrillicIME
+@testable import Pismo
 
 class ProfileManagerTests: XCTestCase {
     var profileManager: ProfileManager!
