@@ -7,6 +7,23 @@
 
 import Foundation
 
+/// キーボードレイアウト（行ベース）
+struct KeyboardLayout: Codable, Hashable {
+    let row1: [String]
+    let row2: [String]
+    let row3: [String]
+
+    /// 全キーをフラットな配列として取得
+    var allKeys: [String] {
+        return row1 + row2 + row3
+    }
+
+    /// 行ごとの配列として取得
+    var rows: [[String]] {
+        return [row1, row2, row3]
+    }
+}
+
 /// プロファイル：キリル文字配列の言語バリアント情報
 struct Profile: Codable, Identifiable, Hashable {
     /// 一意識別子（例: "rus_standard", "srb_cyrillic"）
@@ -18,8 +35,8 @@ struct Profile: Codable, Identifiable, Hashable {
     /// 英語表示名（例: "Russian (Standard)"）
     let nameEn: String
 
-    /// キーボードレイアウト（キリル文字の配列）
-    let keyboardLayout: [String]
+    /// キーボードレイアウト（行ベースの構造）
+    let keyboardLayout: KeyboardLayout
 
     /// 対応する入力スキーマID（例: "schema_rus_v1"）
     let inputSchemaId: String
@@ -46,7 +63,11 @@ extension Profile {
         id: "rus_standard",
         nameJa: "ロシア語 (標準)",
         nameEn: "Russian (Standard)",
-        keyboardLayout: ["А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И"],
+        keyboardLayout: KeyboardLayout(
+            row1: ["Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З"],
+            row2: ["Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д"],
+            row3: ["Я", "Ч", "С", "М", "И", "Т", "Ь"]
+        ),
         inputSchemaId: "schema_rus_v1"
     )
 
@@ -55,21 +76,33 @@ extension Profile {
             id: "rus_standard",
             nameJa: "ロシア語 (標準)",
             nameEn: "Russian (Standard)",
-            keyboardLayout: ["А", "И", "У", "Э", "О", "К", "С", "Т", "Н", "Х"],
+            keyboardLayout: KeyboardLayout(
+                row1: ["Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З"],
+                row2: ["Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж"],
+                row3: ["Я", "Ч", "С", "М", "И", "Т", "Ь"]
+            ),
             inputSchemaId: "schema_rus_v1"
         ),
         Profile(
             id: "srb_cyrillic",
             nameJa: "セルビア語",
             nameEn: "Serbian",
-            keyboardLayout: ["А", "Б", "В", "Г", "Д", "Ђ", "Е", "Ж", "З", "И"],
+            keyboardLayout: KeyboardLayout(
+                row1: ["Љ", "Њ", "Е", "Р", "Т", "З", "У", "И", "О", "П"],
+                row2: ["Ш", "А", "С", "Д", "Ф", "Г", "Х", "Ј", "К"],
+                row3: ["Ч", "Ћ", "Џ", "Ц", "В", "Б", "Н"]
+            ),
             inputSchemaId: "schema_srb_v1"
         ),
         Profile(
             id: "ukr_cyrillic",
             nameJa: "ウクライナ語",
             nameEn: "Ukrainian",
-            keyboardLayout: ["А", "Б", "В", "Г", "Ґ", "Д", "Е", "Є", "Ж", "З"],
+            keyboardLayout: KeyboardLayout(
+                row1: ["Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З"],
+                row2: ["Ф", "Ї", "В", "А", "П", "Р", "О", "Л", "Д"],
+                row3: ["Я", "Ч", "С", "М", "І", "Т", "Ь"]
+            ),
             inputSchemaId: "schema_ukr_v1"
         )
     ]

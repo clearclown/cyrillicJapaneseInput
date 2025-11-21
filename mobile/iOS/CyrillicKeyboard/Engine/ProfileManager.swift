@@ -15,10 +15,17 @@ class ProfileManager {
     // MARK: - Properties
     private(set) var availableProfiles: [Profile] = []
     private var loadedSchemas: Set<String> = []
+    private var schemaCache: [String: Schema] = [:]
 
     var currentProfile: Profile? {
         let currentId = UserDefaults.shared.currentProfileId
         return availableProfiles.first { $0.id == currentId }
+    }
+
+    /// 現在のプロファイルのスキーマを取得
+    var currentSchema: Schema? {
+        guard let profile = currentProfile else { return nil }
+        return schemaCache[profile.inputSchemaId]
     }
 
     private init() {}
@@ -38,7 +45,7 @@ class ProfileManager {
             return "Failed to load japaneseKanaEngine.json"
         }
 
-        // 3. プロファイル配列をパース
+        // 3. プロファイル配列をパース（新しい行ベース構造）
         guard let profilesData = profilesJSON.data(using: .utf8) else {
             return "Invalid UTF-8 in profiles.json"
         }
@@ -49,9 +56,25 @@ class ProfileManager {
             return "Failed to decode profiles.json: \(error.localizedDescription)"
         }
 
-        // 4. Rust Coreエンジンを初期化
+        // 4. Rust Core用に古いフォーマット（フラット配列）に変換
+        let rustProfiles = availableProfiles.map { profile -> [String: Any] in
+            return [
+                "id": profile.id,
+                "name_ja": profile.nameJa,
+                "name_en": profile.nameEn,
+                "keyboardLayout": profile.keyboardLayout.allKeys,  // 配列に変換
+                "inputSchemaId": profile.inputSchemaId
+            ]
+        }
+
+        guard let rustProfilesData = try? JSONSerialization.data(withJSONObject: rustProfiles),
+              let rustProfilesJSON = String(data: rustProfilesData, encoding: .utf8) else {
+            return "Failed to serialize profiles for Rust engine"
+        }
+
+        // 5. Rust Coreエンジンを初期化
         if let error = RustCoreFFI.shared.initEngine(
-            profilesJSON: profilesJSON,
+            profilesJSON: rustProfilesJSON,
             kanaEngineJSON: kanaEngineJSON
         ) {
             return "Failed to initialize Rust engine: \(error)"
@@ -78,6 +101,19 @@ class ProfileManager {
         // スキーマJSONファイルをロード
         guard let schemaJSON = loadBundledJSON(filename: schemaId, subdirectory: "schemas") else {
             return "Failed to load schema file: \(schemaId).json"
+        }
+
+        // Swift側でスキーマをパースしてキャッシュ
+        guard let schemaData = schemaJSON.data(using: .utf8) else {
+            return "Invalid UTF-8 in \(schemaId).json"
+        }
+
+        do {
+            let schema = try JSONDecoder().decode(Schema.self, from: schemaData)
+            schemaCache[schemaId] = schema
+            print("[ProfileManager] Parsed schema \(schemaId) with \(schema.count) entries")
+        } catch {
+            return "Failed to decode schema \(schemaId): \(error.localizedDescription)"
         }
 
         // Rust Coreにスキーマをロード
@@ -132,22 +168,27 @@ class ProfileManager {
     ///   - subdirectory: サブディレクトリ（オプション）
     /// - Returns: JSON文字列、読み込み失敗時はnil
     private func loadBundledJSON(filename: String, subdirectory: String? = nil) -> String? {
-        // Bundle検索：Keyboard Extension Bundle -> Main Bundle
-        let bundles = [
-            Bundle(identifier: "com.yourcompany.cyrillicime.keyboard"),
-            Bundle.main
-        ].compactMap { $0 }
+        // Bundle.main はKeyboard Extension内ではExtensionのBundleを指す
+        let bundle = Bundle.main
 
-        for bundle in bundles {
-            if let url = bundle.url(forResource: filename, withExtension: "json", subdirectory: subdirectory),
-               let data = try? Data(contentsOf: url),
+        if let url = bundle.url(forResource: filename, withExtension: "json", subdirectory: subdirectory) {
+            print("[ProfileManager] Found \(filename).json at: \(url.path)")
+
+            if let data = try? Data(contentsOf: url),
                let jsonString = String(data: data, encoding: .utf8) {
-                print("[ProfileManager] Loaded \(filename).json from bundle: \(bundle.bundleIdentifier ?? "unknown")")
+                print("[ProfileManager] Successfully loaded \(filename).json from bundle: \(bundle.bundleIdentifier ?? "unknown")")
                 return jsonString
+            } else {
+                print("[ProfileManager] Error: Could not read data from \(url.path)")
+            }
+        } else {
+            print("[ProfileManager] Error: Could not find \(filename).json in bundle")
+            print("[ProfileManager] Bundle path: \(bundle.bundlePath)")
+            if let resourcePath = bundle.resourcePath {
+                print("[ProfileManager] Resource path: \(resourcePath)")
             }
         }
 
-        print("[ProfileManager] Error: Could not find \(filename).json")
         return nil
     }
 

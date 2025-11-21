@@ -24,6 +24,7 @@ extension UserDefaults {
     enum Keys {
         static let currentProfileId = "current_profile_id"
         static let hasCompletedOnboarding = "has_completed_onboarding"
+        static let currentInputMode = "current_input_mode"
     }
 
     // MARK: - Profile Management
@@ -42,6 +43,20 @@ extension UserDefaults {
         }
         set {
             set(newValue, forKey: Keys.hasCompletedOnboarding)
+        }
+    }
+
+    // MARK: - Input Mode Management
+    var currentInputMode: InputMode {
+        get {
+            guard let rawValue = string(forKey: Keys.currentInputMode),
+                  let mode = InputMode(rawValue: rawValue) else {
+                return .japaneseHiragana  // デフォルトは平仮名モード
+            }
+            return mode
+        }
+        set {
+            set(newValue.rawValue, forKey: Keys.currentInputMode)
         }
     }
 }

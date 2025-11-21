@@ -54,8 +54,10 @@ class RustCoreFFI {
     ///   - kanaEngineJSON: かなエンジンマッピングのJSON文字列
     /// - Returns: 成功時はnil、エラー時はエラーメッセージ
     func initEngine(profilesJSON: String, kanaEngineJSON: String) -> String? {
-        guard !isInitialized else {
-            return "Engine already initialized"
+        // 既にSwift側で初期化済みの場合はスキップ
+        if isInitialized {
+            print("[RustCoreFFI] Engine already initialized (Swift flag)")
+            return nil
         }
 
         let errorPtr = profilesJSON.withCString { profilesPtr in
@@ -66,10 +68,17 @@ class RustCoreFFI {
 
         // null = 成功, non-null = エラーメッセージ
         if let errorMessage = consumeRustString(errorPtr) {
+            // Rust側で既に初期化済みの場合は成功とみなす
+            if errorMessage.contains("already initialized") {
+                print("[RustCoreFFI] Engine already initialized (Rust side), continuing...")
+                isInitialized = true
+                return nil
+            }
             return errorMessage
         }
 
         isInitialized = true
+        print("[RustCoreFFI] Engine initialized successfully")
         return nil
     }
 

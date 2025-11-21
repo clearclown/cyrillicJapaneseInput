@@ -28,6 +28,17 @@ targets:
         name: Engine
     resources:
       - CyrillicIME/Assets.xcassets
+    postCompileScripts:
+      - script: |
+          # Copy JSON resources to main app bundle
+          echo "Copying JSON resources to main app bundle..."
+          cp "${PROJECT_DIR}/../../profiles/profiles.json" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/" || echo "Failed to copy profiles.json"
+          cp "${PROJECT_DIR}/../../profiles/japaneseKanaEngine.json" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/" || echo "Failed to copy japaneseKanaEngine.json"
+          mkdir -p "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/schemas"
+          cp "${PROJECT_DIR}/../../profiles/schemas/"*.json "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/schemas/" || echo "Failed to copy schema files"
+          echo "JSON resources copied to ${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/"
+        name: Copy JSON Resources to Main App
+        runOnlyWhenInstalling: false
     info:
       path: CyrillicIME/Info.plist
       properties:
@@ -89,11 +100,17 @@ targets:
         name: CyrillicKeyboard
       - path: Shared
         name: Shared
-    resources:
-      - ../../profiles/profiles.json
-      - ../../profiles/japaneseKanaEngine.json
-      - path: ../../profiles/schemas
-        type: folder
+    postCompileScripts:
+      - script: |
+          # Copy JSON resources to extension bundle
+          echo "Copying JSON resources..."
+          cp "${PROJECT_DIR}/../../profiles/profiles.json" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/" || echo "Failed to copy profiles.json"
+          cp "${PROJECT_DIR}/../../profiles/japaneseKanaEngine.json" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/" || echo "Failed to copy japaneseKanaEngine.json"
+          mkdir -p "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/schemas"
+          cp "${PROJECT_DIR}/../../profiles/schemas/"*.json "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/schemas/" || echo "Failed to copy schema files"
+          echo "JSON resources copied to ${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/"
+        name: Copy JSON Resources
+        runOnlyWhenInstalling: false
     info:
       path: CyrillicKeyboard/Info.plist
       properties:

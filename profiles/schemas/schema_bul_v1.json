@@ -2,27 +2,35 @@
   "А": {
     "kana_key": "a",
     "hintLabel": "@",
-    "popupCharacters": ["Ӑ", "Ӓ", "Ӕ"]
+    "popupCharacters": []
   },
   "И": {
     "kana_key": "i",
     "hintLabel": "1",
-    "popupCharacters": ["Ї", "Ӣ", "Ӥ"]
+    "popupCharacters": ["Ѝ"]
   },
   "У": {
     "kana_key": "u",
     "hintLabel": "3",
-    "popupCharacters": ["Ў", "Ү", "Ұ", "Ӯ", "Ӱ", "Ӳ"]
+    "popupCharacters": []
   },
-  "Э": {
+  "Е": {
     "kana_key": "e",
     "hintLabel": "€",
-    "popupCharacters": ["Є"]
+    "popupCharacters": []
   },
   "О": {
     "kana_key": "o",
     "hintLabel": "\\",
-    "popupCharacters": ["Ӧ", "Ө", "Ӫ", "Ѳ", "Ѻ"]
+    "popupCharacters": []
+  },
+  "Ы": {
+    "kana_key": "i",
+    "popupCharacters": []
+  },
+  "Э": {
+    "kana_key": "e",
+    "popupCharacters": []
   },
   "КА": {
     "kana_key": "ka"
@@ -33,7 +41,7 @@
   "КУ": {
     "kana_key": "ku"
   },
-  "КЭ": {
+  "КЕ": {
     "kana_key": "ke"
   },
   "КО": {
@@ -48,7 +56,7 @@
   "СУ": {
     "kana_key": "su"
   },
-  "СЭ": {
+  "СЕ": {
     "kana_key": "se"
   },
   "СО": {
@@ -57,13 +65,13 @@
   "ТА": {
     "kana_key": "ta"
   },
-  "ЧИ": {
+  "ТИ": {
     "kana_key": "chi"
   },
-  "ЦУ": {
+  "ТУ": {
     "kana_key": "tsu"
   },
-  "ТЭ": {
+  "ТЕ": {
     "kana_key": "te"
   },
   "ТО": {
@@ -78,7 +86,7 @@
   "НУ": {
     "kana_key": "nu"
   },
-  "НЭ": {
+  "НЕ": {
     "kana_key": "ne"
   },
   "НО": {
@@ -90,10 +98,10 @@
   "ХИ": {
     "kana_key": "hi"
   },
-  "ФУ": {
+  "ХУ": {
     "kana_key": "fu"
   },
-  "ХЭ": {
+  "ХЕ": {
     "kana_key": "he"
   },
   "ХО": {
@@ -108,19 +116,19 @@
   "МУ": {
     "kana_key": "mu"
   },
-  "МЭ": {
+  "МЕ": {
     "kana_key": "me"
   },
   "МО": {
     "kana_key": "mo"
   },
-  "Я": {
+  "ЯА": {
     "kana_key": "ya"
   },
-  "Ю": {
+  "ЮУ": {
     "kana_key": "yu"
   },
-  "Ё": {
+  "ЙО": {
     "kana_key": "yo"
   },
   "РА": {
@@ -132,7 +140,7 @@
   "РУ": {
     "kana_key": "ru"
   },
-  "РЭ": {
+  "РЕ": {
     "kana_key": "re"
   },
   "РО": {
@@ -150,31 +158,37 @@
   "ГУ": {
     "kana_key": "gu"
   },
-  "ГЭ": {
+  "ГЕ": {
     "kana_key": "ge"
   },
   "ГО": {
     "kana_key": "go"
   },
-  "ДЗА": {
+  "ЗА": {
     "kana_key": "za"
   },
-  "ДЗИ": {
+  "ЗИ": {
     "kana_key": "ji"
   },
-  "ДЗУ": {
+  "ЗУ": {
     "kana_key": "zu"
   },
-  "ДЗЭ": {
+  "ЗЕ": {
     "kana_key": "ze"
   },
-  "ДЗО": {
+  "ЗО": {
     "kana_key": "zo"
   },
   "ДА": {
     "kana_key": "da"
   },
-  "ДЭ": {
+  "ДИ": {
+    "kana_key": "di"
+  },
+  "ДУ": {
+    "kana_key": "du"
+  },
+  "ДЕ": {
     "kana_key": "de"
   },
   "ДО": {
@@ -189,7 +203,7 @@
   "БУ": {
     "kana_key": "bu"
   },
-  "БЭ": {
+  "БЕ": {
     "kana_key": "be"
   },
   "БО": {
@@ -204,7 +218,7 @@
   "ПУ": {
     "kana_key": "pu"
   },
-  "ПЭ": {
+  "ПЕ": {
     "kana_key": "pe"
   },
   "ПО": {
@@ -216,98 +230,8 @@
   "КЮ": {
     "kana_key": "kyu"
   },
-  "КЁ": {
+  "КЙО": {
     "kana_key": "kyo"
-  },
-  "СЯ": {
-    "kana_key": "sha"
-  },
-  "СЮ": {
-    "kana_key": "shu"
-  },
-  "СЁ": {
-    "kana_key": "sho"
-  },
-  "ЧА": {
-    "kana_key": "cha"
-  },
-  "ЧУ": {
-    "kana_key": "chu"
-  },
-  "ЧО": {
-    "kana_key": "cho"
-  },
-  "НЯ": {
-    "kana_key": "nya"
-  },
-  "НЮ": {
-    "kana_key": "nyu"
-  },
-  "НЁ": {
-    "kana_key": "nyo"
-  },
-  "ХЯ": {
-    "kana_key": "hya"
-  },
-  "ХЮ": {
-    "kana_key": "hyu"
-  },
-  "ХЁ": {
-    "kana_key": "hyo"
-  },
-  "МЯ": {
-    "kana_key": "mya"
-  },
-  "МЮ": {
-    "kana_key": "myu"
-  },
-  "МЁ": {
-    "kana_key": "myo"
-  },
-  "РЯ": {
-    "kana_key": "rya"
-  },
-  "РЮ": {
-    "kana_key": "ryu"
-  },
-  "РЁ": {
-    "kana_key": "ryo"
-  },
-  "ГЯ": {
-    "kana_key": "gya"
-  },
-  "ГЮ": {
-    "kana_key": "gyu"
-  },
-  "ГЁ": {
-    "kana_key": "gyo"
-  },
-  "ДЗЯ": {
-    "kana_key": "ja"
-  },
-  "ДЗЮ": {
-    "kana_key": "ju"
-  },
-  "ДЗЁ": {
-    "kana_key": "jo"
-  },
-  "БЯ": {
-    "kana_key": "bya"
-  },
-  "БЮ": {
-    "kana_key": "byu"
-  },
-  "БЁ": {
-    "kana_key": "byo"
-  },
-  "ПЯ": {
-    "kana_key": "pya"
-  },
-  "ПЮ": {
-    "kana_key": "pyu"
-  },
-  "ПЁ": {
-    "kana_key": "pyo"
   },
   "Н": {
     "kana_key": "n"
