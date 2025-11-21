@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
+    @StateObject private var settingsStore = SettingsStore.shared
 
     var body: some View {
         NavigationView {
@@ -16,27 +17,31 @@ struct SettingsView: View {
                 // プロファイル選択セクション
                 Section {
                     ForEach(viewModel.profiles) { profile in
-                        ProfileRow(
-                            profile: profile,
-                            isSelected: profile.id == viewModel.currentProfileId
-                        )
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            viewModel.selectProfile(profile.id)
+                        NavigationLink(destination: ProfileDetailView(profile: profile)) {
+                            ProfileRow(
+                                profile: profile,
+                                isSelected: profile.id == viewModel.currentProfileId
+                            )
                         }
                     }
                 } header: {
-                    Text("入力プロファイル")
+                    Text("キーボードプロファイル")
                 } footer: {
                     Text("使用するキリル文字配列を選択してください")
                 }
 
                 // キーボード設定セクション
                 Section {
-                    NavigationLink {
-                        KeyboardSetupGuideView()
-                    } label: {
-                        Label("キーボードの設定方法", systemImage: "keyboard")
+                    NavigationLink(destination: KeyboardSettingsView()) {
+                        Label("入力設定", systemImage: "keyboard")
+                    }
+
+                    NavigationLink(destination: ThemeSettingsView()) {
+                        Label("テーマ", systemImage: "paintbrush")
+                    }
+
+                    NavigationLink(destination: KeyboardSetupGuideView()) {
+                        Label("キーボードの設定方法", systemImage: "questionmark.circle")
                     }
 
                     if !viewModel.isKeyboardEnabled {
@@ -45,7 +50,24 @@ struct SettingsView: View {
                             .font(.caption)
                     }
                 } header: {
-                    Text("設定")
+                    Text("キーボード設定")
+                }
+
+                // ユーザー辞書セクション
+                Section {
+                    NavigationLink(destination: UserDictionaryView()) {
+                        HStack {
+                            Label("学習済み単語", systemImage: "book")
+                            Spacer()
+                            if settingsStore.userDictionaryCount > 0 {
+                                Text("\(settingsStore.userDictionaryCount)")
+                                    .foregroundColor(.secondary)
+                                    .font(.caption)
+                            }
+                        }
+                    }
+                } header: {
+                    Text("ユーザー辞書")
                 }
 
                 // 情報セクション
@@ -82,7 +104,7 @@ struct SettingsView: View {
                 }
                 #endif
             }
-            .navigationTitle("Cyrillic IME")
+            .navigationTitle("Pismo 設定")
             .alert("エラー", isPresented: $viewModel.showError) {
                 Button("OK", role: .cancel) {}
             } message: {
