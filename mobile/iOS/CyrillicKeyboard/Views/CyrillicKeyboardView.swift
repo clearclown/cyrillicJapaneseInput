@@ -48,22 +48,16 @@ class CyrillicKeyboardView: UIView {
         return label
     }()
 
-    /// 変換候補表示バー
-    private let candidateScrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.showsHorizontalScrollIndicator = false
-        scrollView.backgroundColor = .secondarySystemBackground
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        return scrollView
+    /// 変換候補表示バー (Phase 4: Enhanced UI)
+    private let candidateBarView: CandidateBarView = {
+        let bar = CandidateBarView()
+        bar.translatesAutoresizingMaskIntoConstraints = false
+        bar.isHidden = true
+        return bar
     }()
 
-    private let candidateStackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.spacing = 8
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
-    }()
+    /// 候補バーのジェスチャーハンドラー
+    private var candidateGestureHandler: CandidateGestureHandler?
 
     /// キーボードコンテナ
     private let keyboardContainer: UIView = {
@@ -103,8 +97,7 @@ class CyrillicKeyboardView: UIView {
 
         // バッファラベルと候補バーを追加
         addSubview(bufferLabel)
-        addSubview(candidateScrollView)
-        candidateScrollView.addSubview(candidateStackView)
+        addSubview(candidateBarView)
         addSubview(keyboardContainer)
 
         NSLayoutConstraint.activate([
@@ -114,31 +107,53 @@ class CyrillicKeyboardView: UIView {
             bufferLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
             bufferLabel.heightAnchor.constraint(equalToConstant: 24),
 
-            // 変換候補バー
-            candidateScrollView.topAnchor.constraint(equalTo: bufferLabel.bottomAnchor, constant: 2),
-            candidateScrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            candidateScrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            candidateScrollView.heightAnchor.constraint(equalToConstant: 36),
-
-            // 候補スタックビュー
-            candidateStackView.topAnchor.constraint(equalTo: candidateScrollView.topAnchor, constant: 4),
-            candidateStackView.leadingAnchor.constraint(equalTo: candidateScrollView.leadingAnchor, constant: 8),
-            candidateStackView.trailingAnchor.constraint(equalTo: candidateScrollView.trailingAnchor, constant: -8),
-            candidateStackView.bottomAnchor.constraint(equalTo: candidateScrollView.bottomAnchor, constant: -4),
-            candidateStackView.heightAnchor.constraint(equalTo: candidateScrollView.heightAnchor, constant: -8),
+            // 変換候補バー (Phase 4: Enhanced UI)
+            candidateBarView.topAnchor.constraint(equalTo: bufferLabel.bottomAnchor, constant: 2),
+            candidateBarView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            candidateBarView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            candidateBarView.heightAnchor.constraint(equalToConstant: CandidateBarView.preferredHeight),
 
             // キーボード本体
-            keyboardContainer.topAnchor.constraint(equalTo: candidateScrollView.bottomAnchor, constant: 4),
+            keyboardContainer.topAnchor.constraint(equalTo: candidateBarView.bottomAnchor, constant: 4),
             keyboardContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             keyboardContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
             keyboardContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
 
-        // 初期状態では候補バーを非表示
-        candidateScrollView.isHidden = true
+        // Setup gesture handler for candidate bar
+        candidateGestureHandler = CandidateGestureHandler(candidateBar: candidateBarView)
+        setupCandidateBarCallbacks()
 
         // キーボードレイアウトを構築
         buildKeyboardLayout()
+    }
+
+    private func setupCandidateBarCallbacks() {
+        // Candidate selection callback
+        candidateBarView.onCandidateSelected = { [weak self] candidate, index in
+            guard let self = self else { return }
+            print("[CyrillicKeyboardView] Candidate selected: \(candidate.text)")
+            self.delegate?.keyboardView(self, didSelectCandidate: candidate.text)
+            self.hideCandidates()
+        }
+
+        // Gesture callbacks
+        candidateGestureHandler?.onSwipeLeft = { [weak self] in
+            self?.candidateBarView.selectNext()
+        }
+
+        candidateGestureHandler?.onSwipeRight = { [weak self] in
+            self?.candidateBarView.selectPrevious()
+        }
+
+        candidateGestureHandler?.onSwipeUp = { [weak self] in
+            // TODO: Expand candidate view (future enhancement)
+            print("[CyrillicKeyboardView] Swipe up - expand candidates")
+        }
+
+        candidateGestureHandler?.onSwipeDown = { [weak self] in
+            self?.hideCandidates()
+        }
     }
 
     // MARK: - Keyboard Layout
@@ -423,44 +438,37 @@ class CyrillicKeyboardView: UIView {
         inputModeButton?.setTitle(inputMode.shortName, for: .normal)
     }
 
-    /// 変換候補を表示
+    /// 変換候補を表示 (Phase 4: Updated for enhanced UI)
     func showCandidates(_ candidates: [String]) {
-        // 既存の候補をクリア
-        candidateStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        // Convert String candidates to Candidate model
+        let candidateModels = candidates.enumerated().map { index, text in
+            Candidate(
+                id: UUID(),
+                text: text,
+                reading: text, // For simple string candidates, reading = text
+                score: Double(candidates.count - index), // Higher score for earlier candidates
+                isLearned: false,
+                partOfSpeech: nil
+            )
+        }
+        showCandidates(candidateModels)
+    }
 
+    /// 変換候補を表示 (Phase 4: New method with Candidate model)
+    func showCandidates(_ candidates: [Candidate]) {
         if candidates.isEmpty {
-            candidateScrollView.isHidden = true
+            hideCandidates()
             return
         }
 
-        // 候補ボタンを追加
-        for candidate in candidates {
-            let button = UIButton(type: .system)
-            button.setTitle(candidate, for: .normal)
-            button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-            button.backgroundColor = .systemBackground
-            button.layer.cornerRadius = 4
-            button.contentEdgeInsets = UIEdgeInsets(top: 4, left: 12, bottom: 4, right: 12)
-            button.addTarget(self, action: #selector(handleCandidateSelected(_:)), for: .touchUpInside)
-            candidateStackView.addArrangedSubview(button)
-        }
-
-        candidateScrollView.isHidden = false
+        candidateBarView.updateCandidates(candidates, selectedIndex: 0)
+        candidateBarView.isHidden = false
     }
 
     /// 変換候補を非表示
     func hideCandidates() {
-        candidateScrollView.isHidden = true
-        candidateStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-    }
-
-    @objc private func handleCandidateSelected(_ sender: UIButton) {
-        guard let candidate = sender.currentTitle else { return }
-        print("[CyrillicKeyboardView] Candidate selected: \(candidate)")
-        // 候補選択をデリゲートに通知
-        delegate?.keyboardView(self, didSelectCandidate: candidate)
-        // 候補バーを非表示
-        hideCandidates()
+        candidateBarView.isHidden = true
+        candidateBarView.clearCandidates()
     }
 
     // MARK: - Animation
