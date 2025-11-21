@@ -224,11 +224,19 @@ extension KeyboardViewController: CyrillicKeyboardViewDelegate {
         advanceToNextInputMode()
     }
 
-    /// Candidate selected
-    func keyboardView(_ view: CyrillicKeyboardView, didSelectCandidate candidate: String) {
-        // Find index of selected candidate
-        // For now, just commit it (proper index tracking in Phase 2)
-        inputManager.commitIfNeeded()
-        textDocumentProxy.insertText(candidate)
+    /// Candidate selected (Phase 4: Index-based selection)
+    func keyboardView(_ view: CyrillicKeyboardView, didSelectCandidateAt index: Int) {
+        print("[KeyboardViewController] Candidate selected at index: \(index)")
+        inputManager.selectCandidate(at: index)
+        view.hideCandidates()
+    }
+
+    /// Number key pressed (Phase 4: Quick candidate selection)
+    func keyboardView(_ view: CyrillicKeyboardView, didPressNumberKey number: Int) {
+        print("[KeyboardViewController] Number key \(number) pressed for candidate selection")
+        // Number keys are 1-indexed, convert to 0-indexed
+        let index = number - 1
+        inputManager.selectCandidate(at: index)
+        view.hideCandidates()
     }
 }

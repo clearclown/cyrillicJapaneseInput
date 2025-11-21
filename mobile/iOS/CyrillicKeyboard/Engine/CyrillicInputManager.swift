@@ -27,8 +27,8 @@ final class CyrillicInputManager {
     /// Current input mode
     private var currentInputMode: InputMode = .japaneseIME
 
-    /// Conversion candidates (for Phase 2: Kanji conversion)
-    private var candidates: [String] = []
+    /// Conversion candidates (Phase 4: Using Candidate model)
+    private var candidates: [Candidate] = []
 
     /// Whether currently in conversion mode
     private var isConverting: Bool = false
@@ -38,8 +38,8 @@ final class CyrillicInputManager {
 
     // MARK: - Callbacks
 
-    /// Called when candidates should be displayed
-    var onCandidatesUpdated: (([String]) -> Void)?
+    /// Called when candidates should be displayed (Phase 4: Using Candidate model)
+    var onCandidatesUpdated: (([Candidate]) -> Void)?
 
     /// Called when composing text changes
     var onComposingTextChanged: ((String) -> Void)?
@@ -215,17 +215,25 @@ final class CyrillicInputManager {
         }
     }
 
-    /// Starts kanji conversion mode (Phase 2)
+    /// Starts kanji conversion mode (Phase 4: Using Candidate model)
     private func startConversion() {
         isConverting = true
 
-        // TODO Phase 2: Get real kanji candidates
-        // For now, just show hiragana and katakana
-        var candidateList = [composingText.hiraganaTarget]
+        // TODO Phase 2: Get real kanji candidates from conversion engine
+        // For now, create Candidate objects for hiragana and katakana
+        var candidateList: [Candidate] = []
 
+        // Add hiragana candidate
+        candidateList.append(Candidate.hiragana(composingText.hiraganaTarget, rank: 0))
+
+        // Add katakana candidate
         if let katakana = convertToKatakana(composingText.hiraganaTarget) {
-            candidateList.append(katakana)
+            candidateList.append(Candidate.katakana(katakana, rank: 1))
         }
+
+        // TODO Phase 2: Add kanji candidates here
+        // Example:
+        // candidateList.append(Candidate.kanji("会社", reading: "かいしゃ", partOfSpeech: "名詞", rank: 2))
 
         candidates = candidateList
         selectedCandidateIndex = 0
@@ -245,10 +253,10 @@ final class CyrillicInputManager {
         // Update display with selected candidate
         displayedTextManager.updateComposingText(
             composingText.hiraganaTarget,
-            liveConversionText: selected
+            liveConversionText: selected.text
         )
 
-        print("[CyrillicInputManager] Cycled to candidate: '\(selected)'")
+        print("[CyrillicInputManager] Cycled to candidate: '\(selected.text)'")
     }
 
     /// Exits conversion mode
@@ -290,7 +298,7 @@ final class CyrillicInputManager {
     /// Commits a candidate
     private func commitCandidate(at index: Int) {
         let selected = candidates[index]
-        commitText(selected)
+        commitText(selected.text)
 
         // TODO Phase 2: Learn from selection
         // conversionEngine.learn(composingText.hiraganaTarget, selected: selected)
