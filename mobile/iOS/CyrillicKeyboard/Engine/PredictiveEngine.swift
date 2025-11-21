@@ -227,7 +227,8 @@ final class PredictiveEngine {
 
         // Keep only top entries
         let sorted = bigrams.sorted { $0.value > $1.value }
-        let pruned = Dictionary(uniqueKeysWithValues: sorted.prefix(maxBigramsPerKey))
+        let topEntries = Array(sorted.prefix(maxBigramsPerKey))
+        let pruned = Dictionary(uniqueKeysWithValues: topEntries)
 
         bigramMap[context] = pruned
     }

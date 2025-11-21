@@ -103,7 +103,6 @@ final class ClauseSegmenter {
 
     init() {
         self.tagger = NLTagger(tagSchemes: [.lexicalClass, .language])
-        self.tagger.setLanguage(.japanese, range: tagger.string?.startIndex..<(tagger.string?.endIndex ?? tagger.string!.startIndex))
     }
 
     // MARK: - Segmentation
@@ -228,7 +227,7 @@ final class ClauseSegmenter {
     /// - Returns: Array of clauses with optimized boundaries
     func segmentWithLookahead(_ hiragana: String) -> [Clause] {
         // Basic segmentation first
-        var clauses = segment(hiragana)
+        let clauses = segment(hiragana)
 
         // Merge short adjacent word clauses
         var merged: [Clause] = []
