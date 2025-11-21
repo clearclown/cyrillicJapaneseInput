@@ -1,0 +1,242 @@
+{
+  "А": {
+    "kana_key": "a",
+    "hintLabel": "@",
+    "popupCharacters": []
+  },
+  "И": {
+    "kana_key": "i",
+    "hintLabel": "1",
+    "popupCharacters": ["Ѝ"]
+  },
+  "У": {
+    "kana_key": "u",
+    "hintLabel": "3",
+    "popupCharacters": []
+  },
+  "Е": {
+    "kana_key": "e",
+    "hintLabel": "€",
+    "popupCharacters": []
+  },
+  "О": {
+    "kana_key": "o",
+    "hintLabel": "\\",
+    "popupCharacters": []
+  },
+  "Ы": {
+    "kana_key": "i",
+    "popupCharacters": []
+  },
+  "Э": {
+    "kana_key": "e",
+    "popupCharacters": []
+  },
+  "КА": {
+    "kana_key": "ka"
+  },
+  "КИ": {
+    "kana_key": "ki"
+  },
+  "КУ": {
+    "kana_key": "ku"
+  },
+  "КЕ": {
+    "kana_key": "ke"
+  },
+  "КО": {
+    "kana_key": "ko"
+  },
+  "СА": {
+    "kana_key": "sa"
+  },
+  "СИ": {
+    "kana_key": "shi"
+  },
+  "СУ": {
+    "kana_key": "su"
+  },
+  "СЕ": {
+    "kana_key": "se"
+  },
+  "СО": {
+    "kana_key": "so"
+  },
+  "ТА": {
+    "kana_key": "ta"
+  },
+  "ТИ": {
+    "kana_key": "chi"
+  },
+  "ТУ": {
+    "kana_key": "tsu"
+  },
+  "ТЕ": {
+    "kana_key": "te"
+  },
+  "ТО": {
+    "kana_key": "to"
+  },
+  "НА": {
+    "kana_key": "na"
+  },
+  "НИ": {
+    "kana_key": "ni"
+  },
+  "НУ": {
+    "kana_key": "nu"
+  },
+  "НЕ": {
+    "kana_key": "ne"
+  },
+  "НО": {
+    "kana_key": "no"
+  },
+  "ХА": {
+    "kana_key": "ha"
+  },
+  "ХИ": {
+    "kana_key": "hi"
+  },
+  "ХУ": {
+    "kana_key": "fu"
+  },
+  "ХЕ": {
+    "kana_key": "he"
+  },
+  "ХО": {
+    "kana_key": "ho"
+  },
+  "МА": {
+    "kana_key": "ma"
+  },
+  "МИ": {
+    "kana_key": "mi"
+  },
+  "МУ": {
+    "kana_key": "mu"
+  },
+  "МЕ": {
+    "kana_key": "me"
+  },
+  "МО": {
+    "kana_key": "mo"
+  },
+  "ЯА": {
+    "kana_key": "ya"
+  },
+  "ЮУ": {
+    "kana_key": "yu"
+  },
+  "ЙО": {
+    "kana_key": "yo"
+  },
+  "РА": {
+    "kana_key": "ra"
+  },
+  "РИ": {
+    "kana_key": "ri"
+  },
+  "РУ": {
+    "kana_key": "ru"
+  },
+  "РЕ": {
+    "kana_key": "re"
+  },
+  "РО": {
+    "kana_key": "ro"
+  },
+  "ВА": {
+    "kana_key": "wa"
+  },
+  "ГА": {
+    "kana_key": "ga"
+  },
+  "ГИ": {
+    "kana_key": "gi"
+  },
+  "ГУ": {
+    "kana_key": "gu"
+  },
+  "ГЕ": {
+    "kana_key": "ge"
+  },
+  "ГО": {
+    "kana_key": "go"
+  },
+  "ЗА": {
+    "kana_key": "za"
+  },
+  "ЗИ": {
+    "kana_key": "ji"
+  },
+  "ЗУ": {
+    "kana_key": "zu"
+  },
+  "ЗЕ": {
+    "kana_key": "ze"
+  },
+  "ЗО": {
+    "kana_key": "zo"
+  },
+  "ДА": {
+    "kana_key": "da"
+  },
+  "ДИ": {
+    "kana_key": "di"
+  },
+  "ДУ": {
+    "kana_key": "du"
+  },
+  "ДЕ": {
+    "kana_key": "de"
+  },
+  "ДО": {
+    "kana_key": "do"
+  },
+  "БА": {
+    "kana_key": "ba"
+  },
+  "БИ": {
+    "kana_key": "bi"
+  },
+  "БУ": {
+    "kana_key": "bu"
+  },
+  "БЕ": {
+    "kana_key": "be"
+  },
+  "БО": {
+    "kana_key": "bo"
+  },
+  "ПА": {
+    "kana_key": "pa"
+  },
+  "ПИ": {
+    "kana_key": "pi"
+  },
+  "ПУ": {
+    "kana_key": "pu"
+  },
+  "ПЕ": {
+    "kana_key": "pe"
+  },
+  "ПО": {
+    "kana_key": "po"
+  },
+  "КЯ": {
+    "kana_key": "kya"
+  },
+  "КЮ": {
+    "kana_key": "kyu"
+  },
+  "КЙО": {
+    "kana_key": "kyo"
+  },
+  "Н": {
+    "kana_key": "n"
+  },
+  "Ф": {
+    "kana_key": "fu"
+  }
+}

@@ -1,0 +1,57 @@
+[
+  {
+    "id": "rus_standard",
+    "name_ja": "ロシア語 (標準)",
+    "name_en": "Russian (Standard)",
+    "keyboardLayout": {
+      "row1": ["Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З"],
+      "row2": ["Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж"],
+      "row3": ["Я", "Ч", "С", "М", "И", "Т", "Ь"]
+    },
+    "inputSchemaId": "schema_rus_v1"
+  },
+  {
+    "id": "bul_bds",
+    "name_ja": "ブルガリア語 (BDS)",
+    "name_en": "Bulgarian (BDS)",
+    "keyboardLayout": {
+      "row1": ["Ы", "У", "Е", "И", "Ш", "Щ", "К", "С", "Д", "З"],
+      "row2": ["Ц", "Ь", "Я", "А", "О", "Ж", "Г", "Т", "Н"],
+      "row3": ["В", "М", "Ч", "Ю", "Й", "Ъ", "Э"]
+    },
+    "inputSchemaId": "schema_bul_v1"
+  },
+  {
+    "id": "srb_cyrillic",
+    "name_ja": "セルビア語",
+    "name_en": "Serbian",
+    "keyboardLayout": {
+      "row1": ["Љ", "Њ", "Е", "Р", "Т", "З", "У", "И", "О", "П"],
+      "row2": ["Ш", "А", "С", "Д", "Ф", "Г", "Х", "Ј", "К", "Л"],
+      "row3": ["Ч", "Ћ", "Џ", "Ц", "В", "Б", "Н"]
+    },
+    "inputSchemaId": "schema_srb_v1"
+  },
+  {
+    "id": "ukr_cyrillic",
+    "name_ja": "ウクライナ語",
+    "name_en": "Ukrainian",
+    "keyboardLayout": {
+      "row1": ["Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З"],
+      "row2": ["Ф", "Ї", "В", "А", "П", "Р", "О", "Л", "Д", "Ж"],
+      "row3": ["Я", "Ч", "С", "М", "І", "Т", "Ь"]
+    },
+    "inputSchemaId": "schema_ukr_v1"
+  },
+  {
+    "id": "rus_analytical",
+    "name_ja": "ロシア語 (分析モード)",
+    "name_en": "Russian (Analytical)",
+    "keyboardLayout": {
+      "row1": ["Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З"],
+      "row2": ["Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж"],
+      "row3": ["Я", "Ч", "С", "М", "И", "Т", "Ь"]
+    },
+    "inputSchemaId": "schema_rus_analytical_v1"
+  }
+]
