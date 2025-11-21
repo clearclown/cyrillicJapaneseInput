@@ -4,6 +4,7 @@
 //
 //  Orchestrates Cyrillic input and Japanese conversion
 //  Based on azooKey's InputManager pattern
+//  Phase 3: Integrated with LiveConversionManager
 //
 
 import Foundation
@@ -21,13 +22,19 @@ final class CyrillicInputManager {
     /// Current profile manager
     private let profileManager: ProfileManager
 
+    /// Kanji conversion engine (Phase 2)
+    private let conversionEngine: KanjiConversionEngineProtocol
+
+    /// Live conversion manager (Phase 3)
+    private let liveConversionManager: LiveConversionManager
+
     /// Current composing text state
     private var composingText: CyrillicComposingText = CyrillicComposingText()
 
     /// Current input mode
     private var currentInputMode: InputMode = .japaneseIME
 
-    /// Conversion candidates (for Phase 2: Kanji conversion)
+    /// Conversion candidates (for Phase 2: Manual conversion)
     private var candidates: [String] = []
 
     /// Whether currently in conversion mode
@@ -35,6 +42,13 @@ final class CyrillicInputManager {
 
     /// Selected candidate index
     private var selectedCandidateIndex: Int = 0
+
+    /// Whether live conversion is enabled (Phase 3)
+    var isLiveConversionEnabled: Bool = true {
+        didSet {
+            liveConversionManager.isEnabled = isLiveConversionEnabled
+        }
+    }
 
     // MARK: - Callbacks
 
@@ -44,14 +58,40 @@ final class CyrillicInputManager {
     /// Called when composing text changes
     var onComposingTextChanged: ((String) -> Void)?
 
+    /// Called when clauses are updated (Phase 3)
+    var onClausesUpdated: (([Clause]) -> Void)?
+
     // MARK: - Initialization
 
     init(displayedTextManager: DisplayedTextManager,
          rustCore: RustCoreFFI = .shared,
-         profileManager: ProfileManager = .shared) {
+         profileManager: ProfileManager = .shared,
+         conversionEngine: KanjiConversionEngineProtocol = KanjiConversionEngine.shared,
+         liveConversionManager: LiveConversionManager? = nil) {
         self.displayedTextManager = displayedTextManager
         self.rustCore = rustCore
         self.profileManager = profileManager
+        self.conversionEngine = conversionEngine
+        self.liveConversionManager = liveConversionManager ?? LiveConversionManager(
+            conversionEngine: conversionEngine
+        )
+
+        setupLiveConversionCallbacks()
+    }
+
+    /// Sets up callbacks for live conversion manager
+    private func setupLiveConversionCallbacks() {
+        liveConversionManager.onLiveConversionUpdated = { [weak self] text in
+            self?.onComposingTextChanged?(text)
+        }
+
+        liveConversionManager.onClausesUpdated = { [weak self] clauses in
+            self?.onClausesUpdated?(clauses)
+        }
+
+        liveConversionManager.onStateChanged = { [weak self] state in
+            print("[CyrillicInputManager] Live conversion state: \(state)")
+        }
     }
 
     // MARK: - Mode Management
@@ -131,19 +171,19 @@ final class CyrillicInputManager {
         }
     }
 
-    /// IME mode: Show hiragana, allow space for conversion (Phase 2)
+    /// IME mode: Show hiragana, allow space for conversion (Phase 2/3)
     private func handleIMEMode(result: ConversionResult) {
-        // For Phase 1: Just show hiragana as composing text
-        // Phase 2 will add kanji conversion here
+        let hiragana = composingText.hiraganaTarget
 
-        displayedTextManager.updateComposingText(composingText.hiraganaTarget)
-        onComposingTextChanged?(composingText.hiraganaTarget)
-
-        // TODO Phase 2: Request kanji candidates
-        // conversionEngine.requestCandidates(composingText.hiraganaTarget) { candidates in
-        //     self.candidates = candidates
-        //     self.onCandidatesUpdated?(candidates)
-        // }
+        if isLiveConversionEnabled {
+            // Phase 3: Use live conversion
+            liveConversionManager.processInput(hiragana)
+            // Display will be updated via callback
+        } else {
+            // Phase 1/2: Manual conversion mode
+            displayedTextManager.updateComposingText(hiragana)
+            onComposingTextChanged?(hiragana)
+        }
     }
 
     // MARK: - Delete Handling
@@ -201,11 +241,14 @@ final class CyrillicInputManager {
     /// Handles space key press
     func processSpace() {
         if currentInputMode == .japaneseIME && !composingText.isEmpty {
-            if isConverting {
-                // Already converting: cycle to next candidate
+            if isLiveConversionEnabled {
+                // Phase 3: Cycle selected clause candidate
+                liveConversionManager.cycleSelectedClauseCandidate()
+            } else if isConverting {
+                // Phase 2: Already converting: cycle to next candidate
                 cycleToNextCandidate()
             } else {
-                // Start conversion
+                // Phase 2: Start conversion
                 startConversion()
             }
         } else {
@@ -268,8 +311,13 @@ final class CyrillicInputManager {
 
     /// Handles return/enter key
     func processReturn() {
-        if isConverting && !candidates.isEmpty {
-            // Commit selected candidate
+        if isLiveConversionEnabled && liveConversionManager.currentState != .idle {
+            // Phase 3: Commit all clauses
+            let result = liveConversionManager.commitAll()
+            displayedTextManager.insertText(result)
+            composingText.clear()
+        } else if isConverting && !candidates.isEmpty {
+            // Phase 2: Commit selected candidate
             commitCandidate(at: selectedCandidateIndex)
         } else if !composingText.isEmpty {
             // Commit composing text as-is
@@ -332,6 +380,37 @@ final class CyrillicInputManager {
         return nil
     }
 
+    // MARK: - Arrow Key Handling (Phase 3)
+
+    /// Handles left arrow key (move to previous clause)
+    func processLeftArrow() {
+        if isLiveConversionEnabled && liveConversionManager.currentState != .idle {
+            liveConversionManager.selectPreviousClause()
+        }
+    }
+
+    /// Handles right arrow key (move to next clause)
+    func processRightArrow() {
+        if isLiveConversionEnabled && liveConversionManager.currentState != .idle {
+            liveConversionManager.selectNextClause()
+        }
+    }
+
+    // MARK: - Live Conversion Control (Phase 3)
+
+    /// Toggles live conversion on/off
+    func toggleLiveConversion() {
+        isLiveConversionEnabled.toggle()
+        print("[CyrillicInputManager] Live conversion: \(isLiveConversionEnabled ? "enabled" : "disabled")")
+    }
+
+    /// Forces immediate conversion
+    func forceConversion() {
+        if isLiveConversionEnabled && !composingText.isEmpty {
+            liveConversionManager.forceConversion(composingText.hiraganaTarget)
+        }
+    }
+
     // MARK: - Public State Access
 
     var currentComposingText: String {
@@ -340,5 +419,15 @@ final class CyrillicInputManager {
 
     var hasComposingText: Bool {
         return !composingText.isEmpty
+    }
+
+    /// Current clauses (Phase 3)
+    var currentClauses: [Clause] {
+        return liveConversionManager.currentClauses
+    }
+
+    /// Selected clause index (Phase 3)
+    var selectedClauseIndex: Int {
+        return liveConversionManager.currentSelectedIndex
     }
 }
