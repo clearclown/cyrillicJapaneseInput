@@ -17,7 +17,7 @@ class ModelTests: XCTestCase {
             id: "rus_standard",
             nameJa: "ロシア語",
             nameEn: "Russian",
-            keyboardLayout: ["А", "Б", "В"],
+            keyboardLayout: KeyboardLayout(row1: ["А"], row2: ["Б"], row3: ["В"]),
             inputSchemaId: "schema_rus_v1"
         )
 
@@ -49,7 +49,7 @@ class ModelTests: XCTestCase {
             id: "test",
             nameJa: "テスト",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
 
@@ -67,7 +67,7 @@ class ModelTests: XCTestCase {
             id: "rus",
             nameJa: "ロシア語",
             nameEn: "Russian",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_rus"
         )
 
@@ -75,7 +75,7 @@ class ModelTests: XCTestCase {
             id: "srb",
             nameJa: "セルビア語",
             nameEn: "Serbian",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_srb"
         )
 
@@ -89,7 +89,7 @@ class ModelTests: XCTestCase {
             id: "test",
             nameJa: "テスト",
             nameEn: "Test",
-            keyboardLayout: ["А"],
+            keyboardLayout: KeyboardLayout(row1: ["А"], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
 
@@ -97,7 +97,7 @@ class ModelTests: XCTestCase {
             id: "test",
             nameJa: "テスト",
             nameEn: "Test",
-            keyboardLayout: ["А"],
+            keyboardLayout: KeyboardLayout(row1: ["А"], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
 
@@ -114,7 +114,7 @@ class ModelTests: XCTestCase {
             id: "rus",
             nameJa: "ロシア語",
             nameEn: "Russian",
-            keyboardLayout: ["А", "Б"],
+            keyboardLayout: KeyboardLayout(row1: ["А"], row2: ["Б"], row3: []),
             inputSchemaId: "schema_rus"
         )
 
@@ -122,7 +122,7 @@ class ModelTests: XCTestCase {
             id: "rus",
             nameJa: "ロシア語",
             nameEn: "Russian",
-            keyboardLayout: ["А", "Б"],
+            keyboardLayout: KeyboardLayout(row1: ["А"], row2: ["Б"], row3: []),
             inputSchemaId: "schema_rus"
         )
 

@@ -8,8 +8,8 @@
 
 import UIKit
 
-/// Manages the display of composing and committed text using UITextDocumentProxy
-final class DisplayedTextManager {
+/// Manages the display of composing and computed text using UITextDocumentProxy
+class DisplayedTextManager {
     // MARK: - Properties
 
     /// Reference to the text document proxy
