@@ -51,7 +51,7 @@ class ProfileManagerTests: XCTestCase {
             XCTAssertFalse(profile.id.isEmpty, "Profile ID should not be empty")
             XCTAssertFalse(profile.nameJa.isEmpty, "Profile Japanese name should not be empty")
             XCTAssertFalse(profile.nameEn.isEmpty, "Profile English name should not be empty")
-            XCTAssertFalse(profile.keyboardLayout.isEmpty, "Keyboard layout should not be empty")
+            XCTAssertFalse(profile.keyboardLayout.allKeys.isEmpty, "Keyboard layout should not be empty")
             XCTAssertFalse(profile.inputSchemaId.isEmpty, "Input schema ID should not be empty")
         }
     }
@@ -174,7 +174,7 @@ class ProfileManagerTests: XCTestCase {
             id: "test",
             nameJa: "テストプロファイル",
             nameEn: "Test Profile",
-            keyboardLayout: ["А", "Б"],
+            keyboardLayout: KeyboardLayout(row1: ["А"], row2: ["Б"], row3: []),
             inputSchemaId: "schema_test"
         )
 
@@ -183,10 +183,10 @@ class ProfileManagerTests: XCTestCase {
 
         // Then: Should return appropriate name based on locale
         XCTAssertFalse(displayName.isEmpty, "Display name should not be empty")
-        XCTAssertTrue(
-            displayName == profile.nameJa || displayName == profile.nameEn,
-            "Display name should be either Japanese or English name"
-        )
+
+        // Check if display name matches one of the expected names
+        let isValidName = (displayName == profile.nameJa || displayName == profile.nameEn)
+        XCTAssertTrue(isValidName, "Display name should be either Japanese or English name")
     }
 
     // MARK: - Error Handling Tests
@@ -200,7 +200,7 @@ class ProfileManagerTests: XCTestCase {
             id: "invalid",
             nameJa: "無効",
             nameEn: "Invalid",
-            keyboardLayout: ["А"],
+            keyboardLayout: KeyboardLayout(row1: ["А"], row2: [], row3: []),
             inputSchemaId: "nonexistent_schema"
         )
 
