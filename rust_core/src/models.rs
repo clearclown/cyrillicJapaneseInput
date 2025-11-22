@@ -40,6 +40,11 @@ pub struct ConversionResult {
     /// Last output for long vowel detection (internal use)
     #[serde(rename = "lastOutput")]
     pub last_output: String,
+
+    /// Last vowel type for consecutive long vowel detection
+    /// Tracks the vowel type through "ー" characters
+    #[serde(rename = "lastVowelType")]
+    pub last_vowel_type: Option<String>,
 }
 
 impl ConversionResult {
@@ -50,6 +55,7 @@ impl ConversionResult {
             buffer: String::new(),
             action: "commit".to_string(),
             last_output: last,
+            last_vowel_type: None,
         }
     }
 
@@ -59,6 +65,7 @@ impl ConversionResult {
             buffer,
             action: "composing".to_string(),
             last_output: String::new(),
+            last_vowel_type: None,
         }
     }
 
@@ -68,6 +75,7 @@ impl ConversionResult {
             buffer: String::new(),
             action: "clear".to_string(),
             last_output: String::new(),
+            last_vowel_type: None,
         }
     }
 }

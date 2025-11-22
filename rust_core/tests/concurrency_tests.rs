@@ -37,7 +37,7 @@ fn test_concurrent_reads() {
     for i in 0..10 {
         let handle = thread::spawn(move || {
             for _ in 0..100 {
-                let result = IMEEngine::process_key("А", "", "test_concurrent");
+                let result = IMEEngine::process_key("А", "", "test_concurrent", "", &None);
                 assert!(result.is_ok(), "Thread {} failed to process key", i);
                 if let Ok(conv) = result {
                     assert_eq!(conv.output, "あ");
@@ -90,7 +90,7 @@ fn test_concurrent_mixed_operations() {
                 0 => {
                     // Read operations
                     for _ in 0..50 {
-                        let _ = IMEEngine::process_key("А", "", "test_concurrent");
+                        let _ = IMEEngine::process_key("А", "", "test_concurrent", "", &None);
                     }
                 }
                 1 => {
@@ -147,7 +147,7 @@ fn test_concurrent_processing_different_profiles() {
             let profile_id = if i % 2 == 0 { "profile_1" } else { "profile_2" };
 
             for _ in 0..100 {
-                let result = IMEEngine::process_key("А", "", profile_id);
+                let result = IMEEngine::process_key("А", "", profile_id, "", &None);
                 // May fail if profiles not found (engine initialized by other test)
                 let _ = result;
             }
@@ -171,7 +171,7 @@ fn test_high_contention_reads() {
     for i in 0..50 {
         let handle = thread::spawn(move || {
             for _ in 0..1000 {
-                let result = IMEEngine::process_key("КЯ", "К", "test_concurrent");
+                let result = IMEEngine::process_key("КЯ", "К", "test_concurrent", "", &None);
                 assert!(result.is_ok(), "Thread {} failed", i);
             }
         });
@@ -196,7 +196,7 @@ fn test_arc_wrapped_concurrent_access() {
         let counter = Arc::clone(&counter);
         let handle = thread::spawn(move || {
             for _ in 0..100 {
-                let result = IMEEngine::process_key("А", "", "test_concurrent");
+                let result = IMEEngine::process_key("А", "", "test_concurrent", "", &None);
                 if result.is_ok() {
                     counter.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
                 }
@@ -225,7 +225,7 @@ fn test_no_deadlocks_with_rapid_schema_loading() {
                 let schema_id = format!("rapid_schema_{}_{}", i, j);
                 let _ = IMEEngine::load_schema(TEST_SCHEMA, &schema_id);
                 // Immediately try to use it (may fail if not yet visible, that's ok)
-                let _ = IMEEngine::process_key("А", "", "test_concurrent");
+                let _ = IMEEngine::process_key("А", "", "test_concurrent", "", &None);
             }
         });
         handles.push(handle);
@@ -273,10 +273,10 @@ fn test_stress_test_all_operations() {
             for j in 0..100 {
                 match (i + j) % 4 {
                     0 => {
-                        let _ = IMEEngine::process_key("А", "", "test_concurrent");
+                        let _ = IMEEngine::process_key("А", "", "test_concurrent", "", &None);
                     }
                     1 => {
-                        let _ = IMEEngine::process_key("КЯ", "К", "test_concurrent");
+                        let _ = IMEEngine::process_key("КЯ", "К", "test_concurrent", "", &None);
                     }
                     2 => {
                         let _ = IMEEngine::get_profiles();

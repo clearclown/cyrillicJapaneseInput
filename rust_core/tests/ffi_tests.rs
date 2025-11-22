@@ -118,8 +118,10 @@ fn test_rust_process_key_basic() {
         let key = CString::new("А").unwrap();
         let buffer = CString::new("").unwrap();
         let profile_id = CString::new("test_ffi_process").unwrap();
+        let last_output = CString::new("").unwrap();
+        let last_vowel_type = CString::new("").unwrap();
 
-        let result = rust_process_key(key.as_ptr(), buffer.as_ptr(), profile_id.as_ptr());
+        let result = rust_process_key(key.as_ptr(), buffer.as_ptr(), profile_id.as_ptr(), last_output.as_ptr(), last_vowel_type.as_ptr());
         if !result.is_null() {
             let json_str = CString::from_raw(result);
             let json = json_str.to_str().unwrap();

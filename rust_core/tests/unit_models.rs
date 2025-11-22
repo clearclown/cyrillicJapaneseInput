@@ -41,12 +41,14 @@ fn test_conversion_result_serialization() {
 
 #[test]
 fn test_conversion_result_deserialization() {
-    let json = r#"{"output":"きゃ","buffer":"","action":"commit"}"#;
+    let json = r#"{"output":"きゃ","buffer":"","action":"commit","lastOutput":"きゃ","lastVowelType":"a"}"#;
     let result: ConversionResult = serde_json::from_str(json).unwrap();
 
     assert_eq!(result.output, "きゃ");
     assert_eq!(result.buffer, "");
     assert_eq!(result.action, "commit");
+    assert_eq!(result.last_output, "きゃ");
+    assert_eq!(result.last_vowel_type, Some("a".to_string()));
 }
 
 #[test]
@@ -143,6 +145,8 @@ fn test_conversion_result_with_empty_strings() {
         output: "".to_string(),
         buffer: "".to_string(),
         action: "clear".to_string(),
+        last_output: "".to_string(),
+        last_vowel_type: None,
     };
 
     let json = serde_json::to_string(&result).unwrap();

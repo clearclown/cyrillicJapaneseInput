@@ -118,7 +118,9 @@ final class CyrillicInputManager {
         guard let result = rustCore.processKey(
             cyrillicKey: key,
             currentBuffer: currentBuffer,
-            profileId: profile.id
+            profileId: profile.id,
+            lastOutput: composingText.lastOutput,
+            lastVowelType: composingText.lastVowelType
         ) else {
             print("[CyrillicInputManager] Error: Rust Core conversion failed")
             return

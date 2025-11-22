@@ -144,22 +144,22 @@ fn test_russian_hiragana_conversion_real_data() {
     // Test common Russian input sequences
 
     // А -> あ
-    let result = IMEEngine::process_key("А", "", "rus_standard");
+    let result = IMEEngine::process_key("А", "", "rus_standard", "", &None);
     assert!(result.is_ok());
     assert_eq!(result.unwrap().output, "あ");
 
     // КА -> か
-    let result = IMEEngine::process_key("А", "К", "rus_standard");
+    let result = IMEEngine::process_key("А", "К", "rus_standard", "", &None);
     assert!(result.is_ok());
     assert_eq!(result.unwrap().output, "か");
 
     // КЯ -> きゃ
-    let result = IMEEngine::process_key("Я", "К", "rus_standard");
+    let result = IMEEngine::process_key("Я", "К", "rus_standard", "", &None);
     assert!(result.is_ok());
     assert_eq!(result.unwrap().output, "きゃ");
 
     // ЧА -> ちゃ
-    let result = IMEEngine::process_key("А", "Ч", "rus_standard");
+    let result = IMEEngine::process_key("А", "Ч", "rus_standard", "", &None);
     assert!(result.is_ok());
     assert_eq!(result.unwrap().output, "ちゃ");
 }
@@ -185,18 +185,18 @@ fn test_serbian_special_characters_real_data() {
     // Test Serbian special characters
 
     // Ћ -> ち (single key)
-    let result = IMEEngine::process_key("Ћ", "", "srb_cyrillic");
+    let result = IMEEngine::process_key("Ћ", "", "srb_cyrillic", "", &None);
     assert!(result.is_ok());
     assert_eq!(result.unwrap().output, "ち");
 
     // Њ -> にゃ (single key)
-    let result = IMEEngine::process_key("Њ", "", "srb_cyrillic");
+    let result = IMEEngine::process_key("Њ", "", "srb_cyrillic", "", &None);
     assert!(result.is_ok());
     let output = result.unwrap().output;
     assert!(output == "にゃ" || output == "", "Њ should map to nya or be composing");
 
     // Љ -> りゃ (single key)
-    let result = IMEEngine::process_key("Љ", "", "srb_cyrillic");
+    let result = IMEEngine::process_key("Љ", "", "srb_cyrillic", "", &None);
     assert!(result.is_ok());
     let output = result.unwrap().output;
     assert!(output == "りゃ" || output == "", "Љ should map to rya or be composing");
@@ -225,7 +225,7 @@ fn test_complete_word_conversion_russian() {
     let mut output = String::new();
 
     // К -> composing
-    let result = IMEEngine::process_key("К", &buffer, "rus_standard");
+    let result = IMEEngine::process_key("К", &buffer, "rus_standard", "", &None);
     assert!(result.is_ok());
     let conv = result.unwrap();
     if conv.action == "composing" {
@@ -233,7 +233,7 @@ fn test_complete_word_conversion_russian() {
     }
 
     // А -> commit "か"
-    let result = IMEEngine::process_key("А", &buffer, "rus_standard");
+    let result = IMEEngine::process_key("А", &buffer, "rus_standard", "", &None);
     assert!(result.is_ok());
     let conv = result.unwrap();
     if conv.action == "commit" {
@@ -242,7 +242,7 @@ fn test_complete_word_conversion_russian() {
     }
 
     // С -> composing
-    let result = IMEEngine::process_key("С", &buffer, "rus_standard");
+    let result = IMEEngine::process_key("С", &buffer, "rus_standard", "", &None);
     assert!(result.is_ok());
     let conv = result.unwrap();
     if conv.action == "composing" {
@@ -250,7 +250,7 @@ fn test_complete_word_conversion_russian() {
     }
 
     // А -> commit "さ"
-    let result = IMEEngine::process_key("А", &buffer, "rus_standard");
+    let result = IMEEngine::process_key("А", &buffer, "rus_standard", "", &None);
     assert!(result.is_ok());
     let conv = result.unwrap();
     if conv.action == "commit" {
@@ -259,7 +259,7 @@ fn test_complete_word_conversion_russian() {
     }
 
     // Я -> commit "や"
-    let result = IMEEngine::process_key("Я", &buffer, "rus_standard");
+    let result = IMEEngine::process_key("Я", &buffer, "rus_standard", "", &None);
     assert!(result.is_ok());
     let conv = result.unwrap();
     if conv.action == "commit" {
@@ -340,13 +340,13 @@ fn test_profile_switching_consistency() {
 
     // Test that the same phonetic output comes from different inputs
     // Russian: КЯ -> きゃ
-    let result_rus = IMEEngine::process_key("Я", "К", "rus_standard");
+    let result_rus = IMEEngine::process_key("Я", "К", "rus_standard", "", &None);
 
     // Serbian: КЈА -> きゃ
-    let result_srb1 = IMEEngine::process_key("Ј", "К", "srb_cyrillic");
+    let result_srb1 = IMEEngine::process_key("Ј", "К", "srb_cyrillic", "", &None);
     if result_srb1.is_ok() && result_srb1.as_ref().unwrap().action == "composing" {
         let buffer = result_srb1.unwrap().buffer;
-        let result_srb2 = IMEEngine::process_key("А", &buffer, "srb_cyrillic");
+        let result_srb2 = IMEEngine::process_key("А", &buffer, "srb_cyrillic", "", &None);
 
         if result_rus.is_ok() && result_srb2.is_ok() {
             // Both should produce the same hiragana

@@ -24,6 +24,10 @@ struct ConversionResult: Codable {
     /// 最後の出力（長音検出用）
     let lastOutput: String
 
+    /// 最後の母音タイプ（連続長音検出用）
+    /// "ー" の母音タイプを追跡するために使用
+    let lastVowelType: String?
+
     /// 便利プロパティ
     var isCommit: Bool { action == "commit" }
     var isComposing: Bool { action == "composing" }
@@ -37,21 +41,24 @@ extension ConversionResult {
         action: "commit",
         output: "きゃ",
         buffer: "",
-        lastOutput: "きゃ"
+        lastOutput: "きゃ",
+        lastVowelType: "a"
     )
 
     static let composingExample = ConversionResult(
         action: "composing",
         output: "",
         buffer: "К",
-        lastOutput: ""
+        lastOutput: "",
+        lastVowelType: nil
     )
 
     static let clearExample = ConversionResult(
         action: "clear",
         output: "",
         buffer: "",
-        lastOutput: ""
+        lastOutput: "",
+        lastVowelType: nil
     )
 }
 #endif
