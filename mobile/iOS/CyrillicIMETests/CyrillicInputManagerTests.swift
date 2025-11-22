@@ -71,7 +71,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "テスト",
             nameEn: "Test",
-            keyboardLayout: ["А"],
+            keyboardLayout: KeyboardLayout(row1: ["А"], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         mockRustCore.nextResult = ConversionResult(action: "commit", output: "あ", buffer: "")
@@ -93,7 +93,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -130,7 +130,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         mockRustCore.nextResult = nil
@@ -150,7 +150,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -175,7 +175,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseHiragana)
@@ -196,7 +196,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -221,7 +221,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
 
@@ -238,7 +238,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -264,7 +264,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -290,7 +290,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -312,7 +312,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -332,7 +332,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -353,7 +353,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -375,7 +375,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
 
@@ -394,7 +394,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -416,7 +416,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -439,7 +439,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -460,7 +460,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
 
@@ -484,7 +484,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -510,7 +510,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -531,7 +531,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -551,7 +551,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
 
@@ -575,7 +575,7 @@ class CyrillicInputManagerTests: XCTestCase {
             id: "test",
             nameJa: "Test",
             nameEn: "Test",
-            keyboardLayout: [],
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
@@ -633,6 +633,10 @@ class MockRustCoreFFI: RustCoreFFI {
     var nextResult: ConversionResult?
     var lastProcessKeyCall: (cyrillicKey: String, currentBuffer: String, profileId: String)?
 
+    init() {
+        // MockRustCoreFFI has its own initializer since parent's init is private
+    }
+
     override func processKey(cyrillicKey: String, currentBuffer: String, profileId: String) -> ConversionResult? {
         lastProcessKeyCall = (cyrillicKey, currentBuffer, profileId)
         return nextResult
@@ -642,6 +646,10 @@ class MockRustCoreFFI: RustCoreFFI {
 // MARK: - Mock ProfileManager
 
 class MockProfileManager: ProfileManager {
+    init() {
+        // MockProfileManager has its own initializer since parent's init is private
+    }
+
     override var currentProfile: Profile? {
         get { return _currentProfile }
         set { _currentProfile = newValue }
