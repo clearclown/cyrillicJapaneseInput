@@ -1,0 +1,32 @@
+name: Build on push
+
+on: 
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Xcode Build
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: true
+
+      - name: Cache DerivedData
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-derived-data-${{ hashFiles('**/project.pbxproj') }}
+          restore-keys: |
+            ${{ runner.os }}-derived-data-
+
+      - name: Build Project
+        run: |
+          xcodebuild build -project azooKey.xcodeproj \
+                     -scheme MainApp \
+                     -sdk iphoneos \
+                     -configuration Release \
+                     CODE_SIGNING_ALLOWED=NO
