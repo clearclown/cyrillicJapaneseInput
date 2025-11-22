@@ -67,6 +67,12 @@ impl IMEEngine {
         matches!(ch, "А" | "И" | "У" | "Э" | "О" | "І" | "Е" | "Ы" | "Я" | "Ю" | "Ё")
     }
 
+    /// Check if a character can create sokuon (促音) when doubled
+    /// Н cannot create sokuon - it represents the special ん mora
+    fn can_create_sokuon(ch: &str) -> bool {
+        ch != "Н" && !Self::is_vowel(ch)
+    }
+
     /// Process a key press
     pub fn process_key(
         key: &str,
@@ -97,7 +103,8 @@ impl IMEEngine {
         // Check for sokuon (促音): double consonant
         // If buffer contains a single character and new key is the same consonant,
         // output っ (sokuon) and reset buffer to that consonant
-        if !buffer.is_empty() && buffer == key && !Self::is_vowel(key) {
+        // NOTE: Н is excluded because it's the special ん mora and cannot be doubled
+        if !buffer.is_empty() && buffer == key && Self::can_create_sokuon(key) {
             if let Some(sokuon) = engine.kana_engine.get("sokuon") {
                 return Ok(ConversionResult {
                     output: sokuon.clone(),
@@ -112,7 +119,18 @@ impl IMEEngine {
 
         // Try to match the new buffer
         if let Some(entry) = schema.get(&new_buffer) {
-            // Found a match, convert to hiragana
+            // Found an exact match, but for Н (which can be both a complete mora
+            // and a prefix), we need to check if it could be the start of a longer
+            // sequence before committing
+            let should_buffer = new_buffer == "Н" &&
+                schema.keys().any(|k| k.starts_with("Н") && k.len() > 1);
+
+            if should_buffer {
+                // Keep Н in buffer as it might combine with the next character
+                return Ok(ConversionResult::composing(new_buffer));
+            }
+
+            // Commit the match
             if let Some(hiragana) = engine.kana_engine.get(&entry.kana_key) {
                 return Ok(ConversionResult::commit(hiragana.clone()));
             } else {
