@@ -156,6 +156,35 @@ impl IMEEngine {
             .get(&profile.input_schema_id)
             .ok_or_else(|| format!("Schema not loaded: {}", profile.input_schema_id))?;
 
+        // Check for hard sign (Ъ): syllable separator
+        // Ъ commits any buffered characters and acts as a separator (outputs nothing)
+        // Example: Н + Ъ + А → ん + (separator) + あ = んあ
+        if key == "Ъ" {
+            if !buffer.is_empty() {
+                // Commit the buffer (e.g., Н → ん)
+                if let Some(entry) = schema.get(buffer) {
+                    if let Some(hiragana) = engine.kana_engine.get(&entry.kana_key) {
+                        let vowel_type = Self::get_vowel_type(&hiragana).map(|s| s.to_string());
+                        return Ok(ConversionResult {
+                            output: hiragana.clone(),
+                            buffer: String::new(),
+                            action: "separator".to_string(),
+                            last_output: hiragana.clone(),
+                            last_vowel_type: vowel_type,
+                        });
+                    }
+                }
+            }
+            // Ъ itself outputs nothing (pure separator)
+            return Ok(ConversionResult {
+                output: String::new(),
+                buffer: String::new(),
+                action: "separator".to_string(),
+                last_output: String::new(),
+                last_vowel_type: None,
+            });
+        }
+
         // Check for sokuon (促音): double consonant
         // If buffer contains a single character and new key is the same consonant,
         // output っ (sokuon) and reset buffer to that consonant
