@@ -29,7 +29,7 @@ class ProfileManager: ObservableObject {
         return schemaCache[profile.inputSchemaId]
     }
 
-    private init() {}
+    init() {} // Internal for test mocking
 
     // MARK: - Initialization
 

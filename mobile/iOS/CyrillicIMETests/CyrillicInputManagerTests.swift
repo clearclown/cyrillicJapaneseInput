@@ -633,8 +633,8 @@ class MockRustCoreFFI: RustCoreFFI {
     var nextResult: ConversionResult?
     var lastProcessKeyCall: (cyrillicKey: String, currentBuffer: String, profileId: String)?
 
-    init() {
-        // MockRustCoreFFI has its own initializer since parent's init is private
+    override init() {
+        super.init()
     }
 
     override func processKey(cyrillicKey: String, currentBuffer: String, profileId: String) -> ConversionResult? {
@@ -646,8 +646,8 @@ class MockRustCoreFFI: RustCoreFFI {
 // MARK: - Mock ProfileManager
 
 class MockProfileManager: ProfileManager {
-    init() {
-        // MockProfileManager has its own initializer since parent's init is private
+    override init() {
+        super.init()
     }
 
     override var currentProfile: Profile? {

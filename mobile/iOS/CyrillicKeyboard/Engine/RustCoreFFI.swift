@@ -33,7 +33,7 @@ class RustCoreFFI {
 
     private var isInitialized = false
 
-    private init() {}
+    init() {} // Internal for test mocking
 
     // MARK: - Helper: CString処理
 
