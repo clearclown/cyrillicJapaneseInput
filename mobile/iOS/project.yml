@@ -162,6 +162,20 @@ targets:
         LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
         LIBRARY_SEARCH_PATHS: "$(inherited) $(PROJECT_DIR)/CyrillicIMECore"
 
+  PismoUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - PismoUITests
+    dependencies:
+      - target: Pismo
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pismo.PismoUITests
+        INFOPLIST_FILE: PismoUITests/Info.plist
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
+        TEST_TARGET_NAME: Pismo
+
 schemes:
   Pismo:
     build:
@@ -169,11 +183,13 @@ schemes:
         Pismo: all
         PismoKeyboard: all
         PismoTests: [test]
+        PismoUITests: [test]
     run:
       config: Debug
     test:
       config: Debug
       targets:
         - PismoTests
+        - PismoUITests
     archive:
       config: Release
