@@ -1,0 +1,433 @@
+name: Comprehensive Test Suite
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'phase-*'
+      - 'claude/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+  schedule:
+    # Run daily at 3 AM UTC
+    - cron: '0 3 * * *'
+
+jobs:
+  rust-core-tests:
+    name: Rust Core Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust_core/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Run Rust tests
+        working-directory: rust_core
+        run: cargo test --all --verbose
+
+      - name: Check Rust formatting
+        working-directory: rust_core
+        run: cargo fmt -- --check
+
+      - name: Run Rust clippy
+        working-directory: rust_core
+        run: cargo clippy -- -D warnings
+
+  ios-unit-tests:
+    name: iOS Unit Tests (560 cases)
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios, aarch64-apple-ios-sim, x86_64-apple-ios
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust_core/target
+          key: ${{ runner.os }}-cargo-ios-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install cargo-lipo
+        run: cargo install cargo-lipo || true
+
+      - name: Build Rust Core for iOS Simulator
+        working-directory: rust_core
+        run: |
+          cargo lipo --release --targets aarch64-apple-ios-sim
+          mkdir -p ../mobile/iOS/CyrillicIMECore
+          cp target/universal/release/libcyrillic_ime_core.a ../mobile/iOS/CyrillicIMECore/
+
+      - name: Generate Xcode project
+        working-directory: mobile/iOS
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Run ALL unit tests
+        working-directory: mobile/iOS
+        run: |
+          xcodebuild test \
+            -project Pismo.xcodeproj \
+            -scheme Pismo \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -only-testing:PismoTests \
+            -enableCodeCoverage YES \
+            -resultBundlePath TestResults.xcresult \
+            | xcpretty && exit ${PIPESTATUS[0]}
+
+      - name: Run Automated Conversion Tests (560 cases)
+        working-directory: mobile/iOS
+        run: |
+          xcodebuild test \
+            -project Pismo.xcodeproj \
+            -scheme Pismo \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -only-testing:PismoTests/AutomatedConversionTests \
+            | xcpretty && exit ${PIPESTATUS[0]}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-test-results
+          path: mobile/iOS/TestResults.xcresult
+
+  ios-ui-tests:
+    name: iOS UI Tests
+    runs-on: macos-latest
+    needs: ios-unit-tests
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios-sim
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust_core/target
+          key: ${{ runner.os }}-cargo-ios-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install cargo-lipo
+        run: cargo install cargo-lipo || true
+
+      - name: Build Rust Core for iOS Simulator
+        working-directory: rust_core
+        run: |
+          cargo lipo --release --targets aarch64-apple-ios-sim
+          mkdir -p ../mobile/iOS/CyrillicIMECore
+          cp target/universal/release/libcyrillic_ime_core.a ../mobile/iOS/CyrillicIMECore/
+
+      - name: Generate Xcode project
+        working-directory: mobile/iOS
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Run UI Tests
+        working-directory: mobile/iOS
+        run: |
+          xcodebuild test \
+            -project Pismo.xcodeproj \
+            -scheme Pismo \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -only-testing:PismoUITests \
+            | xcpretty && exit ${PIPESTATUS[0]}
+
+      - name: Upload UI test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-ui-test-results
+          path: mobile/iOS/TestResults.xcresult
+
+  ios-performance-tests:
+    name: iOS Performance Tests
+    runs-on: macos-latest
+    needs: ios-unit-tests
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios-sim
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust_core/target
+          key: ${{ runner.os }}-cargo-ios-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install cargo-lipo
+        run: cargo install cargo-lipo || true
+
+      - name: Build Rust Core for iOS Simulator
+        working-directory: rust_core
+        run: |
+          cargo lipo --release --targets aarch64-apple-ios-sim
+          mkdir -p ../mobile/iOS/CyrillicIMECore
+          cp target/universal/release/libcyrillic_ime_core.a ../mobile/iOS/CyrillicIMECore/
+
+      - name: Generate Xcode project
+        working-directory: mobile/iOS
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Run Performance Tests
+        working-directory: mobile/iOS
+        run: |
+          xcodebuild test \
+            -project Pismo.xcodeproj \
+            -scheme Pismo \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -only-testing:PismoTests/PerformanceTests \
+            | xcpretty && exit ${PIPESTATUS[0]}
+
+      - name: Check performance metrics
+        run: |
+          echo "Performance metrics analysis..."
+          # TODO: Parse performance metrics from test results
+          # and fail if they exceed thresholds
+
+  coverage-report:
+    name: Generate Coverage Report
+    runs-on: macos-latest
+    needs: [ios-unit-tests]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios-sim
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust_core/target
+          key: ${{ runner.os }}-cargo-ios-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install cargo-lipo
+        run: cargo install cargo-lipo || true
+
+      - name: Build Rust Core for iOS Simulator
+        working-directory: rust_core
+        run: |
+          cargo lipo --release --targets aarch64-apple-ios-sim
+          mkdir -p ../mobile/iOS/CyrillicIMECore
+          cp target/universal/release/libcyrillic_ime_core.a ../mobile/iOS/CyrillicIMECore/
+
+      - name: Generate Xcode project
+        working-directory: mobile/iOS
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Run tests with coverage
+        working-directory: mobile/iOS
+        run: |
+          xcodebuild test \
+            -project Pismo.xcodeproj \
+            -scheme Pismo \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -enableCodeCoverage YES \
+            -resultBundlePath TestResults.xcresult \
+            | xcpretty && exit ${PIPESTATUS[0]}
+
+      - name: Generate coverage report
+        working-directory: mobile/iOS
+        run: |
+          xcrun xccov view --report --json TestResults.xcresult > coverage.json
+
+          # Extract coverage percentage
+          coverage=$(xcrun xccov view --report TestResults.xcresult | grep "Pismo.app" | awk '{print $2}' | sed 's/%//')
+          echo "Coverage: $coverage%"
+
+          # Check if coverage meets 80% threshold
+          if (( $(echo "$coverage < 80.0" | bc -l) )); then
+            echo "❌ Coverage $coverage% is below 80% threshold"
+            exit 1
+          else
+            echo "✅ Coverage $coverage% meets 80% threshold"
+          fi
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: mobile/iOS/coverage.json
+
+      - name: Comment coverage on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const coverage = JSON.parse(fs.readFileSync('mobile/iOS/coverage.json', 'utf8'));
+            const lineCoverage = (coverage.lineCoverage * 100).toFixed(2);
+
+            const comment = `## Test Coverage Report
+
+            📊 Line Coverage: **${lineCoverage}%**
+
+            ${lineCoverage >= 80 ? '✅' : '❌'} Coverage ${lineCoverage >= 80 ? 'meets' : 'does not meet'} 80% threshold
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.name,
+              body: comment
+            });
+
+  integration-matrix:
+    name: Integration Test Matrix
+    runs-on: macos-latest
+    needs: [ios-unit-tests]
+
+    strategy:
+      matrix:
+        profile: [rus_standard]
+        # Future profiles (Phase 1):
+        # profile: [rus_standard, srb_cyrillic, ukr_cyrillic, bul_bds, rus_analytical]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios-sim
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust_core/target
+          key: ${{ runner.os }}-cargo-ios-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install cargo-lipo
+        run: cargo install cargo-lipo || true
+
+      - name: Build Rust Core for iOS Simulator
+        working-directory: rust_core
+        run: |
+          cargo lipo --release --targets aarch64-apple-ios-sim
+          mkdir -p ../mobile/iOS/CyrillicIMECore
+          cp target/universal/release/libcyrillic_ime_core.a ../mobile/iOS/CyrillicIMECore/
+
+      - name: Generate Xcode project
+        working-directory: mobile/iOS
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Run tests for ${{ matrix.profile }}
+        working-directory: mobile/iOS
+        run: |
+          echo "Testing profile: ${{ matrix.profile }}"
+          xcodebuild test \
+            -project Pismo.xcodeproj \
+            -scheme Pismo \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -only-testing:PismoTests/ConversionLogicIntegrationTests \
+            | xcpretty && exit ${PIPESTATUS[0]}
+
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [rust-core-tests, ios-unit-tests, ios-ui-tests, ios-performance-tests, coverage-report]
+    if: always()
+
+    steps:
+      - name: Summary
+        run: |
+          echo "## Comprehensive Test Suite Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Rust Core Tests: ${{ needs.rust-core-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- iOS Unit Tests (560 cases): ${{ needs.ios-unit-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- iOS UI Tests: ${{ needs.ios-ui-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- iOS Performance Tests: ${{ needs.ios-performance-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Coverage Report: ${{ needs.coverage-report.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [[ "${{ needs.rust-core-tests.result }}" == "success" ]] && \
+             [[ "${{ needs.ios-unit-tests.result }}" == "success" ]] && \
+             [[ "${{ needs.ios-ui-tests.result }}" == "success" ]] && \
+             [[ "${{ needs.ios-performance-tests.result }}" == "success" ]] && \
+             [[ "${{ needs.coverage-report.result }}" == "success" ]]; then
+            echo "✅ All tests passed!" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Some tests failed. Please review the logs." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
