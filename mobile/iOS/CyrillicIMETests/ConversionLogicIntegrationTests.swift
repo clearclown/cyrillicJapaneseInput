@@ -24,10 +24,12 @@ class ConversionLogicIntegrationTests: XCTestCase {
         profileManager = ProfileManager.shared
 
         // Ensure profiles are loaded
-        profileManager.loadProfiles()
+        let initError = profileManager.initialize()
+        XCTAssertNil(initError, "ProfileManager initialization should succeed")
 
         // Set to Russian Standard profile for tests
-        profileManager.currentProfileId = "rus_standard"
+        let switchError = profileManager.switchProfile(to: "rus_standard")
+        XCTAssertNil(switchError, "Should switch to rus_standard profile")
 
         print("\n=== Integration Test Setup ===")
         print("Current profile: \(profileManager.currentProfile?.id ?? "nil")")
