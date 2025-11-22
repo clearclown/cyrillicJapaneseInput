@@ -3,6 +3,7 @@
 //  CyrillicKeyboard
 //
 //  Individual candidate cell for the candidate bar
+//  Phase 2: Enhanced with ThemeProvider support
 //  Phase 4: Candidate UI Enhancement
 //
 
@@ -13,6 +14,9 @@ final class CandidateCellView: UICollectionViewCell {
     // MARK: - Properties
 
     static let reuseIdentifier = "CandidateCellView"
+
+    /// Theme provider for consistent styling
+    private let themeProvider: ThemeProvider = ThemeManager.shared.currentTheme
 
     // MARK: - UI Components
 
@@ -27,10 +31,10 @@ final class CandidateCellView: UICollectionViewCell {
     }()
 
     /// Main candidate text label
-    private let textLabel: UILabel = {
+    private lazy var textLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
-        label.textColor = .label
+        label.textColor = themeProvider.candidateTextColor
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
@@ -90,6 +94,14 @@ final class CandidateCellView: UICollectionViewCell {
         stackView.addArrangedSubview(readingLabel)
 
         contentView.addSubview(stackView)
+
+        // Listen for theme changes
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(themeDidChange),
+            name: .themeDidChange,
+            object: nil
+        )
     }
 
     private func setupConstraints() {
@@ -145,48 +157,59 @@ final class CandidateCellView: UICollectionViewCell {
 
     private func updateAppearance(isSelected: Bool) {
         if isSelected {
-            // Selected state
-            contentView.backgroundColor = .systemBlue
-            contentView.layer.borderColor = UIColor.systemBlue.cgColor
+            // Selected state - use theme colors
+            contentView.backgroundColor = themeProvider.selectedCandidateBackgroundColor
+            contentView.layer.borderColor = themeProvider.selectedCandidateColor.cgColor
             contentView.layer.borderWidth = 2
 
             textLabel.font = .systemFont(ofSize: 18, weight: .bold)
-            textLabel.textColor = .white
+            textLabel.textColor = themeProvider.selectedCandidateColor
 
-            numberLabel.textColor = .white.withAlphaComponent(0.8)
-            readingLabel.textColor = .white.withAlphaComponent(0.8)
+            numberLabel.textColor = themeProvider.selectedCandidateColor.withAlphaComponent(0.8)
+            readingLabel.textColor = themeProvider.selectedCandidateColor.withAlphaComponent(0.8)
 
-            // Scale animation
+            // Scale animation with spring effect
             UIView.animate(
-                withDuration: 0.2,
+                withDuration: 0.25,
                 delay: 0,
+                usingSpringWithDamping: 0.7,
+                initialSpringVelocity: 0.5,
                 options: [.curveEaseOut],
                 animations: {
                     self.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
                 }
             )
         } else {
-            // Normal state
+            // Normal state - use theme colors
             contentView.backgroundColor = .secondarySystemBackground
             contentView.layer.borderColor = UIColor.separator.cgColor
             contentView.layer.borderWidth = 1
 
             textLabel.font = .systemFont(ofSize: 16)
-            textLabel.textColor = .label
+            textLabel.textColor = themeProvider.candidateTextColor
 
             numberLabel.textColor = .secondaryLabel
             readingLabel.textColor = .tertiaryLabel
 
-            // Reset scale
+            // Reset scale with spring effect
             UIView.animate(
-                withDuration: 0.2,
+                withDuration: 0.25,
                 delay: 0,
+                usingSpringWithDamping: 0.7,
+                initialSpringVelocity: 0.5,
                 options: [.curveEaseOut],
                 animations: {
                     self.transform = .identity
                 }
             )
         }
+    }
+
+    // MARK: - Theme Management
+
+    @objc private func themeDidChange() {
+        // Re-apply current selection state with new theme
+        setNeedsLayout()
     }
 
     // MARK: - Reuse
@@ -199,6 +222,12 @@ final class CandidateCellView: UICollectionViewCell {
         numberLabel.isHidden = false
         readingLabel.isHidden = false
         transform = .identity
+    }
+
+    // MARK: - Cleanup
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
 

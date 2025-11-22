@@ -3,6 +3,7 @@
 //  CyrillicKeyboard
 //
 //  Horizontal scrollable candidate bar for kanji conversion
+//  Phase 2: Enhanced with show/hide animations and haptic feedback
 //  Phase 4: Candidate UI Enhancement
 //
 
@@ -23,6 +24,12 @@ final class CandidateBarView: UIView {
 
     /// Maximum number of candidates to show with numbers
     private let maxNumberedCandidates = 9
+
+    /// Haptic manager for tactile feedback
+    private let hapticManager = HapticManager.shared
+
+    /// Theme provider for consistent styling
+    private let themeProvider: ThemeProvider = ThemeManager.shared.currentTheme
 
     // MARK: - Callbacks
 
@@ -69,11 +76,19 @@ final class CandidateBarView: UIView {
     // MARK: - Setup
 
     private func setupUI() {
-        backgroundColor = .systemBackground
+        backgroundColor = themeProvider.candidateBarBackgroundColor
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.1
         layer.shadowOffset = CGSize(width: 0, height: -2)
         layer.shadowRadius = 4
+
+        // Listen for theme changes
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(themeDidChange),
+            name: .themeDidChange,
+            object: nil
+        )
     }
 
     private func setupCollectionView() {
@@ -112,7 +127,9 @@ final class CandidateBarView: UIView {
     /// - Parameters:
     ///   - candidates: New candidates to display
     ///   - selectedIndex: Index of the currently selected candidate
-    func updateCandidates(_ candidates: [Candidate], selectedIndex: Int = 0) {
+    ///   - animated: Whether to animate the update (default: true)
+    func updateCandidates(_ candidates: [Candidate], selectedIndex: Int = 0, animated: Bool = true) {
+        let wasEmpty = self.candidates.isEmpty
         self.candidates = candidates
         self.selectedIndex = min(selectedIndex, candidates.count - 1)
 
@@ -121,11 +138,70 @@ final class CandidateBarView: UIView {
         // Scroll to selected candidate with animation
         if selectedIndex < candidates.count {
             let indexPath = IndexPath(item: selectedIndex, section: 0)
-            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: animated)
         }
 
-        // Animate appearance
-        animateAppearance()
+        // Animate appearance only if bar was previously hidden/empty
+        if wasEmpty && !candidates.isEmpty && animated {
+            show(animated: animated)
+        }
+    }
+
+    /// Shows the candidate bar with animation
+    /// - Parameter animated: Whether to animate the appearance
+    func show(animated: Bool = true) {
+        guard isHidden || alpha == 0 else { return }
+
+        isHidden = false
+
+        if !animated {
+            alpha = 1.0
+            transform = .identity
+            return
+        }
+
+        // Slide up animation from below
+        alpha = 0
+        transform = CGAffineTransform(translationX: 0, y: 20)
+
+        UIView.animate(
+            withDuration: 0.25,
+            delay: 0,
+            options: [.curveEaseOut],
+            animations: {
+                self.alpha = 1.0
+                self.transform = .identity
+            }
+        )
+
+        // Haptic feedback
+        hapticManager.conversionStart()
+    }
+
+    /// Hides the candidate bar with animation
+    /// - Parameter animated: Whether to animate the disappearance
+    func hide(animated: Bool = true) {
+        guard !isHidden else { return }
+
+        if !animated {
+            isHidden = true
+            alpha = 0
+            return
+        }
+
+        UIView.animate(
+            withDuration: 0.2,
+            delay: 0,
+            options: [.curveEaseIn],
+            animations: {
+                self.alpha = 0
+                self.transform = CGAffineTransform(translationX: 0, y: 10)
+            },
+            completion: { _ in
+                self.isHidden = true
+                self.transform = .identity
+            }
+        )
     }
 
     /// Clears all candidates
@@ -140,6 +216,9 @@ final class CandidateBarView: UIView {
         selectedIndex = (selectedIndex + 1) % candidates.count
         collectionView.reloadData()
         scrollToSelectedCandidate()
+
+        // Haptic feedback
+        hapticManager.candidateNavigate()
     }
 
     /// Selects previous candidate
@@ -148,6 +227,9 @@ final class CandidateBarView: UIView {
         selectedIndex = (selectedIndex - 1 + candidates.count) % candidates.count
         collectionView.reloadData()
         scrollToSelectedCandidate()
+
+        // Haptic feedback
+        hapticManager.candidateNavigate()
     }
 
     /// Selects candidate by number (1-9)
@@ -158,6 +240,10 @@ final class CandidateBarView: UIView {
 
         let index = number - 1
         let candidate = candidates[index]
+
+        // Haptic feedback
+        hapticManager.candidateSelect()
+
         onCandidateSelected?(candidate, index)
     }
 
@@ -170,23 +256,24 @@ final class CandidateBarView: UIView {
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
 
-    private func animateAppearance() {
-        alpha = 0
-        transform = CGAffineTransform(scaleX: 1.0, y: 0.8)
+    @objc private func expandButtonTapped() {
+        // Haptic feedback
+        hapticManager.candidateSelect()
 
-        UIView.animate(
-            withDuration: 0.25,
-            delay: 0,
-            options: [.curveEaseOut],
-            animations: {
-                self.alpha = 1.0
-                self.transform = .identity
-            }
-        )
+        onLoadMore?()
     }
 
-    @objc private func expandButtonTapped() {
-        onLoadMore?()
+    // MARK: - Theme Management
+
+    @objc private func themeDidChange() {
+        backgroundColor = themeProvider.candidateBarBackgroundColor
+        collectionView.reloadData()
+    }
+
+    // MARK: - Cleanup
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - Size Calculation
