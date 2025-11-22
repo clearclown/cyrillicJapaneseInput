@@ -24,6 +24,9 @@
     "hintLabel": "\\",
     "popupCharacters": ["Ӧ", "Ө", "Ӫ", "Ѳ", "Ѻ"]
   },
+  "І": {
+    "kana_key": "i"
+  },
   "КА": {
     "kana_key": "ka"
   },
@@ -140,6 +143,36 @@
   },
   "ВА": {
     "kana_key": "wa"
+  },
+  "ЗА": {
+    "kana_key": "za"
+  },
+  "ЗИ": {
+    "kana_key": "zi"
+  },
+  "ЗУ": {
+    "kana_key": "zu"
+  },
+  "ЗЭ": {
+    "kana_key": "ze"
+  },
+  "ЗО": {
+    "kana_key": "zo"
+  },
+  "ЖА": {
+    "kana_key": "ja"
+  },
+  "ЖИ": {
+    "kana_key": "ji"
+  },
+  "ЖУ": {
+    "kana_key": "ju"
+  },
+  "ЖЭ": {
+    "kana_key": "je"
+  },
+  "ЖО": {
+    "kana_key": "jo"
   },
   "ГА": {
     "kana_key": "ga"
