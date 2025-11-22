@@ -62,6 +62,11 @@ impl IMEEngine {
         Ok(())
     }
 
+    /// Check if a Cyrillic character is a vowel
+    fn is_vowel(ch: &str) -> bool {
+        matches!(ch, "А" | "И" | "У" | "Э" | "О" | "І" | "Е" | "Ы" | "Я" | "Ю" | "Ё")
+    }
+
     /// Process a key press
     pub fn process_key(
         key: &str,
@@ -88,6 +93,19 @@ impl IMEEngine {
             .schemas
             .get(&profile.input_schema_id)
             .ok_or_else(|| format!("Schema not loaded: {}", profile.input_schema_id))?;
+
+        // Check for sokuon (促音): double consonant
+        // If buffer contains a single character and new key is the same consonant,
+        // output っ (sokuon) and reset buffer to that consonant
+        if !buffer.is_empty() && buffer == key && !Self::is_vowel(key) {
+            if let Some(sokuon) = engine.kana_engine.get("sokuon") {
+                return Ok(ConversionResult {
+                    output: sokuon.clone(),
+                    buffer: key.to_string(),
+                    action: "commit".to_string(),
+                });
+            }
+        }
 
         // Update buffer with new key
         let new_buffer = format!("{}{}", buffer, key);
