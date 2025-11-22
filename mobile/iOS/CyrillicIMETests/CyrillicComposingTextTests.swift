@@ -60,7 +60,7 @@ class CyrillicComposingTextTests: XCTestCase {
     func testAppendSingleKey() {
         // Given: Empty composing text
         var composing = CyrillicComposingText()
-        let result = ConversionResult(action: "commit", output: "あ", buffer: "")
+        let result = ConversionResult(action: "commit", output: "あ", buffer: "", lastOutput: "")
 
         // When: Appending key
         composing.append(key: "А", result: result)
@@ -77,8 +77,8 @@ class CyrillicComposingTextTests: XCTestCase {
         var composing = CyrillicComposingText()
 
         // When: Appending multiple keys
-        composing.append(key: "К", result: ConversionResult(action: "composing", output: "", buffer: "К"))
-        composing.append(key: "А", result: ConversionResult(action: "commit", output: "か", buffer: ""))
+        composing.append(key: "К", result: ConversionResult(action: "composing", output: "", buffer: "К", lastOutput: ""))
+        composing.append(key: "А", result: ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: ""))
 
         // Then: Should accumulate keys and hiragana
         XCTAssertEqual(composing.cyrillicKeys, ["К", "А"])
@@ -92,9 +92,9 @@ class CyrillicComposingTextTests: XCTestCase {
         var composing = CyrillicComposingText()
 
         // When: Appending keys that produce hiragana
-        composing.append(key: "К", result: ConversionResult(action: "composing", output: "", buffer: "К"))
-        composing.append(key: "А", result: ConversionResult(action: "commit", output: "か", buffer: ""))
-        composing.append(key: "Й", result: ConversionResult(action: "commit", output: "い", buffer: ""))
+        composing.append(key: "К", result: ConversionResult(action: "composing", output: "", buffer: "К", lastOutput: ""))
+        composing.append(key: "А", result: ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: ""))
+        composing.append(key: "Й", result: ConversionResult(action: "commit", output: "い", buffer: "", lastOutput: ""))
 
         // Then: Hiragana should accumulate (not replace)
         XCTAssertEqual(composing.cyrillicKeys, ["К", "А", "Й"])
@@ -107,7 +107,7 @@ class CyrillicComposingTextTests: XCTestCase {
         var composing = CyrillicComposingText()
 
         // When: Appending key that updates buffer
-        let result = ConversionResult(action: "composing", output: "", buffer: "К")
+        let result = ConversionResult(action: "composing", output: "", buffer: "К", lastOutput: "")
         composing.append(key: "К", result: result)
 
         // Then: Buffer should be updated
@@ -120,10 +120,10 @@ class CyrillicComposingTextTests: XCTestCase {
     func testAppendEmptyOutput() {
         // Given: Composing text with existing hiragana
         var composing = CyrillicComposingText()
-        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あ", buffer: ""))
+        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あ", buffer: "", lastOutput: ""))
 
         // When: Appending key with empty output
-        composing.append(key: "К", result: ConversionResult(action: "composing", output: "", buffer: "К"))
+        composing.append(key: "К", result: ConversionResult(action: "composing", output: "", buffer: "К", lastOutput: ""))
 
         // Then: Hiragana should not change
         XCTAssertEqual(composing.cyrillicKeys, ["А", "К"])
@@ -137,8 +137,8 @@ class CyrillicComposingTextTests: XCTestCase {
     func testDeleteBackwardSuccess() {
         // Given: Composing text with keys
         var composing = CyrillicComposingText()
-        composing.append(key: "К", result: ConversionResult(action: "commit", output: "か", buffer: ""))
-        composing.append(key: "Й", result: ConversionResult(action: "commit", output: "い", buffer: ""))
+        composing.append(key: "К", result: ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: ""))
+        composing.append(key: "Й", result: ConversionResult(action: "commit", output: "い", buffer: "", lastOutput: ""))
 
         // When: Deleting backward
         let success = composing.deleteBackward()
@@ -163,9 +163,9 @@ class CyrillicComposingTextTests: XCTestCase {
     func testDeleteBackwardMultiple() {
         // Given: Composing text with multiple keys
         var composing = CyrillicComposingText()
-        composing.append(key: "К", result: ConversionResult(action: "commit", output: "か", buffer: ""))
-        composing.append(key: "Й", result: ConversionResult(action: "commit", output: "い", buffer: ""))
-        composing.append(key: "Ш", result: ConversionResult(action: "commit", output: "し", buffer: ""))
+        composing.append(key: "К", result: ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: ""))
+        composing.append(key: "Й", result: ConversionResult(action: "commit", output: "い", buffer: "", lastOutput: ""))
+        composing.append(key: "Ш", result: ConversionResult(action: "commit", output: "し", buffer: "", lastOutput: ""))
 
         // When: Deleting multiple times
         let success1 = composing.deleteBackward()
@@ -180,7 +180,7 @@ class CyrillicComposingTextTests: XCTestCase {
     func testDeleteBackwardUntilEmpty() {
         // Given: Composing text with one key
         var composing = CyrillicComposingText()
-        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あ", buffer: ""))
+        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あ", buffer: "", lastOutput: ""))
 
         // When: Deleting until empty
         let success1 = composing.deleteBackward()
@@ -197,8 +197,8 @@ class CyrillicComposingTextTests: XCTestCase {
     func testClear() {
         // Given: Composing text with data
         var composing = CyrillicComposingText()
-        composing.append(key: "К", result: ConversionResult(action: "composing", output: "", buffer: "К"))
-        composing.append(key: "А", result: ConversionResult(action: "commit", output: "か", buffer: ""))
+        composing.append(key: "К", result: ConversionResult(action: "composing", output: "", buffer: "К", lastOutput: ""))
+        composing.append(key: "А", result: ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: ""))
 
         // When: Clearing
         composing.clear()
@@ -227,7 +227,7 @@ class CyrillicComposingTextTests: XCTestCase {
     func testUpdateCursorPosition() {
         // Given: Composing text with hiragana
         var composing = CyrillicComposingText()
-        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あいうえお", buffer: ""))
+        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あいうえお", buffer: "", lastOutput: ""))
 
         // When: Updating cursor position
         composing.updateCursorPosition(3)
@@ -239,7 +239,7 @@ class CyrillicComposingTextTests: XCTestCase {
     func testUpdateCursorPositionClamping() {
         // Given: Composing text with hiragana
         var composing = CyrillicComposingText()
-        composing.append(key: "А", result: ConversionResult(action: "commit", output: "abc", buffer: ""))
+        composing.append(key: "А", result: ConversionResult(action: "commit", output: "abc", buffer: "", lastOutput: ""))
 
         // When: Setting cursor beyond bounds
         composing.updateCursorPosition(10)
@@ -257,7 +257,7 @@ class CyrillicComposingTextTests: XCTestCase {
     func testUpdateCursorPositionZero() {
         // Given: Composing text with hiragana
         var composing = CyrillicComposingText()
-        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あ", buffer: ""))
+        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あ", buffer: "", lastOutput: ""))
 
         // When: Setting cursor to 0
         composing.updateCursorPosition(0)
@@ -271,7 +271,7 @@ class CyrillicComposingTextTests: XCTestCase {
     func testSetHiragana() {
         // Given: Composing text with existing data
         var composing = CyrillicComposingText()
-        composing.append(key: "К", result: ConversionResult(action: "commit", output: "old", buffer: "OLD"))
+        composing.append(key: "К", result: ConversionResult(action: "commit", output: "old", buffer: "OLD", lastOutput: ""))
 
         // When: Setting new hiragana
         composing.setHiragana("new", buffer: "NEW")
@@ -287,7 +287,7 @@ class CyrillicComposingTextTests: XCTestCase {
     func testSetHiraganaEmpty() {
         // Given: Composing text with data
         var composing = CyrillicComposingText()
-        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あ", buffer: ""))
+        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あ", buffer: "", lastOutput: ""))
 
         // When: Setting empty hiragana
         composing.setHiragana("", buffer: "")
@@ -303,7 +303,7 @@ class CyrillicComposingTextTests: XCTestCase {
     func testConvertTarget() {
         // Given: Composing text with hiragana
         var composing = CyrillicComposingText()
-        composing.append(key: "К", result: ConversionResult(action: "commit", output: "かいしゃ", buffer: ""))
+        composing.append(key: "К", result: ConversionResult(action: "commit", output: "かいしゃ", buffer: "", lastOutput: ""))
 
         // When: Getting convert target
         let target = composing.convertTarget
@@ -331,7 +331,7 @@ class CyrillicComposingTextTests: XCTestCase {
     func testTextBeforeCursorAtStart() {
         // Given: Composing text with cursor at start
         var composing = CyrillicComposingText()
-        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あいう", buffer: ""))
+        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あいう", buffer: "", lastOutput: ""))
         composing.updateCursorPosition(0)
 
         // When: Getting text before cursor
@@ -360,7 +360,7 @@ class CyrillicComposingTextTests: XCTestCase {
     func testTextAfterCursorAtEnd() {
         // Given: Composing text with cursor at end
         var composing = CyrillicComposingText()
-        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あいう", buffer: ""))
+        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あいう", buffer: "", lastOutput: ""))
 
         // When: Getting text after cursor
         let textAfter = composing.textAfterCursor
@@ -382,7 +382,7 @@ class CyrillicComposingTextTests: XCTestCase {
     func testIsEmptyWithKeys() {
         // Given: Composing text with keys
         var composing = CyrillicComposingText()
-        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あ", buffer: ""))
+        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あ", buffer: "", lastOutput: ""))
 
         // Then: Should not be empty
         XCTAssertFalse(composing.isEmpty)
@@ -391,7 +391,7 @@ class CyrillicComposingTextTests: XCTestCase {
     func testIsEmptyWithBuffer() {
         // Given: Composing text with buffer only
         var composing = CyrillicComposingText()
-        composing.append(key: "К", result: ConversionResult(action: "composing", output: "", buffer: "К"))
+        composing.append(key: "К", result: ConversionResult(action: "composing", output: "", buffer: "К", lastOutput: ""))
 
         // Then: Should not be empty
         XCTAssertFalse(composing.isEmpty)
@@ -400,7 +400,7 @@ class CyrillicComposingTextTests: XCTestCase {
     func testIsEmptyAfterClear() {
         // Given: Composing text with data
         var composing = CyrillicComposingText()
-        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あ", buffer: ""))
+        composing.append(key: "А", result: ConversionResult(action: "commit", output: "あ", buffer: "", lastOutput: ""))
 
         // When: Clearing
         composing.clear()
@@ -519,17 +519,17 @@ class CyrillicComposingTextTests: XCTestCase {
         var composing = CyrillicComposingText()
 
         // When: Simulating complete input sequence КАЙ -> かい
-        composing.append(key: "К", result: ConversionResult(action: "composing", output: "", buffer: "К"))
+        composing.append(key: "К", result: ConversionResult(action: "composing", output: "", buffer: "К", lastOutput: ""))
         XCTAssertEqual(composing.cyrillicKeys, ["К"])
         XCTAssertEqual(composing.cyrillicBuffer, "К")
         XCTAssertEqual(composing.hiraganaTarget, "")
 
-        composing.append(key: "А", result: ConversionResult(action: "commit", output: "か", buffer: ""))
+        composing.append(key: "А", result: ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: ""))
         XCTAssertEqual(composing.cyrillicKeys, ["К", "А"])
         XCTAssertEqual(composing.cyrillicBuffer, "")
         XCTAssertEqual(composing.hiraganaTarget, "か")
 
-        composing.append(key: "Й", result: ConversionResult(action: "commit", output: "い", buffer: ""))
+        composing.append(key: "Й", result: ConversionResult(action: "commit", output: "い", buffer: "", lastOutput: ""))
         XCTAssertEqual(composing.cyrillicKeys, ["К", "А", "Й"])
         XCTAssertEqual(composing.hiraganaTarget, "かい")
 
@@ -541,8 +541,8 @@ class CyrillicComposingTextTests: XCTestCase {
     func testDeleteAndRebuildScenario() {
         // Given: Composing text with multiple characters
         var composing = CyrillicComposingText()
-        composing.append(key: "К", result: ConversionResult(action: "commit", output: "か", buffer: ""))
-        composing.append(key: "Й", result: ConversionResult(action: "commit", output: "い", buffer: ""))
+        composing.append(key: "К", result: ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: ""))
+        composing.append(key: "Й", result: ConversionResult(action: "commit", output: "い", buffer: "", lastOutput: ""))
 
         // When: Deleting last key
         let deleted = composing.deleteBackward()

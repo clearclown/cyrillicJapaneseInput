@@ -15,6 +15,9 @@ enum InputMode: String, Codable, CaseIterable {
     /// キリル文字→日本語平仮名（変換なし）
     case japaneseHiragana
 
+    /// キリル文字→日本語片仮名（変換なし）
+    case japaneseKatakana
+
     /// キリル文字→日本語平仮名→変換（漢字/カタカナ）
     case japaneseIME
 
@@ -25,6 +28,8 @@ enum InputMode: String, Codable, CaseIterable {
             return "キリル文字直接入力"
         case .japaneseHiragana:
             return "日本語（平仮名）"
+        case .japaneseKatakana:
+            return "日本語（片仮名）"
         case .japaneseIME:
             return "日本語（IME）"
         }
@@ -37,6 +42,8 @@ enum InputMode: String, Codable, CaseIterable {
             return "Direct Cyrillic"
         case .japaneseHiragana:
             return "Japanese (Hiragana)"
+        case .japaneseKatakana:
+            return "Japanese (Katakana)"
         case .japaneseIME:
             return "Japanese (IME)"
         }
@@ -49,6 +56,8 @@ enum InputMode: String, Codable, CaseIterable {
             return "АБВ"
         case .japaneseHiragana:
             return "あ"
+        case .japaneseKatakana:
+            return "ア"
         case .japaneseIME:
             return "あ変"
         }

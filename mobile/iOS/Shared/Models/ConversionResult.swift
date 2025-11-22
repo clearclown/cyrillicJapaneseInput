@@ -21,6 +21,9 @@ struct ConversionResult: Codable {
     /// 現在の入力バッファ（action="composing"の場合に表示）
     let buffer: String
 
+    /// 最後の出力（長音検出用）
+    let lastOutput: String
+
     /// 便利プロパティ
     var isCommit: Bool { action == "commit" }
     var isComposing: Bool { action == "composing" }
@@ -33,19 +36,22 @@ extension ConversionResult {
     static let commitExample = ConversionResult(
         action: "commit",
         output: "きゃ",
-        buffer: ""
+        buffer: "",
+        lastOutput: "きゃ"
     )
 
     static let composingExample = ConversionResult(
         action: "composing",
         output: "",
-        buffer: "К"
+        buffer: "К",
+        lastOutput: ""
     )
 
     static let clearExample = ConversionResult(
         action: "clear",
         output: "",
-        buffer: ""
+        buffer: "",
+        lastOutput: ""
     )
 }
 #endif

@@ -137,7 +137,8 @@ class ModelTests: XCTestCase {
         let result = ConversionResult(
             action: "commit",
             output: "あ",
-            buffer: ""
+            buffer: "",
+            lastOutput: "あ"
         )
 
         // When: Encoding to JSON
@@ -156,11 +157,12 @@ class ModelTests: XCTestCase {
         XCTAssertEqual(decodedResult?.action, result.action)
         XCTAssertEqual(decodedResult?.output, result.output)
         XCTAssertEqual(decodedResult?.buffer, result.buffer)
+        XCTAssertEqual(decodedResult?.lastOutput, result.lastOutput)
     }
 
     func testConversionResultIsCommit() {
         // Given: A commit result
-        let commitResult = ConversionResult(action: "commit", output: "あ", buffer: "")
+        let commitResult = ConversionResult(action: "commit", output: "あ", buffer: "", lastOutput: "あ")
 
         // Then: isCommit should be true
         XCTAssertTrue(commitResult.isCommit)
@@ -170,7 +172,7 @@ class ModelTests: XCTestCase {
 
     func testConversionResultIsComposing() {
         // Given: A composing result
-        let composingResult = ConversionResult(action: "composing", output: "", buffer: "К")
+        let composingResult = ConversionResult(action: "composing", output: "", buffer: "К", lastOutput: "")
 
         // Then: isComposing should be true
         XCTAssertFalse(composingResult.isCommit)
@@ -180,7 +182,7 @@ class ModelTests: XCTestCase {
 
     func testConversionResultIsClear() {
         // Given: A clear result
-        let clearResult = ConversionResult(action: "clear", output: "", buffer: "")
+        let clearResult = ConversionResult(action: "clear", output: "", buffer: "", lastOutput: "")
 
         // Then: isClear should be true
         XCTAssertFalse(clearResult.isCommit)
@@ -190,7 +192,7 @@ class ModelTests: XCTestCase {
 
     func testConversionResultUnknownAction() {
         // Given: A result with unknown action
-        let unknownResult = ConversionResult(action: "unknown", output: "", buffer: "")
+        let unknownResult = ConversionResult(action: "unknown", output: "", buffer: "", lastOutput: "")
 
         // Then: All convenience properties should be false
         XCTAssertFalse(unknownResult.isCommit)

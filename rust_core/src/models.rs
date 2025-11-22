@@ -36,14 +36,20 @@ pub struct ConversionResult {
 
     /// Action to take: "commit", "composing", "clear"
     pub action: String,
+
+    /// Last output for long vowel detection (internal use)
+    #[serde(rename = "lastOutput")]
+    pub last_output: String,
 }
 
 impl ConversionResult {
     pub fn commit(output: String) -> Self {
+        let last = output.clone();
         Self {
             output,
             buffer: String::new(),
             action: "commit".to_string(),
+            last_output: last,
         }
     }
 
@@ -52,6 +58,7 @@ impl ConversionResult {
             output: String::new(),
             buffer,
             action: "composing".to_string(),
+            last_output: String::new(),
         }
     }
 
@@ -60,6 +67,7 @@ impl ConversionResult {
             output: String::new(),
             buffer: String::new(),
             action: "clear".to_string(),
+            last_output: String::new(),
         }
     }
 }

@@ -73,11 +73,57 @@ impl IMEEngine {
         ch != "Н" && !Self::is_vowel(ch)
     }
 
+    /// Get the vowel sound from a hiragana character
+    fn get_vowel_type(hiragana: &str) -> Option<&'static str> {
+        match hiragana {
+            // A-row (あ段)
+            "あ" | "か" | "が" | "さ" | "ざ" | "た" | "だ" | "な" | "は" | "ば" | "ぱ" | "ま" | "や" | "ら" | "わ" => Some("a"),
+            "きゃ" | "ぎゃ" | "しゃ" | "じゃ" | "ちゃ" | "にゃ" | "ひゃ" | "びゃ" | "ぴゃ" | "みゃ" | "りゃ" => Some("a"),
+
+            // I-row (い段)
+            "い" | "き" | "ぎ" | "し" | "じ" | "ち" | "に" | "ひ" | "び" | "ぴ" | "み" | "り" => Some("i"),
+
+            // U-row (う段)
+            "う" | "く" | "ぐ" | "す" | "ず" | "つ" | "づ" | "ぬ" | "ふ" | "ぶ" | "ぷ" | "む" | "ゆ" | "る" => Some("u"),
+            "きゅ" | "ぎゅ" | "しゅ" | "じゅ" | "ちゅ" | "にゅ" | "ひゅ" | "びゅ" | "ぴゅ" | "みゅ" | "りゅ" => Some("u"),
+
+            // E-row (え段)
+            "え" | "け" | "げ" | "せ" | "ぜ" | "て" | "で" | "ね" | "へ" | "べ" | "ぺ" | "め" | "れ" => Some("e"),
+
+            // O-row (お段)
+            "お" | "こ" | "ご" | "そ" | "ぞ" | "と" | "ど" | "の" | "ほ" | "ぼ" | "ぽ" | "も" | "よ" | "ろ" | "を" => Some("o"),
+            "きょ" | "ぎょ" | "しょ" | "じょ" | "ちょ" | "にょ" | "ひょ" | "びょ" | "ぴょ" | "みょ" | "りょ" => Some("o"),
+
+            _ => None,
+        }
+    }
+
+    /// Check if a vowel matches the last output's vowel type
+    fn is_long_vowel(last_output: &str, current_vowel_key: &str) -> bool {
+        if last_output.is_empty() {
+            return false;
+        }
+
+        // Get the vowel type of the last character
+        let last_vowel_type = Self::get_vowel_type(last_output);
+
+        // Check if current input is a vowel that extends the previous sound
+        match (last_vowel_type, current_vowel_key) {
+            (Some("a"), "a") => true,
+            (Some("i"), "i") => true,
+            (Some("u"), "u") => true,
+            (Some("e"), "e") | (Some("e"), "i") => true,  // え + い = えい or えー
+            (Some("o"), "o") | (Some("o"), "u") => true,  // お + う = おう or おー
+            _ => false,
+        }
+    }
+
     /// Process a key press
     pub fn process_key(
         key: &str,
         buffer: &str,
         profile_id: &str,
+        last_output: &str,
     ) -> Result<ConversionResult, String> {
         let engine_lock = ENGINE
             .read()
@@ -110,12 +156,26 @@ impl IMEEngine {
                     output: sokuon.clone(),
                     buffer: key.to_string(),
                     action: "commit".to_string(),
+                    last_output: sokuon.clone(),
                 });
             }
         }
 
         // Update buffer with new key
         let new_buffer = format!("{}{}", buffer, key);
+
+        // Check for long vowel (chōonpu)
+        // If the new input is a vowel that extends the previous mora, output ー
+        if let Some(entry) = schema.get(&new_buffer) {
+            if buffer.is_empty() && Self::is_long_vowel(last_output, &entry.kana_key) {
+                return Ok(ConversionResult {
+                    output: "ー".to_string(),
+                    buffer: String::new(),
+                    action: "commit".to_string(),
+                    last_output: "ー".to_string(),
+                });
+            }
+        }
 
         // Try to match the new buffer
         if let Some(entry) = schema.get(&new_buffer) {
@@ -154,6 +214,7 @@ impl IMEEngine {
                         output: hiragana.clone(),
                         buffer: buffer.to_string(),
                         action: "commit".to_string(),
+                        last_output: hiragana.clone(),
                     });
                 }
             }

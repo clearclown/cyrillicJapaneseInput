@@ -74,7 +74,7 @@ class CyrillicInputManagerTests: XCTestCase {
             keyboardLayout: KeyboardLayout(row1: ["А"], row2: [], row3: []),
             inputSchemaId: "schema_test"
         )
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "あ", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "あ", buffer: "", lastOutput: "")
         manager.setInputMode(.japaneseIME)
 
         // When: Processing key
@@ -99,13 +99,13 @@ class CyrillicInputManagerTests: XCTestCase {
         manager.setInputMode(.japaneseIME)
 
         // When: Processing multiple keys
-        mockRustCore.nextResult = ConversionResult(action: "composing", output: "", buffer: "К")
+        mockRustCore.nextResult = ConversionResult(action: "composing", output: "", buffer: "К", lastOutput: "")
         manager.processKey("К")
 
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
         manager.processKey("А")
 
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "い", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "い", buffer: "", lastOutput: "")
         manager.processKey("Й")
 
         // Then: Should accumulate hiragana
@@ -161,7 +161,7 @@ class CyrillicInputManagerTests: XCTestCase {
         }
 
         // When: Processing key in IME mode
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
         manager.processKey("А")
 
         // Then: Should update composing text and call callback
@@ -181,11 +181,49 @@ class CyrillicInputManagerTests: XCTestCase {
         manager.setInputMode(.japaneseHiragana)
 
         // When: Processing key that commits
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
         manager.processKey("А")
 
         // Then: Should insert text immediately
         XCTAssertEqual(mockDisplayedTextManager.lastInsertedText, "か")
+    }
+
+    func testHandleKatakanaMode() {
+        // Given: Katakana mode with profile
+        mockProfileManager.currentProfile = Profile(
+            id: "test",
+            nameJa: "Test",
+            nameEn: "Test",
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
+            inputSchemaId: "schema_test"
+        )
+        manager.setInputMode(.japaneseKatakana)
+
+        // When: Processing key that commits (hiragana output from Rust Core)
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
+        manager.processKey("А")
+
+        // Then: Should convert to katakana and insert ("か" -> "カ")
+        XCTAssertEqual(mockDisplayedTextManager.lastInsertedText, "カ")
+    }
+
+    func testHandleKatakanaModeLongVowel() {
+        // Given: Katakana mode with profile
+        mockProfileManager.currentProfile = Profile(
+            id: "test",
+            nameJa: "Test",
+            nameEn: "Test",
+            keyboardLayout: KeyboardLayout(row1: [], row2: [], row3: []),
+            inputSchemaId: "schema_test"
+        )
+        manager.setInputMode(.japaneseKatakana)
+
+        // When: Processing keys that produce long vowel in hiragana
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "とー", buffer: "", lastOutput: "")
+        manager.processKey("ТО")
+
+        // Then: Should convert to katakana with long vowel mark ("とー" -> "トー")
+        XCTAssertEqual(mockDisplayedTextManager.lastInsertedText, "トー")
     }
 
     // MARK: - Delete Handling Tests
@@ -201,13 +239,13 @@ class CyrillicInputManagerTests: XCTestCase {
         )
         manager.setInputMode(.japaneseIME)
 
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
         manager.processKey("К")
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "い", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "い", buffer: "", lastOutput: "")
         manager.processKey("А")
 
         // When: Deleting
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
         manager.processDelete()
 
         // Then: Should rebuild from history
@@ -242,7 +280,7 @@ class CyrillicInputManagerTests: XCTestCase {
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
         manager.processKey("А")
 
         // Start conversion
@@ -268,7 +306,7 @@ class CyrillicInputManagerTests: XCTestCase {
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "かいしゃ", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "かいしゃ", buffer: "", lastOutput: "")
         manager.processKey("К")
 
         var candidatesUpdated = false
@@ -294,7 +332,7 @@ class CyrillicInputManagerTests: XCTestCase {
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
         manager.processKey("А")
         manager.processSpace() // Start conversion
 
@@ -336,7 +374,7 @@ class CyrillicInputManagerTests: XCTestCase {
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
         manager.processKey("А")
 
         // When: Pressing return
@@ -357,7 +395,7 @@ class CyrillicInputManagerTests: XCTestCase {
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
         manager.processKey("А")
         manager.processSpace() // Start conversion
 
@@ -398,7 +436,7 @@ class CyrillicInputManagerTests: XCTestCase {
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
         manager.processKey("А")
         manager.processSpace() // Start conversion
 
@@ -420,7 +458,7 @@ class CyrillicInputManagerTests: XCTestCase {
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
         manager.processKey("А")
         manager.processSpace()
 
@@ -443,7 +481,7 @@ class CyrillicInputManagerTests: XCTestCase {
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
         manager.processKey("А")
 
         // When: Committing if needed
@@ -488,7 +526,7 @@ class CyrillicInputManagerTests: XCTestCase {
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
         manager.processKey("А")
 
         // When: Starting conversion
@@ -514,7 +552,7 @@ class CyrillicInputManagerTests: XCTestCase {
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
 
         // When: Processing key
         manager.processKey("А")
@@ -535,7 +573,7 @@ class CyrillicInputManagerTests: XCTestCase {
             inputSchemaId: "schema_test"
         )
         manager.setInputMode(.japaneseIME)
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "かいしゃ", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "かいしゃ", buffer: "", lastOutput: "")
         manager.processKey("К")
 
         // When: Getting current composing text
@@ -560,7 +598,7 @@ class CyrillicInputManagerTests: XCTestCase {
 
         // Given: Add composing text
         manager.setInputMode(.japaneseIME)
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
         manager.processKey("А")
 
         // Then: Should have composing text
@@ -581,13 +619,13 @@ class CyrillicInputManagerTests: XCTestCase {
         manager.setInputMode(.japaneseIME)
 
         // When: Typing "かいしゃ" and converting to "会社"
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "か", buffer: "", lastOutput: "")
         manager.processKey("К")
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "い", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "い", buffer: "", lastOutput: "")
         manager.processKey("А")
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "し", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "し", buffer: "", lastOutput: "")
         manager.processKey("Ш")
-        mockRustCore.nextResult = ConversionResult(action: "commit", output: "ゃ", buffer: "")
+        mockRustCore.nextResult = ConversionResult(action: "commit", output: "ゃ", buffer: "", lastOutput: "")
         manager.processKey("Я")
 
         XCTAssertEqual(manager.currentComposingText, "かいしゃ")
@@ -631,14 +669,14 @@ class MockDisplayedTextManager: DisplayedTextManager {
 
 class MockRustCoreFFI: RustCoreFFI {
     var nextResult: ConversionResult?
-    var lastProcessKeyCall: (cyrillicKey: String, currentBuffer: String, profileId: String)?
+    var lastProcessKeyCall: (cyrillicKey: String, currentBuffer: String, profileId: String, lastOutput: String)?
 
     override init() {
         super.init()
     }
 
-    override func processKey(cyrillicKey: String, currentBuffer: String, profileId: String) -> ConversionResult? {
-        lastProcessKeyCall = (cyrillicKey, currentBuffer, profileId)
+    override func processKey(cyrillicKey: String, currentBuffer: String, profileId: String, lastOutput: String = "") -> ConversionResult? {
+        lastProcessKeyCall = (cyrillicKey, currentBuffer, profileId, lastOutput)
         return nextResult
     }
 }

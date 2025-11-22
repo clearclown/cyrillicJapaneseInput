@@ -145,7 +145,8 @@ class RustCoreFFITests: XCTestCase {
         let result = RustCoreFFI.shared.processKey(
             cyrillicKey: "А",
             currentBuffer: "",
-            profileId: "rus_test"
+            profileId: "rus_test",
+            lastOutput: ""
         )
 
         // Then: Should return commit result with "あ"
@@ -170,7 +171,8 @@ class RustCoreFFITests: XCTestCase {
         let result = RustCoreFFI.shared.processKey(
             cyrillicKey: "К",
             currentBuffer: "",
-            profileId: "rus_test"
+            profileId: "rus_test",
+            lastOutput: ""
         )
 
         // Then: Should return composing result
@@ -194,7 +196,8 @@ class RustCoreFFITests: XCTestCase {
         let result = RustCoreFFI.shared.processKey(
             cyrillicKey: "И",
             currentBuffer: "К",
-            profileId: "rus_test"
+            profileId: "rus_test",
+            lastOutput: ""
         )
 
         // Then: Should commit "き"
@@ -219,14 +222,16 @@ class RustCoreFFITests: XCTestCase {
         let result1 = RustCoreFFI.shared.processKey(
             cyrillicKey: "К",
             currentBuffer: "",
-            profileId: "rus_test"
+            profileId: "rus_test",
+            lastOutput: ""
         )
         XCTAssertEqual(result1?.action, "composing")
 
         let result2 = RustCoreFFI.shared.processKey(
             cyrillicKey: "Я",
             currentBuffer: "К",
-            profileId: "rus_test"
+            profileId: "rus_test",
+            lastOutput: result1?.lastOutput ?? ""
         )
 
         // Then: Should commit "きゃ"
@@ -246,7 +251,8 @@ class RustCoreFFITests: XCTestCase {
         let result = RustCoreFFI.shared.processKey(
             cyrillicKey: "А",
             currentBuffer: "",
-            profileId: "nonexistent_profile"
+            profileId: "nonexistent_profile",
+            lastOutput: ""
         )
 
         // Then: Should return nil or error result
@@ -272,7 +278,8 @@ class RustCoreFFITests: XCTestCase {
         let result = RustCoreFFI.shared.processKey(
             cyrillicKey: "",
             currentBuffer: "",
-            profileId: "rus_test"
+            profileId: "rus_test",
+            lastOutput: ""
         )
 
         // Then: Should handle gracefully (clear or nil)
@@ -310,9 +317,9 @@ class RustCoreFFITests: XCTestCase {
 
     func testConversionResultConvenienceProperties() {
         // Given: Different action types
-        let commitResult = ConversionResult(action: "commit", output: "あ", buffer: "")
-        let composingResult = ConversionResult(action: "composing", output: "", buffer: "К")
-        let clearResult = ConversionResult(action: "clear", output: "", buffer: "")
+        let commitResult = ConversionResult(action: "commit", output: "あ", buffer: "", lastOutput: "")
+        let composingResult = ConversionResult(action: "composing", output: "", buffer: "К", lastOutput: "")
+        let clearResult = ConversionResult(action: "clear", output: "", buffer: "", lastOutput: "")
 
         // When/Then: Testing convenience properties
         XCTAssertTrue(commitResult.isCommit)

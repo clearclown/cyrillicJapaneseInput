@@ -18,7 +18,7 @@ func rust_init_engine(_ profiles_json: UnsafePointer<CChar>, _ kana_engine_json:
 func rust_load_schema(_ schema_json: UnsafePointer<CChar>, _ schema_id: UnsafePointer<CChar>) -> UnsafeMutablePointer<CChar>?
 
 @_silgen_name("rust_process_key")
-func rust_process_key(_ cyrillic_key: UnsafePointer<CChar>, _ current_buffer: UnsafePointer<CChar>, _ profile_id: UnsafePointer<CChar>) -> UnsafeMutablePointer<CChar>?
+func rust_process_key(_ cyrillic_key: UnsafePointer<CChar>, _ current_buffer: UnsafePointer<CChar>, _ profile_id: UnsafePointer<CChar>, _ last_output: UnsafePointer<CChar>) -> UnsafeMutablePointer<CChar>?
 
 @_silgen_name("rust_free_string")
 func rust_free_string(_ ptr: UnsafeMutablePointer<CChar>)
@@ -107,8 +107,9 @@ class RustCoreFFI {
     ///   - cyrillicKey: 入力されたキリル文字
     ///   - currentBuffer: 現在の入力バッファ
     ///   - profileId: 使用するプロファイルID
+    ///   - lastOutput: 最後の出力（長音検出用）
     /// - Returns: 変換結果、エラー時はnil
-    func processKey(cyrillicKey: String, currentBuffer: String, profileId: String) -> ConversionResult? {
+    func processKey(cyrillicKey: String, currentBuffer: String, profileId: String, lastOutput: String = "") -> ConversionResult? {
         guard isInitialized else {
             print("[RustCoreFFI] Error: Engine not initialized")
             return nil
@@ -117,7 +118,9 @@ class RustCoreFFI {
         let jsonPtr = cyrillicKey.withCString { keyPtr in
             currentBuffer.withCString { bufferPtr in
                 profileId.withCString { profilePtr in
-                    rust_process_key(keyPtr, bufferPtr, profilePtr)
+                    lastOutput.withCString { lastOutputPtr in
+                        rust_process_key(keyPtr, bufferPtr, profilePtr, lastOutputPtr)
+                    }
                 }
             }
         }

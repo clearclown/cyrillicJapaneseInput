@@ -389,11 +389,13 @@ class CyrillicKeyboardView: UIView {
     }
 
     @objc private func handleInputModeToggle(_ sender: UIButton) {
-        // 入力モードを切り替え（АБВ → あ → あ変 → АБВ...）
+        // 入力モードを切り替え（АБВ → あ → ア → あ変 → АБВ...）
         switch inputMode {
         case .directCyrillic:
             inputMode = .japaneseHiragana
         case .japaneseHiragana:
+            inputMode = .japaneseKatakana
+        case .japaneseKatakana:
             inputMode = .japaneseIME
         case .japaneseIME:
             inputMode = .directCyrillic
