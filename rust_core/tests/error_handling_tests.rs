@@ -137,7 +137,7 @@ fn test_process_key_with_nonexistent_profile() {
         r#"{"a":"あ"}"#
     );
 
-    let result = IMEEngine::process_key("А", "", "nonexistent_profile");
+    let result = IMEEngine::process_key("А", "", "nonexistent_profile", "", &None);
     assert!(result.is_err(), "Should fail with nonexistent profile");
 
     if let Err(e) = result {
@@ -152,7 +152,7 @@ fn test_process_key_with_unloaded_schema() {
         r#"{"a":"あ"}"#
     );
 
-    let result = IMEEngine::process_key("А", "", "test");
+    let result = IMEEngine::process_key("А", "", "test", "", &None);
     // May succeed or fail depending on which test initialized the engine
     // If it fails, check that error message is appropriate
     if result.is_err() {
@@ -171,12 +171,12 @@ fn test_process_key_with_empty_strings() {
     let _ = IMEEngine::load_schema(r#"{"А":{"kana_key":"a"}}"#, "test_schema");
 
     // Empty key
-    let result = IMEEngine::process_key("", "", "test");
+    let result = IMEEngine::process_key("", "", "test", "", &None);
     // Should either succeed with clear action or fail gracefully
     assert!(result.is_ok() || result.is_err());
 
     // Empty profile ID
-    let result = IMEEngine::process_key("А", "", "");
+    let result = IMEEngine::process_key("А", "", "", "", &None);
     assert!(result.is_err(), "Should fail with empty profile ID");
 }
 
@@ -189,7 +189,7 @@ fn test_process_key_with_special_characters() {
     let _ = IMEEngine::load_schema(r#"{"А":{"kana_key":"a"}}"#, "test_schema");
 
     // Null character in profile ID
-    let result = IMEEngine::process_key("А", "", "test\0broken");
+    let result = IMEEngine::process_key("А", "", "test\0broken", "", &None);
     // Should handle gracefully
     assert!(result.is_err() || result.is_ok());
 }
@@ -221,7 +221,7 @@ fn test_kana_key_not_in_engine() {
     // Schema references kana_key "xyz" which doesn't exist in engine
     let _ = IMEEngine::load_schema(r#"{"А":{"kana_key":"xyz"}}"#, "test_schema");
 
-    let result = IMEEngine::process_key("А", "", "test");
+    let result = IMEEngine::process_key("А", "", "test", "", &None);
     // Should succeed but return the kana_key itself
     if let Ok(conv) = result {
         assert_eq!(conv.output, "xyz", "Should return kana_key if not found in engine");
@@ -238,7 +238,7 @@ fn test_extremely_long_buffer() {
 
     // Buffer with 100,000 characters
     let huge_buffer = "К".repeat(100_000);
-    let result = IMEEngine::process_key("А", &huge_buffer, "test");
+    let result = IMEEngine::process_key("А", &huge_buffer, "test", "", &None);
 
     // Should handle gracefully without crashing
     assert!(result.is_ok() || result.is_err());
@@ -254,7 +254,7 @@ fn test_extremely_long_key() {
 
     // Very long key (unlikely in practice but test robustness)
     let long_key = "А".repeat(10_000);
-    let result = IMEEngine::process_key(&long_key, "", "test");
+    let result = IMEEngine::process_key(&long_key, "", "test", "", &None);
 
     // Should handle gracefully
     assert!(result.is_ok() || result.is_err());

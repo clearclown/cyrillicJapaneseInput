@@ -99,16 +99,25 @@ impl IMEEngine {
     }
 
     /// Check if a vowel matches the last output's vowel type
-    fn is_long_vowel(last_output: &str, current_vowel_key: &str) -> bool {
+    /// Supports consecutive long vowels by using last_vowel_type when last_output is "ー"
+    fn is_long_vowel(
+        last_output: &str,
+        last_vowel_type: &Option<String>,
+        current_vowel_key: &str,
+    ) -> bool {
         if last_output.is_empty() {
             return false;
         }
 
-        // Get the vowel type of the last character
-        let last_vowel_type = Self::get_vowel_type(last_output);
+        // For consecutive long vowels: if last_output is "ー", use last_vowel_type
+        let vowel_type_to_check = if last_output == "ー" {
+            last_vowel_type.as_deref()
+        } else {
+            Self::get_vowel_type(last_output)
+        };
 
         // Check if current input is a vowel that extends the previous sound
-        match (last_vowel_type, current_vowel_key) {
+        match (vowel_type_to_check, current_vowel_key) {
             (Some("a"), "a") => true,
             (Some("i"), "i") => true,
             (Some("u"), "u") => true,
@@ -124,6 +133,7 @@ impl IMEEngine {
         buffer: &str,
         profile_id: &str,
         last_output: &str,
+        last_vowel_type: &Option<String>,
     ) -> Result<ConversionResult, String> {
         let engine_lock = ENGINE
             .read()
@@ -152,11 +162,13 @@ impl IMEEngine {
         // NOTE: Н is excluded because it's the special ん mora and cannot be doubled
         if !buffer.is_empty() && buffer == key && Self::can_create_sokuon(key) {
             if let Some(sokuon) = engine.kana_engine.get("sokuon") {
+                // っ has no vowel type (it's a consonant placeholder)
                 return Ok(ConversionResult {
                     output: sokuon.clone(),
                     buffer: key.to_string(),
                     action: "commit".to_string(),
                     last_output: sokuon.clone(),
+                    last_vowel_type: None,
                 });
             }
         }
@@ -167,12 +179,21 @@ impl IMEEngine {
         // Check for long vowel (chōonpu)
         // If the new input is a vowel that extends the previous mora, output ー
         if let Some(entry) = schema.get(&new_buffer) {
-            if buffer.is_empty() && Self::is_long_vowel(last_output, &entry.kana_key) {
+            if buffer.is_empty() && Self::is_long_vowel(last_output, last_vowel_type, &entry.kana_key) {
+                // Preserve the vowel type through the long vowel mark
+                // If last_output was "ー", inherit its vowel type; otherwise get from last_output
+                let preserved_vowel_type = if last_output == "ー" {
+                    last_vowel_type.clone()
+                } else {
+                    Self::get_vowel_type(last_output).map(|s| s.to_string())
+                };
+
                 return Ok(ConversionResult {
                     output: "ー".to_string(),
                     buffer: String::new(),
                     action: "commit".to_string(),
                     last_output: "ー".to_string(),
+                    last_vowel_type: preserved_vowel_type,
                 });
             }
         }
@@ -192,10 +213,25 @@ impl IMEEngine {
 
             // Commit the match
             if let Some(hiragana) = engine.kana_engine.get(&entry.kana_key) {
-                return Ok(ConversionResult::commit(hiragana.clone()));
+                // Track the vowel type for this hiragana
+                let vowel_type = Self::get_vowel_type(&hiragana).map(|s| s.to_string());
+                return Ok(ConversionResult {
+                    output: hiragana.clone(),
+                    buffer: String::new(),
+                    action: "commit".to_string(),
+                    last_output: hiragana.clone(),
+                    last_vowel_type: vowel_type,
+                });
             } else {
                 // Kana key not found in engine (should not happen with valid data)
-                return Ok(ConversionResult::commit(entry.kana_key.clone()));
+                let vowel_type = Self::get_vowel_type(&entry.kana_key).map(|s| s.to_string());
+                return Ok(ConversionResult {
+                    output: entry.kana_key.clone(),
+                    buffer: String::new(),
+                    action: "commit".to_string(),
+                    last_output: entry.kana_key.clone(),
+                    last_vowel_type: vowel_type,
+                });
             }
         }
 
@@ -210,11 +246,13 @@ impl IMEEngine {
             if let Some(entry) = schema.get(key) {
                 if let Some(hiragana) = engine.kana_engine.get(&entry.kana_key) {
                     // Commit the single key, keep old buffer
+                    let vowel_type = Self::get_vowel_type(&hiragana).map(|s| s.to_string());
                     return Ok(ConversionResult {
                         output: hiragana.clone(),
                         buffer: buffer.to_string(),
                         action: "commit".to_string(),
                         last_output: hiragana.clone(),
+                        last_vowel_type: vowel_type,
                     });
                 }
             }

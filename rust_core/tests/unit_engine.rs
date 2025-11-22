@@ -61,7 +61,7 @@ fn test_process_key_with_empty_key() {
     let _ = IMEEngine::init(TEST_PROFILES, TEST_KANA_ENGINE);
     let _ = IMEEngine::load_schema(TEST_SCHEMA_RUS, "schema_rus_test");
 
-    let result = IMEEngine::process_key("", "", "rus_test");
+    let result = IMEEngine::process_key("", "", "rus_test", "", &None);
     // Empty key should either clear or return an error
     assert!(result.is_ok() || result.is_err());
 }
@@ -71,7 +71,7 @@ fn test_process_key_with_invalid_profile() {
     let _ = IMEEngine::init(TEST_PROFILES, TEST_KANA_ENGINE);
     let _ = IMEEngine::load_schema(TEST_SCHEMA_RUS, "schema_rus_test");
 
-    let result = IMEEngine::process_key("А", "", "nonexistent_profile");
+    let result = IMEEngine::process_key("А", "", "nonexistent_profile", "", &None);
     assert!(result.is_err(), "Should fail with invalid profile");
 }
 
@@ -80,7 +80,7 @@ fn test_process_key_with_unloaded_schema() {
     let _ = IMEEngine::init(TEST_PROFILES, TEST_KANA_ENGINE);
     // Don't load schema
 
-    let result = IMEEngine::process_key("А", "", "rus_test");
+    let result = IMEEngine::process_key("А", "", "rus_test", "", &None);
     // May succeed if schema was loaded by another test, or fail if not loaded
     // This is expected with global singleton pattern
     let _ = result;
@@ -115,14 +115,14 @@ fn test_composing_state_preservation() {
     let _ = IMEEngine::load_schema(TEST_SCHEMA_RUS, "schema_rus_test");
 
     // First key: К (should be composing)
-    let result1 = IMEEngine::process_key("К", "", "rus_test");
+    let result1 = IMEEngine::process_key("К", "", "rus_test", "", &None);
     assert!(result1.is_ok());
     let conv1 = result1.unwrap();
     assert_eq!(conv1.action, "composing");
     assert_eq!(conv1.buffer, "К");
 
     // Second key: И (should commit КИ -> き)
-    let result2 = IMEEngine::process_key("И", &conv1.buffer, "rus_test");
+    let result2 = IMEEngine::process_key("И", &conv1.buffer, "rus_test", "", &None);
     assert!(result2.is_ok());
     let conv2 = result2.unwrap();
     assert_eq!(conv2.action, "commit");
@@ -135,7 +135,7 @@ fn test_single_character_direct_match() {
     let _ = IMEEngine::init(TEST_PROFILES, TEST_KANA_ENGINE);
     let _ = IMEEngine::load_schema(TEST_SCHEMA_RUS, "schema_rus_test");
 
-    let result = IMEEngine::process_key("А", "", "rus_test");
+    let result = IMEEngine::process_key("А", "", "rus_test", "", &None);
     assert!(result.is_ok());
     let conv = result.unwrap();
     assert_eq!(conv.action, "commit");
@@ -149,7 +149,7 @@ fn test_撥音_n_handling() {
     let _ = IMEEngine::load_schema(TEST_SCHEMA_RUS, "schema_rus_test");
 
     // Н alone should give ん
-    let result = IMEEngine::process_key("Н", "", "rus_test");
+    let result = IMEEngine::process_key("Н", "", "rus_test", "", &None);
     assert!(result.is_ok());
     let conv = result.unwrap();
     assert_eq!(conv.output, "ん");
@@ -161,12 +161,12 @@ fn test_prefix_matching_longest_first() {
     let _ = IMEEngine::load_schema(TEST_SCHEMA_RUS, "schema_rus_test");
 
     // К should be composing (prefix of КА, КИ, КЯ)
-    let result1 = IMEEngine::process_key("К", "", "rus_test");
+    let result1 = IMEEngine::process_key("К", "", "rus_test", "", &None);
     assert!(result1.is_ok());
     assert_eq!(result1.unwrap().action, "composing");
 
     // КЯ should commit きゃ
-    let result2 = IMEEngine::process_key("Я", "К", "rus_test");
+    let result2 = IMEEngine::process_key("Я", "К", "rus_test", "", &None);
     assert!(result2.is_ok());
     let conv = result2.unwrap();
     assert_eq!(conv.output, "きゃ");
@@ -179,7 +179,7 @@ fn test_clear_on_invalid_sequence() {
     let _ = IMEEngine::load_schema(TEST_SCHEMA_RUS, "schema_rus_test");
 
     // КУ is not a valid sequence, but У is valid alone
-    let result = IMEEngine::process_key("У", "К", "rus_test");
+    let result = IMEEngine::process_key("У", "К", "rus_test", "", &None);
     assert!(result.is_ok());
     let conv = result.unwrap();
     // Engine commits У and keeps buffer К
@@ -233,7 +233,7 @@ fn test_empty_buffer_processing() {
     let _ = IMEEngine::load_schema(TEST_SCHEMA_RUS, "schema_rus_test");
 
     // Processing with empty buffer should work
-    let result = IMEEngine::process_key("А", "", "rus_test");
+    let result = IMEEngine::process_key("А", "", "rus_test", "", &None);
     assert!(result.is_ok());
     assert_eq!(result.unwrap().output, "あ");
 }
@@ -245,7 +245,7 @@ fn test_large_buffer() {
 
     // Very large invalid buffer should clear
     let large_buffer = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ".repeat(10);
-    let result = IMEEngine::process_key("А", &large_buffer, "rus_test");
+    let result = IMEEngine::process_key("А", &large_buffer, "rus_test", "", &None);
     assert!(result.is_ok());
     // Should either clear or handle gracefully
 }

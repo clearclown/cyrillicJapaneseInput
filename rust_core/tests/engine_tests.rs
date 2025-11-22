@@ -88,7 +88,7 @@ fn test_single_character_conversion_russian() {
     let _ = IMEEngine::load_schema(TEST_SCHEMA_RUS, "schema_rus_v1");
 
     // Test: А -> あ
-    let result = IMEEngine::process_key("А", "", "rus_standard");
+    let result = IMEEngine::process_key("А", "", "rus_standard", "", &None);
     assert!(result.is_ok());
 
     let conv_result = result.unwrap();
@@ -103,14 +103,14 @@ fn test_multi_character_conversion_russian() {
     let _ = IMEEngine::load_schema(TEST_SCHEMA_RUS, "schema_rus_v1");
 
     // Test: К (composing)
-    let result = IMEEngine::process_key("К", "", "rus_standard");
+    let result = IMEEngine::process_key("К", "", "rus_standard", "", &None);
     assert!(result.is_ok());
     let conv_result = result.unwrap();
     assert_eq!(conv_result.action, "composing");
     assert_eq!(conv_result.buffer, "К");
 
     // Test: К + Я -> きゃ
-    let result = IMEEngine::process_key("Я", "К", "rus_standard");
+    let result = IMEEngine::process_key("Я", "К", "rus_standard", "", &None);
     assert!(result.is_ok());
     let conv_result = result.unwrap();
     assert_eq!(conv_result.output, "きゃ");
@@ -126,7 +126,7 @@ fn test_serbian_single_key_ligature() {
     
 
     // Test: Ћ -> ち (Serbian single character for "chi")
-    let result = IMEEngine::process_key("Ћ", "", "srb_cyrillic");
+    let result = IMEEngine::process_key("Ћ", "", "srb_cyrillic", "", &None);
     assert!(result.is_ok());
 
     let conv_result = result.unwrap();
@@ -143,21 +143,21 @@ fn test_serbian_multi_character_conversion() {
     
 
     // Test: К (composing)
-    let result = IMEEngine::process_key("К", "", "srb_cyrillic");
+    let result = IMEEngine::process_key("К", "", "srb_cyrillic", "", &None);
     assert!(result.is_ok());
     let conv_result = result.unwrap();
     assert_eq!(conv_result.action, "composing");
     assert_eq!(conv_result.buffer, "К");
 
     // Test: К + Ј (composing)
-    let result = IMEEngine::process_key("Ј", "К", "srb_cyrillic");
+    let result = IMEEngine::process_key("Ј", "К", "srb_cyrillic", "", &None);
     assert!(result.is_ok());
     let conv_result = result.unwrap();
     assert_eq!(conv_result.action, "composing");
     assert_eq!(conv_result.buffer, "КЈ");
 
     // Test: К + Ј + А -> きゃ
-    let result = IMEEngine::process_key("А", "КЈ", "srb_cyrillic");
+    let result = IMEEngine::process_key("А", "КЈ", "srb_cyrillic", "", &None);
     assert!(result.is_ok());
     let conv_result = result.unwrap();
     assert_eq!(conv_result.output, "きゃ");
@@ -173,7 +173,7 @@ fn test_invalid_sequence() {
     
 
     // Test: Invalid sequence -> clear
-    let result = IMEEngine::process_key("Б", "К", "rus_standard");
+    let result = IMEEngine::process_key("Б", "К", "rus_standard", "", &None);
     assert!(result.is_ok());
     let conv_result = result.unwrap();
     // Should clear buffer since КБ is not a valid sequence
@@ -191,12 +191,12 @@ fn test_profile_switching() {
     // Same phonetic key "kya" but different input sequences
 
     // Russian: КЯ -> きゃ
-    let result = IMEEngine::process_key("Я", "К", "rus_standard");
+    let result = IMEEngine::process_key("Я", "К", "rus_standard", "", &None);
     assert!(result.is_ok());
     assert_eq!(result.unwrap().output, "きゃ");
 
     // Serbian: КЈА -> きゃ
-    let result = IMEEngine::process_key("А", "КЈ", "srb_cyrillic");
+    let result = IMEEngine::process_key("А", "КЈ", "srb_cyrillic", "", &None);
     assert!(result.is_ok());
     assert_eq!(result.unwrap().output, "きゃ");
 }

@@ -112,7 +112,8 @@ pub unsafe extern "C" fn rust_load_schema(
 /// Process a key press and return conversion result as JSON
 ///
 /// # Safety
-/// - `key`, `buffer`, `profile_id`, and `last_output` must be valid UTF-8 C strings
+/// - `key`, `buffer`, `profile_id`, `last_output`, and `last_vowel_type` must be valid UTF-8 C strings
+/// - `last_vowel_type` can be an empty string to represent None
 /// - Returns a pointer to a C string (JSON) that must be freed with `rust_free_string`
 /// - Returns null pointer on failure
 #[no_mangle]
@@ -121,9 +122,10 @@ pub unsafe extern "C" fn rust_process_key(
     buffer: *const c_char,
     profile_id: *const c_char,
     last_output: *const c_char,
+    last_vowel_type: *const c_char,
 ) -> *mut c_char {
     let result = panic::catch_unwind(|| {
-        if key.is_null() || buffer.is_null() || profile_id.is_null() || last_output.is_null() {
+        if key.is_null() || buffer.is_null() || profile_id.is_null() || last_output.is_null() || last_vowel_type.is_null() {
             return std::ptr::null_mut();
         }
 
@@ -147,7 +149,25 @@ pub unsafe extern "C" fn rust_process_key(
             Err(_) => return std::ptr::null_mut(),
         };
 
-        let result = match IMEEngine::process_key(key_str, buffer_str, profile_id_str, last_output_str) {
+        let last_vowel_type_str = match CStr::from_ptr(last_vowel_type).to_str() {
+            Ok(s) => s,
+            Err(_) => return std::ptr::null_mut(),
+        };
+
+        // Convert empty string to None
+        let last_vowel_type_opt = if last_vowel_type_str.is_empty() {
+            None
+        } else {
+            Some(last_vowel_type_str.to_string())
+        };
+
+        let result = match IMEEngine::process_key(
+            key_str,
+            buffer_str,
+            profile_id_str,
+            last_output_str,
+            &last_vowel_type_opt,
+        ) {
             Ok(r) => r,
             Err(_) => return std::ptr::null_mut(),
         };

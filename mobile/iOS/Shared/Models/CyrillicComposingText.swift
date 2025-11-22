@@ -23,6 +23,12 @@ struct CyrillicComposingText {
     /// Cursor position within hiragana target
     private(set) var cursorPosition: Int = 0
 
+    /// Last output from conversion (for long vowel detection)
+    private(set) var lastOutput: String = ""
+
+    /// Last vowel type (for consecutive long vowel detection)
+    private(set) var lastVowelType: String? = nil
+
     // MARK: - Computed Properties
 
     /// Whether there is any composing text
@@ -70,13 +76,15 @@ struct CyrillicComposingText {
         // Update buffer
         cyrillicBuffer = result.buffer
 
-        // Append output to hiragana target if available
+        // Track last output and vowel type for long vowel detection
         if !result.output.isEmpty {
             hiraganaTarget += result.output
             cursorPosition = hiraganaTarget.count
+            lastOutput = result.lastOutput
+            lastVowelType = result.lastVowelType
         }
 
-        print("[CyrillicComposingText] Appended '\(key)' -> buffer: '\(cyrillicBuffer)', hiragana: '\(hiraganaTarget)'")
+        print("[CyrillicComposingText] Appended '\(key)' -> buffer: '\(cyrillicBuffer)', hiragana: '\(hiraganaTarget)', lastOutput: '\(lastOutput)', lastVowelType: '\(lastVowelType ?? "nil")'")
     }
 
     /// Deletes the last character backward
@@ -104,6 +112,8 @@ struct CyrillicComposingText {
         cyrillicBuffer = ""
         hiraganaTarget = ""
         cursorPosition = 0
+        lastOutput = ""
+        lastVowelType = nil
 
         print("[CyrillicComposingText] Cleared all composing text")
     }
