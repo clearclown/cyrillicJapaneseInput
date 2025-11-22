@@ -28,6 +28,9 @@ final class CyrillicInputManager {
     /// Live conversion manager (Phase 3)
     private let liveConversionManager: LiveConversionManager
 
+    /// User dictionary manager (Phase 5)
+    private let userDictionary: UserDictionaryManager
+
     /// Current composing text state
     private var composingText: CyrillicComposingText = CyrillicComposingText()
 
@@ -67,11 +70,13 @@ final class CyrillicInputManager {
          rustCore: RustCoreFFI = .shared,
          profileManager: ProfileManager = .shared,
          conversionEngine: KanjiConversionEngineProtocol = KanjiConversionEngine.shared,
+         userDictionary: UserDictionaryManager = .shared,
          liveConversionManager: LiveConversionManager? = nil) {
         self.displayedTextManager = displayedTextManager
         self.rustCore = rustCore
         self.profileManager = profileManager
         self.conversionEngine = conversionEngine
+        self.userDictionary = userDictionary
         self.liveConversionManager = liveConversionManager ?? LiveConversionManager(
             conversionEngine: conversionEngine
         )
@@ -288,7 +293,7 @@ final class CyrillicInputManager {
         }
     }
 
-    /// Starts kanji conversion mode (Phase 2)
+    /// Starts kanji conversion mode (Phase 2/5)
     private func startConversion() {
         isConverting = true
 
@@ -301,11 +306,25 @@ final class CyrillicInputManager {
                 )
 
                 // Extract candidate texts
-                self.candidates = candidateObjects.map { $0.text }
+                var candidateList = candidateObjects.map { $0.text }
 
-                // Always include original hiragana as first candidate if not present
+                // Phase 5: Add user dictionary candidates at the top
+                let userDictCandidates = userDictionary.lookup(reading: composingText.hiraganaTarget)
+                if !userDictCandidates.isEmpty {
+                    // Insert user dictionary candidates at the beginning
+                    // Remove duplicates from system candidates
+                    candidateList.removeAll { userDictCandidates.contains($0) }
+                    candidateList = userDictCandidates + candidateList
+                    print("[CyrillicInputManager] Found \(userDictCandidates.count) user dictionary candidates")
+                }
+
+                self.candidates = candidateList
+
+                // Always include original hiragana if not present
                 if !self.candidates.contains(composingText.hiraganaTarget) {
-                    self.candidates.insert(composingText.hiraganaTarget, at: 0)
+                    // Insert after user dict candidates but before system candidates
+                    let insertIndex = userDictCandidates.isEmpty ? 0 : userDictCandidates.count
+                    self.candidates.insert(composingText.hiraganaTarget, at: insertIndex)
                 }
 
                 self.selectedCandidateIndex = 0
@@ -321,12 +340,13 @@ final class CyrillicInputManager {
                     )
                 }
 
-                print("[CyrillicInputManager] Started conversion with \(self.candidates.count) candidates")
+                print("[CyrillicInputManager] Started conversion with \(self.candidates.count) candidates (including \(userDictCandidates.count) from user dict)")
             } catch {
                 print("[CyrillicInputManager] Conversion failed: \(error)")
 
-                // Fallback: show hiragana and katakana
-                var candidateList = [composingText.hiraganaTarget]
+                // Fallback: check user dictionary first, then hiragana and katakana
+                var candidateList = userDictionary.lookup(reading: composingText.hiraganaTarget)
+                candidateList.append(composingText.hiraganaTarget)
                 if let katakana = convertToKatakana(composingText.hiraganaTarget) {
                     candidateList.append(katakana)
                 }
@@ -399,7 +419,10 @@ final class CyrillicInputManager {
         let selected = candidates[index]
         let hiragana = composingText.hiraganaTarget
 
-        // Learn from user selection
+        // Phase 5: Record usage in user dictionary
+        userDictionary.recordUsage(reading: hiragana, output: selected)
+
+        // Learn from user selection in system conversion engine
         conversionEngine.learn(hiragana, selected: selected)
 
         commitText(selected)

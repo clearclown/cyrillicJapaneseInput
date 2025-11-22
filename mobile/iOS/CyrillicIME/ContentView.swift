@@ -9,6 +9,9 @@
 import SwiftUI
 
 struct ContentView: View {
+    @AppStorage("has_shown_tutorial", store: UserDefaults.shared) private var hasShownTutorial = false
+    @State private var showingTutorial = false
+
     var body: some View {
         TabView {
             SettingsView()
@@ -20,6 +23,16 @@ struct ContentView: View {
                 .tabItem {
                     Label("ヘルプ", systemImage: "questionmark.circle.fill")
                 }
+        }
+        .sheet(isPresented: $showingTutorial) {
+            TutorialView()
+        }
+        .onAppear {
+            // Show tutorial on first launch
+            if !hasShownTutorial {
+                showingTutorial = true
+                hasShownTutorial = true
+            }
         }
     }
 }
