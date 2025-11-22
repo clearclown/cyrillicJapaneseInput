@@ -53,6 +53,21 @@ struct SettingsView: View {
                     Text("ライブ変換：入力中に自動的に漢字変換を行います")
                 }
 
+                // Preview Section
+                Section {
+                    NavigationLink(destination: KeyboardLayoutPreview()) {
+                        HStack {
+                            Image(systemName: "keyboard.fill")
+                                .foregroundColor(.purple)
+                            Text("レイアウトプレビュー")
+                        }
+                    }
+                } header: {
+                    Text("キーボード")
+                } footer: {
+                    Text("選択したプロファイルのキーボード配列を確認できます")
+                }
+
                 // User Dictionary Section
                 Section {
                     NavigationLink(destination: UserDictionaryView()) {
@@ -77,24 +92,25 @@ struct SettingsView: View {
                     Text("学習データには変換履歴と頻度情報が含まれます")
                 }
 
-                // About Section
+                // Help Section
                 Section {
-                    HStack {
-                        Text("バージョン")
-                        Spacer()
-                        Text("1.0.0")
-                            .foregroundColor(.secondary)
+                    NavigationLink(destination: TutorialView()) {
+                        HStack {
+                            Image(systemName: "graduationcap.fill")
+                                .foregroundColor(.green)
+                            Text("使い方チュートリアル")
+                        }
                     }
 
-                    Link(destination: URL(string: "https://github.com/clearclown/cyrillicJapaneseInput")!) {
+                    NavigationLink(destination: AboutView()) {
                         HStack {
-                            Image(systemName: "link")
-                                .foregroundColor(.blue)
-                            Text("GitHubで見る")
+                            Image(systemName: "info.circle.fill")
+                                .foregroundColor(.orange)
+                            Text("Pismoについて")
                         }
                     }
                 } header: {
-                    Text("アプリについて")
+                    Text("ヘルプ")
                 }
 
                 // Keyboard Setup Guide
@@ -157,14 +173,16 @@ struct SettingsView: View {
     }
 }
 
-// MARK: - User Dictionary View (Placeholder)
+// MARK: - User Dictionary View
 
 struct UserDictionaryView: View {
-    @State private var userWords: [UserDictionaryEntry] = []
+    @StateObject private var dictionaryManager = UserDictionaryManager.shared
+    @State private var showingAddSheet = false
+    @State private var showingClearAlert = false
 
     var body: some View {
         List {
-            if userWords.isEmpty {
+            if dictionaryManager.entries.isEmpty {
                 VStack(spacing: 16) {
                     Image(systemName: "book.closed")
                         .font(.system(size: 48))
@@ -177,54 +195,110 @@ struct UserDictionaryView: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
+                        .padding(.horizontal)
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
+                .listRowBackground(Color.clear)
             } else {
-                ForEach(userWords) { entry in
-                    VStack(alignment: .leading) {
-                        Text(entry.word)
-                            .font(.headline)
-                        Text(entry.reading)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                // Statistics Section
+                Section {
+                    VStack(alignment: .leading, spacing: 8) {
+                        StatRow(label: "登録単語数", value: "\(dictionaryManager.entries.count)件")
+                        StatRow(label: "総使用回数", value: "\(dictionaryManager.statistics.totalUsage)回")
                     }
+                } header: {
+                    Text("統計")
                 }
-                .onDelete(perform: deleteWords)
+
+                // Dictionary Entries
+                Section {
+                    ForEach(dictionaryManager.entries.sorted(by: { $0.frequency > $1.frequency })) { entry in
+                        DictionaryEntryRow(entry: entry)
+                    }
+                    .onDelete(perform: deleteEntries)
+                } header: {
+                    Text("登録単語（頻度順）")
+                }
             }
         }
         .navigationTitle("ユーザー辞書")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: addWord) {
+                Button(action: { showingAddSheet = true }) {
                     Image(systemName: "plus")
                 }
             }
+
+            if !dictionaryManager.entries.isEmpty {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: { showingClearAlert = true }) {
+                        Text("全削除")
+                            .foregroundColor(.red)
+                    }
+                }
+            }
         }
-        .onAppear {
-            loadUserDictionary()
+        .sheet(isPresented: $showingAddSheet) {
+            AddDictionaryEntryView()
+        }
+        .alert("全削除の確認", isPresented: $showingClearAlert) {
+            Button("キャンセル", role: .cancel) {}
+            Button("削除", role: .destructive) {
+                dictionaryManager.clearAll()
+            }
+        } message: {
+            Text("すべてのユーザー辞書エントリを削除してもよろしいですか？この操作は取り消せません。")
         }
     }
 
-    private func loadUserDictionary() {
-        // TODO: Load from UserDefaults or database
-    }
-
-    private func addWord() {
-        // TODO: Show add word sheet
-    }
-
-    private func deleteWords(at offsets: IndexSet) {
-        userWords.remove(atOffsets: offsets)
+    private func deleteEntries(at offsets: IndexSet) {
+        dictionaryManager.removeEntries(at: offsets)
     }
 }
 
-struct UserDictionaryEntry: Identifiable {
-    let id = UUID()
-    let word: String
-    let reading: String
-    var frequency: Int = 0
+// MARK: - Supporting Views
+
+struct DictionaryEntryRow: View {
+    let entry: UserDictionaryEntry
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(entry.output)
+                .font(.headline)
+
+            HStack {
+                Text("読み: \(entry.reading)")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+
+                Spacer()
+
+                if entry.frequency > 0 {
+                    Text("使用: \(entry.frequency)回")
+                        .font(.caption)
+                        .foregroundColor(.blue)
+                }
+            }
+        }
+        .padding(.vertical, 4)
+    }
+}
+
+struct StatRow: View {
+    let label: String
+    let value: String
+
+    var body: some View {
+        HStack {
+            Text(label)
+                .foregroundColor(.secondary)
+            Spacer()
+            Text(value)
+                .fontWeight(.medium)
+        }
+    }
 }
 
 // MARK: - Preview
