@@ -3,6 +3,7 @@
 //  CyrillicKeyboard
 //
 //  Keyboard UI layout view
+//  Phase 2: Enhanced with ThemeProvider and HapticManager
 //
 
 import UIKit
@@ -28,6 +29,12 @@ class CyrillicKeyboardView: UIView {
     private var profile: Profile
     private var keyButtons: [UIButton] = []
 
+    /// Theme provider for iOS HIG-compliant colors
+    private let themeProvider: ThemeProvider = ThemeManager.shared.currentTheme
+
+    /// Haptic manager for tactile feedback
+    private let hapticManager = HapticManager.shared
+
     /// キーボードモード
     enum KeyboardMode {
         case cyrillic
@@ -38,12 +45,12 @@ class CyrillicKeyboardView: UIView {
     private(set) var currentMode: KeyboardMode = .cyrillic
 
     /// 入力バッファ表示ラベル（未確定文字列）
-    private let bufferLabel: UILabel = {
+    private lazy var bufferLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
         label.font = .systemFont(ofSize: 18, weight: .medium)
-        label.textColor = .label
-        label.backgroundColor = .systemBackground
+        label.textColor = themeProvider.bufferTextColor
+        label.backgroundColor = themeProvider.bufferBackgroundColor
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -93,12 +100,24 @@ class CyrillicKeyboardView: UIView {
     // MARK: - Setup
 
     private func setupView() {
-        backgroundColor = .systemGray5
+        // Apply theme to keyboard background
+        themeProvider.applyTheme(to: self)
 
         // バッファラベルと候補バーを追加
         addSubview(bufferLabel)
         addSubview(candidateBarView)
         addSubview(keyboardContainer)
+
+        // Prepare haptics for better responsiveness
+        hapticManager.prepareHaptics()
+
+        // Listen for theme changes
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(themeDidChange),
+            name: .themeDidChange,
+            object: nil
+        )
 
         NSLayoutConstraint.activate([
             // 未確定文字列バッファ
@@ -133,6 +152,10 @@ class CyrillicKeyboardView: UIView {
         candidateBarView.onCandidateSelected = { [weak self] candidate, index in
             guard let self = self else { return }
             print("[CyrillicKeyboardView] Candidate selected: \(candidate.text)")
+
+            // Haptic feedback for successful selection
+            self.hapticManager.candidateSelect()
+
             self.delegate?.keyboardView(self, didSelectCandidate: candidate.text)
             self.hideCandidates()
         }
@@ -289,15 +312,38 @@ class CyrillicKeyboardView: UIView {
     }
 
     private func createKeyButton(title: String, action: Selector, hintLabel: String? = nil, popupCharacters: [String]? = nil) -> UIButton {
-        let button = UIButton(type: .system)
+        let button = UIButton(type: .custom)
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 20, weight: .medium)
-        button.backgroundColor = .systemBackground
+
+        // Determine if this is a special key based on action
+        let isSpecialKey = (action == #selector(handleDeletePress(_:)) ||
+                           action == #selector(handleReturnPress(_:)) ||
+                           action == #selector(handleSpacePress(_:)) ||
+                           action == #selector(handleGlobePress(_:)) ||
+                           action == #selector(handleModeToggle(_:)) ||
+                           action == #selector(handleInputModeToggle(_:)))
+
+        // Apply theme colors
+        if isSpecialKey {
+            button.backgroundColor = themeProvider.specialKeyBackgroundColor
+            button.setTitleColor(themeProvider.specialKeyTextColor, for: .normal)
+        } else {
+            button.backgroundColor = themeProvider.keyBackgroundColor
+            button.setTitleColor(themeProvider.keyTextColor, for: .normal)
+        }
+
+        // iOS HIG-compliant styling
         button.layer.cornerRadius = 5
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOpacity = 0.1
+        button.layer.borderWidth = 0.5
+        button.layer.borderColor = themeProvider.keyBorderColor.cgColor
+
+        // Subtle shadow for depth
+        button.layer.shadowColor = themeProvider.keyShadowColor.cgColor
+        button.layer.shadowOpacity = 0.3
         button.layer.shadowOffset = CGSize(width: 0, height: 1)
-        button.layer.shadowRadius = 2
+        button.layer.shadowRadius = 0
+
         button.addTarget(self, action: action, for: .touchUpInside)
 
         // ヒントラベルを追加
@@ -348,33 +394,68 @@ class CyrillicKeyboardView: UIView {
 
     @objc private func handleCyrillicKeyPress(_ sender: UIButton) {
         guard let key = sender.currentTitle else { return }
-        delegate?.keyboardView(self, didPressCyrillicKey: key)
 
-        // ボタンフィードバック
+        // Haptic feedback
+        hapticManager.keyPress()
+
+        // Visual feedback
         animateButtonPress(sender)
+
+        // Delegate callback
+        delegate?.keyboardView(self, didPressCyrillicKey: key)
     }
 
     @objc private func handleDeletePress(_ sender: UIButton) {
-        delegate?.keyboardViewDidPressDelete(self)
+        // Haptic feedback
+        hapticManager.deleteKey()
+
+        // Visual feedback
         animateButtonPress(sender)
+
+        // Delegate callback
+        delegate?.keyboardViewDidPressDelete(self)
     }
 
     @objc private func handleReturnPress(_ sender: UIButton) {
-        delegate?.keyboardViewDidPressReturn(self)
+        // Haptic feedback
+        hapticManager.returnKey()
+
+        // Visual feedback
         animateButtonPress(sender)
+
+        // Delegate callback
+        delegate?.keyboardViewDidPressReturn(self)
     }
 
     @objc private func handleSpacePress(_ sender: UIButton) {
-        delegate?.keyboardViewDidPressSpace(self)
+        // Haptic feedback
+        hapticManager.spaceKey()
+
+        // Visual feedback
         animateButtonPress(sender)
+
+        // Delegate callback
+        delegate?.keyboardViewDidPressSpace(self)
     }
 
     @objc private func handleGlobePress(_ sender: UIButton) {
-        delegate?.keyboardViewDidPressGlobe(self)
+        // Haptic feedback
+        hapticManager.globeKey()
+
+        // Visual feedback
         animateButtonPress(sender)
+
+        // Delegate callback
+        delegate?.keyboardViewDidPressGlobe(self)
     }
 
     @objc private func handleModeToggle(_ sender: UIButton) {
+        // Haptic feedback
+        hapticManager.modeToggle()
+
+        // Visual feedback
+        animateButtonPress(sender)
+
         // モードを切り替え
         switch currentMode {
         case .cyrillic:
@@ -385,10 +466,15 @@ class CyrillicKeyboardView: UIView {
 
         // レイアウトを再構築
         buildKeyboardLayout()
-        animateButtonPress(sender)
     }
 
     @objc private func handleInputModeToggle(_ sender: UIButton) {
+        // Haptic feedback
+        hapticManager.modeToggle()
+
+        // Visual feedback
+        animateButtonPress(sender)
+
         // 入力モードを切り替え（АБВ → あ → ア → あ変 → АБВ...）
         switch inputMode {
         case .directCyrillic:
@@ -400,7 +486,6 @@ class CyrillicKeyboardView: UIView {
         case .japaneseIME:
             inputMode = .directCyrillic
         }
-        animateButtonPress(sender)
     }
 
     @objc private func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
@@ -410,6 +495,12 @@ class CyrillicKeyboardView: UIView {
               let popupCharsString = button.accessibilityValue else { return }
 
         let popupChars = popupCharsString.split(separator: ",").map { String($0) }
+
+        // Haptic feedback for long press
+        hapticManager.longPress()
+
+        // Visual feedback
+        animateButtonPress(button)
 
         // アラートスタイルのポップアップメニューを表示
         let alert = UIAlertController(title: keyLabel, message: "バリエーションを選択", preferredStyle: .actionSheet)
@@ -429,8 +520,6 @@ class CyrillicKeyboardView: UIView {
             alert.popoverPresentationController?.sourceRect = button.bounds
             viewController.present(alert, animated: true)
         }
-
-        animateButtonPress(button)
     }
 
     // MARK: - Helper Methods
@@ -457,31 +546,68 @@ class CyrillicKeyboardView: UIView {
     }
 
     /// 変換候補を表示 (Phase 4: New method with Candidate model)
-    func showCandidates(_ candidates: [Candidate]) {
+    func showCandidates(_ candidates: [Candidate], animated: Bool = true) {
         if candidates.isEmpty {
-            hideCandidates()
+            hideCandidates(animated: animated)
             return
         }
 
-        candidateBarView.updateCandidates(candidates, selectedIndex: 0)
-        candidateBarView.isHidden = false
+        candidateBarView.updateCandidates(candidates, selectedIndex: 0, animated: animated)
     }
 
     /// 変換候補を非表示
-    func hideCandidates() {
-        candidateBarView.isHidden = true
+    func hideCandidates(animated: Bool = true) {
+        candidateBarView.hide(animated: animated)
         candidateBarView.clearCandidates()
     }
 
     // MARK: - Animation
 
+    /// Enhanced button press animation with highlight color
     private func animateButtonPress(_ button: UIButton) {
-        UIView.animate(withDuration: 0.1, animations: {
-            button.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-        }) { _ in
-            UIView.animate(withDuration: 0.1) {
-                button.transform = .identity
+        let originalBackgroundColor = button.backgroundColor
+
+        // Spring animation for more natural feel
+        UIView.animate(
+            withDuration: 0.1,
+            delay: 0,
+            options: [.curveEaseInOut, .allowUserInteraction],
+            animations: {
+                button.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+                button.backgroundColor = self.themeProvider.keyHighlightColor
+            },
+            completion: { _ in
+                UIView.animate(
+                    withDuration: 0.1,
+                    delay: 0,
+                    options: [.curveEaseOut, .allowUserInteraction],
+                    animations: {
+                        button.transform = .identity
+                        button.backgroundColor = originalBackgroundColor
+                    }
+                )
             }
-        }
+        )
+    }
+
+    // MARK: - Theme Management
+
+    /// Called when theme changes (e.g., light/dark mode switch)
+    @objc private func themeDidChange() {
+        // Rebuild keyboard to apply new theme
+        buildKeyboardLayout()
+
+        // Update buffer label colors
+        bufferLabel.textColor = themeProvider.bufferTextColor
+        bufferLabel.backgroundColor = themeProvider.bufferBackgroundColor
+
+        // Update keyboard background
+        themeProvider.applyTheme(to: self)
+    }
+
+    // MARK: - Cleanup
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
