@@ -36,13 +36,16 @@ final class LiveConversionManager {
     private let predictiveEngine: PredictiveEngine
 
     /// Whether live conversion is enabled
+    /// Smartphone-appropriate: Always enabled for automatic conversion
     var isEnabled: Bool = true
 
     /// Minimum hiragana length to trigger conversion
-    var minimumLength: Int = 3
+    /// Smartphone-appropriate: Lower threshold for more responsive conversion
+    var minimumLength: Int = 2
 
     /// Delay before auto-conversion (seconds)
-    var conversionDelay: TimeInterval = 0.5
+    /// Smartphone-appropriate: Faster delay for smartphone typing speed
+    var conversionDelay: TimeInterval = 0.2
 
     /// Last input timestamp
     private var lastInputTime: Date = Date()

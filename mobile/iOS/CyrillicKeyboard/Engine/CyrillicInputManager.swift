@@ -46,12 +46,8 @@ final class CyrillicInputManager {
     /// Selected candidate index
     private var selectedCandidateIndex: Int = 0
 
-    /// Whether live conversion is enabled (Phase 3)
-    var isLiveConversionEnabled: Bool = true {
-        didSet {
-            liveConversionManager.isEnabled = isLiveConversionEnabled
-        }
-    }
+    // Smartphone-appropriate: Live conversion is always enabled
+    // No need for isLiveConversionEnabled property - it's always true
 
     // MARK: - Callbacks
 
@@ -136,99 +132,23 @@ final class CyrillicInputManager {
         // Update composing text
         composingText.append(key: key, result: result)
 
-        // Handle based on input mode
-        switch currentInputMode {
-        case .directCyrillic:
-            handleDirectCyrillicMode(result: result)
-
-        case .japaneseHiragana:
-            handleHiraganaMode(result: result)
-
-        case .japaneseKatakana:
-            handleKatakanaMode(result: result)
-
-        case .japaneseIME:
-            handleIMEMode(result: result)
-        }
+        // Smartphone-appropriate: Always use automatic live conversion (japaneseIME mode)
+        // No mode switching needed
+        let hiragana = composingText.hiraganaTarget
+        liveConversionManager.processInput(hiragana)
+        // Display will be updated via callback from LiveConversionManager
     }
 
     // MARK: - Mode-Specific Handling
-
-    /// Direct Cyrillic mode: Output Cyrillic characters directly
-    private func handleDirectCyrillicMode(result: ConversionResult) {
-        if result.action == "commit" && !result.output.isEmpty {
-            // Commit Cyrillic directly (actually this mode doesn't make sense for this IME)
-            // For now, just output the Cyrillic key
-            displayedTextManager.insertText(result.output)
-            composingText.clear()
-        } else {
-            // Update display (but this mode is not typical for our use case)
-            displayedTextManager.updateComposingText(result.buffer)
-        }
-    }
-
-    /// Hiragana mode: Output hiragana immediately without conversion
-    private func handleHiraganaMode(result: ConversionResult) {
-        if result.action == "commit" && !result.output.isEmpty {
-            // Commit hiragana immediately
-            displayedTextManager.insertText(result.output)
-            // Don't clear entire composing text, just update
-            composingText.setHiragana("", buffer: result.buffer)
-        } else {
-            // Show hiragana as composing
-            displayedTextManager.updateComposingText(composingText.hiraganaTarget)
-            onComposingTextChanged?(composingText.hiraganaTarget)
-        }
-    }
-
-    /// Katakana mode: Output katakana immediately without conversion
-    private func handleKatakanaMode(result: ConversionResult) {
-        if result.action == "commit" && !result.output.isEmpty {
-            // Convert hiragana to katakana
-            if let katakana = convertToKatakana(result.output) {
-                displayedTextManager.insertText(katakana)
-            } else {
-                // Fallback to hiragana if conversion fails
-                displayedTextManager.insertText(result.output)
-            }
-            // Don't clear entire composing text, just update
-            composingText.setHiragana("", buffer: result.buffer)
-        } else {
-            // Show katakana as composing
-            let hiragana = composingText.hiraganaTarget
-            if let katakana = convertToKatakana(hiragana) {
-                displayedTextManager.updateComposingText(katakana)
-                onComposingTextChanged?(katakana)
-            } else {
-                displayedTextManager.updateComposingText(hiragana)
-                onComposingTextChanged?(hiragana)
-            }
-        }
-    }
-
-    /// IME mode: Show hiragana, allow space for conversion (Phase 2/3)
-    private func handleIMEMode(result: ConversionResult) {
-        let hiragana = composingText.hiraganaTarget
-
-        if isLiveConversionEnabled {
-            // Phase 3: Use live conversion
-            liveConversionManager.processInput(hiragana)
-            // Display will be updated via callback
-        } else {
-            // Phase 1/2: Manual conversion mode
-            displayedTextManager.updateComposingText(hiragana)
-            onComposingTextChanged?(hiragana)
-        }
-    }
+    // Smartphone-appropriate: No mode-specific handlers needed
+    // Always use automatic live conversion (japaneseIME mode)
 
     // MARK: - Delete Handling
 
-    /// Handles delete/backspace key
+    /// Handles delete/backspace key (Smartphone-appropriate: no manual conversion mode)
     func processDelete() {
-        if isConverting && !candidates.isEmpty {
-            // Exit conversion mode
-            exitConversionMode()
-        } else if composingText.deleteBackward() {
+        // Smartphone paradigm: No manual conversion mode to exit
+        if composingText.deleteBackward() {
             // Rebuild composing text from history
             rebuildComposingText()
         } else {
@@ -273,131 +193,32 @@ final class CyrillicInputManager {
 
     // MARK: - Space Key Handling
 
-    /// Handles space key press
+    /// Handles space key press (Smartphone-appropriate: just insert space)
+    /// Space key no longer triggers manual conversion - automatic live conversion handles kanji
     func processSpace() {
-        if currentInputMode == .japaneseIME && !composingText.isEmpty {
-            if isLiveConversionEnabled {
-                // Phase 3: Cycle selected clause candidate
-                liveConversionManager.cycleSelectedClauseCandidate()
-            } else if isConverting {
-                // Phase 2: Already converting: cycle to next candidate
-                cycleToNextCandidate()
-            } else {
-                // Phase 2: Start conversion
-                startConversion()
-            }
-        } else {
-            // No composing text: insert space
+        // Smartphone paradigm: Commit any live conversion, then insert space
+        // No manual conversion triggered by space key
+        if !composingText.isEmpty {
+            // Commit whatever live conversion has been done
             commitIfNeeded()
-            displayedTextManager.insertText(" ")
         }
+        // Always insert space character
+        displayedTextManager.insertText(" ")
     }
 
-    /// Starts kanji conversion mode (Phase 2/5)
-    private func startConversion() {
-        isConverting = true
-
-        // Request kanji candidates from conversion engine
-        Task { @MainActor in
-            do {
-                let candidateObjects = try await conversionEngine.requestCandidates(
-                    for: composingText.hiraganaTarget,
-                    maxCount: 10
-                )
-
-                // Extract candidate texts
-                var candidateList = candidateObjects.map { $0.text }
-
-                // Phase 5: Add user dictionary candidates at the top
-                let userDictCandidates = userDictionary.lookup(reading: composingText.hiraganaTarget)
-                if !userDictCandidates.isEmpty {
-                    // Insert user dictionary candidates at the beginning
-                    // Remove duplicates from system candidates
-                    candidateList.removeAll { userDictCandidates.contains($0) }
-                    candidateList = userDictCandidates + candidateList
-                    print("[CyrillicInputManager] Found \(userDictCandidates.count) user dictionary candidates")
-                }
-
-                self.candidates = candidateList
-
-                // Always include original hiragana if not present
-                if !self.candidates.contains(composingText.hiraganaTarget) {
-                    // Insert after user dict candidates but before system candidates
-                    let insertIndex = userDictCandidates.isEmpty ? 0 : userDictCandidates.count
-                    self.candidates.insert(composingText.hiraganaTarget, at: insertIndex)
-                }
-
-                self.selectedCandidateIndex = 0
-
-                // Update UI
-                self.onCandidatesUpdated?(self.candidates)
-
-                // Update display with first candidate
-                if !self.candidates.isEmpty {
-                    self.displayedTextManager.updateComposingText(
-                        composingText.hiraganaTarget,
-                        liveConversionText: self.candidates[0]
-                    )
-                }
-
-                print("[CyrillicInputManager] Started conversion with \(self.candidates.count) candidates (including \(userDictCandidates.count) from user dict)")
-            } catch {
-                print("[CyrillicInputManager] Conversion failed: \(error)")
-
-                // Fallback: check user dictionary first, then hiragana and katakana
-                var candidateList = userDictionary.lookup(reading: composingText.hiraganaTarget)
-                candidateList.append(composingText.hiraganaTarget)
-                if let katakana = convertToKatakana(composingText.hiraganaTarget) {
-                    candidateList.append(katakana)
-                }
-                self.candidates = candidateList
-                self.selectedCandidateIndex = 0
-                self.onCandidatesUpdated?(self.candidates)
-            }
-        }
-    }
-
-    /// Cycles to next candidate
-    private func cycleToNextCandidate() {
-        guard !candidates.isEmpty else { return }
-
-        selectedCandidateIndex = (selectedCandidateIndex + 1) % candidates.count
-        let selected = candidates[selectedCandidateIndex]
-
-        // Update display with selected candidate
-        displayedTextManager.updateComposingText(
-            composingText.hiraganaTarget,
-            liveConversionText: selected
-        )
-
-        print("[CyrillicInputManager] Cycled to candidate: '\(selected)'")
-    }
-
-    /// Exits conversion mode
-    private func exitConversionMode() {
-        isConverting = false
-        selectedCandidateIndex = 0
-        candidates = []
-
-        // Revert to hiragana display
-        displayedTextManager.updateComposingText(composingText.hiraganaTarget)
-        onCandidatesUpdated?([])
-
-        print("[CyrillicInputManager] Exited conversion mode")
-    }
+    // Smartphone-appropriate: No manual conversion methods needed
+    // Automatic live conversion handles kanji conversion seamlessly
 
     // MARK: - Return Key Handling
 
-    /// Handles return/enter key
+    /// Handles return/enter key (Smartphone-appropriate: always use live conversion)
     func processReturn() {
-        if isLiveConversionEnabled && liveConversionManager.currentState != .idle {
-            // Phase 3: Commit all clauses
+        // Smartphone paradigm: Always using automatic live conversion
+        if liveConversionManager.currentState != .idle {
+            // Commit all live conversion clauses
             let result = liveConversionManager.commitAll()
             displayedTextManager.insertText(result)
             composingText.clear()
-        } else if isConverting && !candidates.isEmpty {
-            // Phase 2: Commit selected candidate
-            commitCandidate(at: selectedCandidateIndex)
         } else if !composingText.isEmpty {
             // Commit composing text as-is
             commitText(composingText.hiraganaTarget)
@@ -464,33 +285,33 @@ final class CyrillicInputManager {
         return nil
     }
 
-    // MARK: - Arrow Key Handling (Phase 3)
+    // MARK: - Arrow Key Handling (Smartphone-appropriate: always enabled)
 
     /// Handles left arrow key (move to previous clause)
     func processLeftArrow() {
-        if isLiveConversionEnabled && liveConversionManager.currentState != .idle {
+        // Smartphone paradigm: Live conversion always enabled
+        if liveConversionManager.currentState != .idle {
             liveConversionManager.selectPreviousClause()
         }
     }
 
     /// Handles right arrow key (move to next clause)
     func processRightArrow() {
-        if isLiveConversionEnabled && liveConversionManager.currentState != .idle {
+        // Smartphone paradigm: Live conversion always enabled
+        if liveConversionManager.currentState != .idle {
             liveConversionManager.selectNextClause()
         }
     }
 
-    // MARK: - Live Conversion Control (Phase 3)
+    // MARK: - Live Conversion Control (Smartphone-appropriate: always enabled)
 
-    /// Toggles live conversion on/off
-    func toggleLiveConversion() {
-        isLiveConversionEnabled.toggle()
-        print("[CyrillicInputManager] Live conversion: \(isLiveConversionEnabled ? "enabled" : "disabled")")
-    }
+    // Smartphone paradigm: No toggle needed - live conversion always enabled
+    // toggleLiveConversion() method removed
 
     /// Forces immediate conversion
     func forceConversion() {
-        if isLiveConversionEnabled && !composingText.isEmpty {
+        // Smartphone paradigm: Live conversion always enabled
+        if !composingText.isEmpty {
             liveConversionManager.forceConversion(composingText.hiraganaTarget)
         }
     }

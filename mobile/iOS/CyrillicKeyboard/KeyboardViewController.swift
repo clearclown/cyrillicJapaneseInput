@@ -196,8 +196,8 @@ extension KeyboardViewController: CyrillicKeyboardViewDelegate {
             return
         }
 
-        // Update input mode in manager
-        inputManager.setInputMode(view.currentInputMode)
+        // Smartphone-appropriate: Always use japaneseIME mode
+        // No need to set input mode - it's always .japaneseIME
 
         // Process key through manager
         inputManager.processKey(key)
