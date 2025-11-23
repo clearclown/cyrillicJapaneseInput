@@ -117,12 +117,13 @@ impl IMEEngine {
         };
 
         // Check if current input is a vowel that extends the previous sound
+        // In Japanese, only two patterns create long vowel marks (ー):
+        // 1. e-row + i (え + い → えー)
+        // 2. o-row + u (お + う → おー)
+        // Same vowels (あ+あ, い+い, う+う, お+お) do NOT create long vowels
         match (vowel_type_to_check, current_vowel_key) {
-            (Some("a"), "a") => true,
-            (Some("i"), "i") => true,
-            (Some("u"), "u") => true,
-            (Some("e"), "e") | (Some("e"), "i") => true,  // え + い = えい or えー
-            (Some("o"), "o") | (Some("o"), "u") => true,  // お + う = おう or おー
+            (Some("e"), "i") => true,   // え + い = えー
+            (Some("o"), "u") => true,   // お + う = おー
             _ => false,
         }
     }
@@ -157,9 +158,12 @@ impl IMEEngine {
             .ok_or_else(|| format!("Schema not loaded: {}", profile.input_schema_id))?;
 
         // Check for hard sign (Ъ): syllable separator
-        // Ъ commits any buffered characters and acts as a separator (outputs nothing)
-        // Example: Н + Ъ + А → ん + (separator) + あ = んあ
-        if key == "Ъ" {
+        // Only apply this logic if Ъ is NOT defined in the schema
+        // This allows schema-specific behavior:
+        // - Bulgarian profile: Ъ is in schema, maps to "u" (vowel)
+        // - Russian Standard: Ъ is not in schema, uses separator logic
+        // - Russian Analytical: Ъ is in schema with explicit НЪА combinations
+        if key == "Ъ" && !schema.contains_key("Ъ") {
             if !buffer.is_empty() {
                 // Commit the buffer (e.g., Н → ん)
                 if let Some(entry) = schema.get(buffer) {
@@ -271,14 +275,32 @@ impl IMEEngine {
             // This could be the start of a longer sequence
             Ok(ConversionResult::composing(new_buffer))
         } else {
-            // No possible match, check if single key matches
+            // No possible match for new_buffer
+            // First, check if the old buffer has a valid match that we should commit
+            if !buffer.is_empty() {
+                if let Some(entry) = schema.get(buffer) {
+                    if let Some(hiragana) = engine.kana_engine.get(&entry.kana_key) {
+                        // Commit the buffered content, then keep new key in buffer for next round
+                        let vowel_type = Self::get_vowel_type(&hiragana).map(|s| s.to_string());
+                        return Ok(ConversionResult {
+                            output: hiragana.clone(),
+                            buffer: key.to_string(),  // Start new buffer with current key
+                            action: "commit".to_string(),
+                            last_output: hiragana.clone(),
+                            last_vowel_type: vowel_type,
+                        });
+                    }
+                }
+            }
+
+            // Old buffer didn't match, try single key match
             if let Some(entry) = schema.get(key) {
                 if let Some(hiragana) = engine.kana_engine.get(&entry.kana_key) {
-                    // Commit the single key, keep old buffer
+                    // Commit the single key, clear buffer
                     let vowel_type = Self::get_vowel_type(&hiragana).map(|s| s.to_string());
                     return Ok(ConversionResult {
                         output: hiragana.clone(),
-                        buffer: buffer.to_string(),
+                        buffer: String::new(),
                         action: "commit".to_string(),
                         last_output: hiragana.clone(),
                         last_vowel_type: vowel_type,

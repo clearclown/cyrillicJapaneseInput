@@ -122,6 +122,9 @@
   "МО": {
     "kana_key": "mo"
   },
+  "Я": {
+    "kana_key": "ya"
+  },
   "ЯА": {
     "kana_key": "ya"
   },
@@ -238,5 +241,133 @@
   },
   "Ф": {
     "kana_key": "fu"
+  },
+  "Ъ": {
+    "kana_key": "u",
+    "hintLabel": "4",
+    "popupCharacters": []
+  },
+  "КЪ": {
+    "kana_key": "ku"
+  },
+  "СЪ": {
+    "kana_key": "su"
+  },
+  "ТЪ": {
+    "kana_key": "tsu"
+  },
+  "НЪ": {
+    "kana_key": "nu"
+  },
+  "ХЪ": {
+    "kana_key": "fu"
+  },
+  "МЪ": {
+    "kana_key": "mu"
+  },
+  "РЪ": {
+    "kana_key": "ru"
+  },
+  "ГЪ": {
+    "kana_key": "gu"
+  },
+  "ЗЪ": {
+    "kana_key": "zu"
+  },
+  "ДЪ": {
+    "kana_key": "du"
+  },
+  "БЪ": {
+    "kana_key": "bu"
+  },
+  "ПЪ": {
+    "kana_key": "pu"
+  },
+  "ЧИ": {
+    "kana_key": "chi"
+  },
+  "ЧА": {
+    "kana_key": "cha"
+  },
+  "ЧУ": {
+    "kana_key": "chu"
+  },
+  "ЧО": {
+    "kana_key": "cho"
+  },
+  "ЦУ": {
+    "kana_key": "tsu"
+  },
+  "ЦЪ": {
+    "kana_key": "tsu"
+  },
+  "ЖА": {
+    "kana_key": "ja"
+  },
+  "ЖИ": {
+    "kana_key": "ji"
+  },
+  "ЖУ": {
+    "kana_key": "ju"
+  },
+  "ЖО": {
+    "kana_key": "jo"
+  },
+  "ША": {
+    "kana_key": "sha"
+  },
+  "ШИ": {
+    "kana_key": "shi"
+  },
+  "ШУ": {
+    "kana_key": "shu"
+  },
+  "ШО": {
+    "kana_key": "sho"
+  },
+  "СЯ": {
+    "kana_key": "sha"
+  },
+  "СЮ": {
+    "kana_key": "shu"
+  },
+  "СЙО": {
+    "kana_key": "sho"
+  },
+  "ГЯ": {
+    "kana_key": "gya"
+  },
+  "ГЮ": {
+    "kana_key": "gyu"
+  },
+  "ГЙО": {
+    "kana_key": "gyo"
+  },
+  "ЗЯ": {
+    "kana_key": "ja"
+  },
+  "ЗЮ": {
+    "kana_key": "ju"
+  },
+  "ЗЙО": {
+    "kana_key": "jo"
+  },
+  "БЯ": {
+    "kana_key": "bya"
+  },
+  "БЮ": {
+    "kana_key": "byu"
+  },
+  "БЙО": {
+    "kana_key": "byo"
+  },
+  "ПЯ": {
+    "kana_key": "pya"
+  },
+  "ПЮ": {
+    "kana_key": "pyu"
+  },
+  "ПЙО": {
+    "kana_key": "pyo"
   }
 }

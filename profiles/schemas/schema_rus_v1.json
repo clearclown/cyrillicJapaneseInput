@@ -144,6 +144,9 @@
   "ВА": {
     "kana_key": "wa"
   },
+  "ВО": {
+    "kana_key": "wo"
+  },
   "ЗА": {
     "kana_key": "za"
   },
@@ -158,6 +161,15 @@
   },
   "ЗО": {
     "kana_key": "zo"
+  },
+  "ЗЯ": {
+    "kana_key": "ja"
+  },
+  "ЗЮ": {
+    "kana_key": "ju"
+  },
+  "ЗЁ": {
+    "kana_key": "jo"
   },
   "ЖА": {
     "kana_key": "ja"
@@ -206,6 +218,12 @@
   },
   "ДА": {
     "kana_key": "da"
+  },
+  "ДИ": {
+    "kana_key": "di"
+  },
+  "ДУ": {
+    "kana_key": "du"
   },
   "ДЭ": {
     "kana_key": "de"
@@ -264,10 +282,19 @@
   "ЧА": {
     "kana_key": "cha"
   },
+  "ЧЯ": {
+    "kana_key": "cha"
+  },
   "ЧУ": {
     "kana_key": "chu"
   },
+  "ЧЮ": {
+    "kana_key": "chu"
+  },
   "ЧО": {
+    "kana_key": "cho"
+  },
+  "ЧЁ": {
     "kana_key": "cho"
   },
   "НЯ": {
@@ -344,8 +371,5 @@
   },
   "Н": {
     "kana_key": "n"
-  },
-  "Ф": {
-    "kana_key": "fu"
   }
 }
