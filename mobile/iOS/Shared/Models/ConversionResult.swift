@@ -22,7 +22,8 @@ struct ConversionResult: Codable {
     let buffer: String
 
     /// 最後の出力（長音検出用）
-    let lastOutput: String
+    /// Optional for backward compatibility with Phase 2 JSON
+    let lastOutput: String?
 
     /// 最後の母音タイプ（連続長音検出用）
     /// "ー" の母音タイプを追跡するために使用
@@ -49,7 +50,7 @@ extension ConversionResult {
         action: "composing",
         output: "",
         buffer: "К",
-        lastOutput: "",
+        lastOutput: nil,
         lastVowelType: nil
     )
 
@@ -57,7 +58,7 @@ extension ConversionResult {
         action: "clear",
         output: "",
         buffer: "",
-        lastOutput: "",
+        lastOutput: nil,
         lastVowelType: nil
     )
 }

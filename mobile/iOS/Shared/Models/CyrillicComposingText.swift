@@ -80,7 +80,7 @@ struct CyrillicComposingText {
         if !result.output.isEmpty {
             hiraganaTarget += result.output
             cursorPosition = hiraganaTarget.count
-            lastOutput = result.lastOutput
+            lastOutput = result.lastOutput ?? ""
             lastVowelType = result.lastVowelType
         }
 

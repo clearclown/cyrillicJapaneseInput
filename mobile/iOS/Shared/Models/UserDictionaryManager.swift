@@ -51,7 +51,10 @@ class UserDictionaryManager: ObservableObject {
 
     /// インデックスでエントリを削除
     func removeEntries(at offsets: IndexSet) {
-        entries.remove(atOffsets: offsets)
+        // Use Foundation-only implementation (remove(atOffsets:) is SwiftUI-only)
+        for offset in offsets.sorted().reversed() {
+            entries.remove(at: offset)
+        }
         saveEntries()
         print("[UserDictionary] Removed \(offsets.count) entries")
     }
