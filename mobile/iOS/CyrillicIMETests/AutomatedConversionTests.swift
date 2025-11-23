@@ -188,13 +188,16 @@ class AutomatedConversionTests: XCTestCase {
     private func runTestCase(_ testCase: ConversionTestCase, profileId: String) throws {
         var currentBuffer = ""
         var accumulatedOutput = ""
+        var lastOutput = ""
+        var lastVowelType: String? = nil
 
         for (index, key) in testCase.input.enumerated() {
             guard let result = rustCore.processKey(
                 cyrillicKey: key,
                 currentBuffer: currentBuffer,
                 profileId: profileId,
-                lastOutput: index > 0 ? testCase.input[index - 1] : ""
+                lastOutput: lastOutput,
+                lastVowelType: lastVowelType
             ) else {
                 throw NSError(
                     domain: "ConversionError",
@@ -211,7 +214,34 @@ class AutomatedConversionTests: XCTestCase {
             // Update buffer for next iteration
             currentBuffer = result.buffer
 
-            print("  Step \(index + 1): Key '\(key)' → output: '\(result.output)', buffer: '\(result.buffer)', action: \(result.action)")
+            // Update lastOutput and lastVowelType for next iteration (for long vowel detection)
+            if let resultLastOutput = result.lastOutput {
+                lastOutput = resultLastOutput
+            }
+            lastVowelType = result.lastVowelType
+
+            print("  Step \(index + 1): Key '\(key)' → output: '\(result.output)', buffer: '\(result.buffer)', action: \(result.action), lastOutput: '\(lastOutput)', lastVowelType: \(lastVowelType ?? "nil")")
+        }
+
+        // If there's remaining buffer content, try to commit it
+        // This simulates pressing space/enter to commit at the end of input
+        if !currentBuffer.isEmpty {
+            // Try one more processKey with empty string to force commit
+            // Or we can just look up the buffer in the schema directly
+            print("  Final buffer remaining: '\(currentBuffer)' - attempting to commit...")
+
+            // Process a space character to commit the buffer
+            if let commitResult = rustCore.processKey(
+                cyrillicKey: " ",
+                currentBuffer: currentBuffer,
+                profileId: profileId,
+                lastOutput: ""
+            ) {
+                if !commitResult.output.isEmpty {
+                    accumulatedOutput += commitResult.output
+                    print("  Committed buffer: '\(commitResult.output)'")
+                }
+            }
         }
 
         // Verify final output

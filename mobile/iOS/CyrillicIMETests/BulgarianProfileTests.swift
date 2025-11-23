@@ -338,7 +338,15 @@ class BulgarianProfileTests: XCTestCase {
             if let result = result {
                 output += result.output
                 buffer = result.buffer
-                lastOutput = result.lastOutput
+                lastOutput = result.lastOutput ?? ""
+            }
+        }
+
+        // Commit remaining buffer (Я stays in buffer because it can combine)
+        if !buffer.isEmpty {
+            let commitResult = rustCore.processKey(cyrillicKey: " ", currentBuffer: buffer, profileId: profileId, lastOutput: lastOutput)
+            if let commitResult = commitResult {
+                output += commitResult.output
             }
         }
 

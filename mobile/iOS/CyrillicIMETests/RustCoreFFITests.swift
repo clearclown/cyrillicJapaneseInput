@@ -9,6 +9,10 @@ import XCTest
 @testable import Pismo
 
 class RustCoreFFITests: XCTestCase {
+
+    var rustCore: RustCoreFFI!
+    var profileManager: ProfileManager!
+
     let testProfilesJSON = """
     [
         {
@@ -44,6 +48,35 @@ class RustCoreFFITests: XCTestCase {
         "Н": {"kana_key": "n_final"}
     }
     """
+
+    override func setUp() {
+        super.setUp()
+
+        rustCore = RustCoreFFI.shared
+        profileManager = ProfileManager.shared
+
+        // Initialize with real profiles (engine can only be initialized once)
+        let initError = profileManager.initialize()
+        if let error = initError {
+            // Engine might already be initialized from other tests
+            XCTAssertTrue(error.contains("already initialized"),
+                         "Unexpected initialization error: \(error)")
+        }
+
+        // Switch to Russian Standard profile (this also loads the schema)
+        let switchError = profileManager.switchProfile(to: "rus_standard")
+        XCTAssertNil(switchError, "Should switch to rus_standard profile")
+
+        print("\n=== RustCoreFFI Test Setup ===")
+        print("Rust Core initialized: \(rustCore.initialized)")
+        print("Current profile: \(profileManager.currentProfile?.id ?? "nil")")
+    }
+
+    override func tearDown() {
+        rustCore = nil
+        profileManager = nil
+        super.tearDown()
+    }
 
     // MARK: - Initialization Tests
 
@@ -131,21 +164,14 @@ class RustCoreFFITests: XCTestCase {
     // MARK: - Key Processing Tests
 
     func testProcessKeySingleCharacter() {
-        // Given: Engine is initialized and schema is loaded
-        _ = RustCoreFFI.shared.initEngine(
-            profilesJSON: testProfilesJSON,
-            kanaEngineJSON: testKanaEngineJSON
-        )
-        _ = RustCoreFFI.shared.loadSchema(
-            schemaJSON: testSchemaJSON,
-            schemaId: "schema_rus_test"
-        )
+        // Given: Engine is initialized with real profiles (from other tests)
+        // Use real profile rus_standard instead of test profile
 
         // When: Processing single character key
         let result = RustCoreFFI.shared.processKey(
             cyrillicKey: "А",
             currentBuffer: "",
-            profileId: "rus_test",
+            profileId: "rus_standard",
             lastOutput: ""
         )
 
@@ -157,21 +183,14 @@ class RustCoreFFITests: XCTestCase {
     }
 
     func testProcessKeyComposing() {
-        // Given: Engine is initialized and schema is loaded
-        _ = RustCoreFFI.shared.initEngine(
-            profilesJSON: testProfilesJSON,
-            kanaEngineJSON: testKanaEngineJSON
-        )
-        _ = RustCoreFFI.shared.loadSchema(
-            schemaJSON: testSchemaJSON,
-            schemaId: "schema_rus_test"
-        )
+        // Given: Engine is initialized with real profiles (from other tests)
+        // Use real profile rus_standard instead of test profile
 
         // When: Processing key that forms prefix
         let result = RustCoreFFI.shared.processKey(
             cyrillicKey: "К",
             currentBuffer: "",
-            profileId: "rus_test",
+            profileId: "rus_standard",
             lastOutput: ""
         )
 
@@ -182,21 +201,14 @@ class RustCoreFFITests: XCTestCase {
     }
 
     func testProcessKeyMultiCharacterSequence() {
-        // Given: Engine is initialized and schema is loaded
-        _ = RustCoreFFI.shared.initEngine(
-            profilesJSON: testProfilesJSON,
-            kanaEngineJSON: testKanaEngineJSON
-        )
-        _ = RustCoreFFI.shared.loadSchema(
-            schemaJSON: testSchemaJSON,
-            schemaId: "schema_rus_test"
-        )
+        // Given: Engine is initialized with real profiles (from other tests)
+        // Use real profile rus_standard instead of test profile
 
         // When: Processing second key to complete sequence
         let result = RustCoreFFI.shared.processKey(
             cyrillicKey: "И",
             currentBuffer: "К",
-            profileId: "rus_test",
+            profileId: "rus_standard",
             lastOutput: ""
         )
 
@@ -208,21 +220,14 @@ class RustCoreFFITests: XCTestCase {
     }
 
     func testProcessKeyThreeCharacterSequence() {
-        // Given: Engine is initialized and schema is loaded
-        _ = RustCoreFFI.shared.initEngine(
-            profilesJSON: testProfilesJSON,
-            kanaEngineJSON: testKanaEngineJSON
-        )
-        _ = RustCoreFFI.shared.loadSchema(
-            schemaJSON: testSchemaJSON,
-            schemaId: "schema_rus_test"
-        )
+        // Given: Engine is initialized with real profiles (from other tests)
+        // Use real profile rus_standard instead of test profile
 
         // When: Processing КЯ sequence for きゃ
         let result1 = RustCoreFFI.shared.processKey(
             cyrillicKey: "К",
             currentBuffer: "",
-            profileId: "rus_test",
+            profileId: "rus_standard",
             lastOutput: ""
         )
         XCTAssertEqual(result1?.action, "composing")
@@ -230,7 +235,7 @@ class RustCoreFFITests: XCTestCase {
         let result2 = RustCoreFFI.shared.processKey(
             cyrillicKey: "Я",
             currentBuffer: "К",
-            profileId: "rus_test",
+            profileId: "rus_standard",
             lastOutput: result1?.lastOutput ?? ""
         )
 
@@ -317,9 +322,9 @@ class RustCoreFFITests: XCTestCase {
 
     func testConversionResultConvenienceProperties() {
         // Given: Different action types
-        let commitResult = ConversionResult(action: "commit", output: "あ", buffer: "", lastOutput: "")
-        let composingResult = ConversionResult(action: "composing", output: "", buffer: "К", lastOutput: "")
-        let clearResult = ConversionResult(action: "clear", output: "", buffer: "", lastOutput: "")
+        let commitResult = ConversionResult(action: "commit", output: "あ", buffer: "", lastOutput: "", lastVowelType: "a")
+        let composingResult = ConversionResult(action: "composing", output: "", buffer: "К", lastOutput: "", lastVowelType: nil)
+        let clearResult = ConversionResult(action: "clear", output: "", buffer: "", lastOutput: "", lastVowelType: nil)
 
         // When/Then: Testing convenience properties
         XCTAssertTrue(commitResult.isCommit)

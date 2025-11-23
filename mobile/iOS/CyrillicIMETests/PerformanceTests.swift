@@ -18,7 +18,7 @@ import XCTest
 class PerformanceTests: XCTestCase {
 
     var inputManager: CyrillicInputManager!
-    var mockDisplayedTextManager: MockDisplayedTextManager!
+    fileprivate var mockDisplayedTextManager: MockDisplayedTextManager!
     var rustCore: RustCoreFFI!
     var profileManager: ProfileManager!
 
@@ -424,7 +424,7 @@ class PerformanceTests: XCTestCase {
 
 // MARK: - Mock DisplayedTextManager for Performance Tests
 
-class MockDisplayedTextManager: DisplayedTextManager {
+fileprivate class MockDisplayedTextManager: DisplayedTextManager {
     var lastComposingText: String?
     var lastLiveConversionText: String?
     var lastInsertedText: String?

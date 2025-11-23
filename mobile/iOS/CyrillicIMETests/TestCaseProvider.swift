@@ -286,8 +286,8 @@ class TestCaseProvider {
             ConversionTestCase(id: "RUS-SPEC-003", profileId: "rus_standard", input: ["Ц", "Ц", "У"], expected: "っつ", category: "sokuon", description: "ЦЦУ → っつ (sokuon + tsu)"),
 
             // Long vowels (長音)
-            ConversionTestCase(id: "RUS-SPEC-004", profileId: "rus_standard", input: ["Т", "О", "О", "К", "Я", "О", "О"], expected: "とーきょー", category: "long-vowel", description: "ТООKЯОО → とーきょー (Tokyo)"),
-            ConversionTestCase(id: "RUS-SPEC-005", profileId: "rus_standard", input: ["О", "О", "С", "А", "К", "А"], expected: "おおさか", category: "long-vowel", description: "ООCАKА → おおさか (Osaka)"),
+            ConversionTestCase(id: "RUS-SPEC-004", profileId: "rus_standard", input: ["Т", "О", "У", "К", "Ё", "У"], expected: "とーきょー", category: "long-vowel", description: "ТОКЁУ → とーきょー (Tokyo)"),
+            ConversionTestCase(id: "RUS-SPEC-005", profileId: "rus_standard", input: ["О", "О", "С", "А", "К", "А"], expected: "おおさか", category: "long-vowel", description: "ООСАКА → おおさか (Osaka)"),
 
             // Syllable separation (音節分離)
             ConversionTestCase(id: "RUS-SPEC-006", profileId: "rus_standard", input: ["Н", "'", "А"], expected: "んあ", category: "separation", description: "Н'А → んあ (n + a with separator)"),

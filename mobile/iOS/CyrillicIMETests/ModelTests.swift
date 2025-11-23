@@ -138,7 +138,8 @@ class ModelTests: XCTestCase {
             action: "commit",
             output: "あ",
             buffer: "",
-            lastOutput: "あ"
+            lastOutput: "あ",
+            lastVowelType: "a"
         )
 
         // When: Encoding to JSON
@@ -162,7 +163,7 @@ class ModelTests: XCTestCase {
 
     func testConversionResultIsCommit() {
         // Given: A commit result
-        let commitResult = ConversionResult(action: "commit", output: "あ", buffer: "", lastOutput: "あ")
+        let commitResult = ConversionResult(action: "commit", output: "あ", buffer: "", lastOutput: "あ", lastVowelType: "a")
 
         // Then: isCommit should be true
         XCTAssertTrue(commitResult.isCommit)
@@ -172,7 +173,7 @@ class ModelTests: XCTestCase {
 
     func testConversionResultIsComposing() {
         // Given: A composing result
-        let composingResult = ConversionResult(action: "composing", output: "", buffer: "К", lastOutput: "")
+        let composingResult = ConversionResult(action: "composing", output: "", buffer: "К", lastOutput: "", lastVowelType: nil)
 
         // Then: isComposing should be true
         XCTAssertFalse(composingResult.isCommit)
@@ -182,7 +183,7 @@ class ModelTests: XCTestCase {
 
     func testConversionResultIsClear() {
         // Given: A clear result
-        let clearResult = ConversionResult(action: "clear", output: "", buffer: "", lastOutput: "")
+        let clearResult = ConversionResult(action: "clear", output: "", buffer: "", lastOutput: "", lastVowelType: nil)
 
         // Then: isClear should be true
         XCTAssertFalse(clearResult.isCommit)
@@ -192,7 +193,7 @@ class ModelTests: XCTestCase {
 
     func testConversionResultUnknownAction() {
         // Given: A result with unknown action
-        let unknownResult = ConversionResult(action: "unknown", output: "", buffer: "", lastOutput: "")
+        let unknownResult = ConversionResult(action: "unknown", output: "", buffer: "", lastOutput: "", lastVowelType: nil)
 
         // Then: All convenience properties should be false
         XCTAssertFalse(unknownResult.isCommit)
@@ -267,21 +268,29 @@ class ModelTests: XCTestCase {
     // MARK: - JSON Parsing Tests
 
     func testProfileArrayDecoding() {
-        // Given: JSON array of profiles
+        // Given: JSON array of profiles with correct keyboardLayout structure
         let json = """
         [
             {
                 "id": "rus",
                 "name_ja": "ロシア語",
                 "name_en": "Russian",
-                "keyboardLayout": ["А", "Б"],
+                "keyboardLayout": {
+                    "row1": ["А", "Б"],
+                    "row2": ["В", "Г"],
+                    "row3": ["Д", "Е"]
+                },
                 "inputSchemaId": "schema_rus"
             },
             {
                 "id": "srb",
                 "name_ja": "セルビア語",
                 "name_en": "Serbian",
-                "keyboardLayout": ["А", "Б", "В"],
+                "keyboardLayout": {
+                    "row1": ["А", "Б", "В"],
+                    "row2": ["Г", "Д"],
+                    "row3": ["Е"]
+                },
                 "inputSchemaId": "schema_srb"
             }
         ]

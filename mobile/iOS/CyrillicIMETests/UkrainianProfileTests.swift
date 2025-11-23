@@ -346,7 +346,7 @@ class UkrainianProfileTests: XCTestCase {
             if let result = result {
                 output += result.output
                 buffer = result.buffer
-                lastOutput = result.lastOutput
+                lastOutput = result.lastOutput ?? ""
             }
         }
 
