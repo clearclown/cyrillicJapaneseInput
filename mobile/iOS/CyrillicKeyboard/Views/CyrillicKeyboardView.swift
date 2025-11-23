@@ -74,16 +74,9 @@ class CyrillicKeyboardView: UIView {
     }()
 
     /// 現在の入力モード
-    private var inputMode: InputMode {
-        get { UserDefaults.shared.currentInputMode }
-        set {
-            UserDefaults.shared.currentInputMode = newValue
-            updateInputModeButton()
-        }
-    }
-
-    /// 入力モード切り替えボタン（参照保持用）
-    private var inputModeButton: UIButton?
+    // Smartphone-appropriate: Always use japaneseIME mode (automatic live conversion)
+    // No mode switching needed for smartphone keyboards
+    private let inputMode: InputMode = .japaneseIME
 
     // MARK: - Initialization
 
@@ -287,11 +280,8 @@ class CyrillicKeyboardView: UIView {
         let globeButton = createKeyButton(title: "🌐", action: #selector(handleGlobePress))
         globeButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
 
-        // 入力モード切り替えボタン（АБВ/あ/あ変）
-        let inputModeBtn = createKeyButton(title: inputMode.shortName, action: #selector(handleInputModeToggle))
-        inputModeBtn.widthAnchor.constraint(equalToConstant: 45).isActive = true
-        inputModeBtn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        self.inputModeButton = inputModeBtn
+        // Smartphone-appropriate: No input mode switcher needed
+        // Always use automatic live conversion (japaneseIME)
 
         let spaceButton = createKeyButton(title: "空白", action: #selector(handleSpacePress))
 
@@ -303,7 +293,7 @@ class CyrillicKeyboardView: UIView {
 
         bottomRow.addArrangedSubview(modeToggleButton)
         bottomRow.addArrangedSubview(globeButton)
-        bottomRow.addArrangedSubview(inputModeBtn)
+        // Removed: inputModeBtn (smartphone-appropriate - no mode switcher needed)
         bottomRow.addArrangedSubview(spaceButton)
         bottomRow.addArrangedSubview(deleteButton)
         bottomRow.addArrangedSubview(returnButton)
@@ -321,8 +311,7 @@ class CyrillicKeyboardView: UIView {
                            action == #selector(handleReturnPress(_:)) ||
                            action == #selector(handleSpacePress(_:)) ||
                            action == #selector(handleGlobePress(_:)) ||
-                           action == #selector(handleModeToggle(_:)) ||
-                           action == #selector(handleInputModeToggle(_:)))
+                           action == #selector(handleModeToggle(_:)))
 
         // Apply theme colors
         if isSpecialKey {
@@ -468,25 +457,8 @@ class CyrillicKeyboardView: UIView {
         buildKeyboardLayout()
     }
 
-    @objc private func handleInputModeToggle(_ sender: UIButton) {
-        // Haptic feedback
-        hapticManager.modeToggle()
-
-        // Visual feedback
-        animateButtonPress(sender)
-
-        // 入力モードを切り替え（АБВ → あ → ア → あ変 → АБВ...）
-        switch inputMode {
-        case .directCyrillic:
-            inputMode = .japaneseHiragana
-        case .japaneseHiragana:
-            inputMode = .japaneseKatakana
-        case .japaneseKatakana:
-            inputMode = .japaneseIME
-        case .japaneseIME:
-            inputMode = .directCyrillic
-        }
-    }
+    // Smartphone-appropriate: No input mode toggling needed
+    // Always use japaneseIME mode with automatic live conversion
 
     @objc private func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
         guard gesture.state == .began,
@@ -524,10 +496,8 @@ class CyrillicKeyboardView: UIView {
 
     // MARK: - Helper Methods
 
-    /// 入力モードボタンのタイトルを更新
-    private func updateInputModeButton() {
-        inputModeButton?.setTitle(inputMode.shortName, for: .normal)
-    }
+    // Smartphone-appropriate: No input mode button to update
+    // Always use japaneseIME mode with automatic live conversion
 
     /// 変換候補を表示 (Phase 4: Updated for enhanced UI)
     func showCandidates(_ candidates: [String]) {

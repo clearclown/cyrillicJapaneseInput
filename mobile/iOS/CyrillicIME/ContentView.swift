@@ -178,7 +178,7 @@ struct HelpStep: View {
     }
 }
 
-struct ExampleRow: View {
+private struct ExampleRow: View {
     let cyrillic: String
     let hiragana: String
     let kanji: String

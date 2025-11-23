@@ -172,7 +172,7 @@ struct TutorialPageView: View {
     }
 }
 
-struct ExampleRow: View {
+private struct ExampleRow: View {
     let example: String
 
     var body: some View {
