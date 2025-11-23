@@ -100,3 +100,7 @@ iOSInjectionProject/
 AuthKey_*.p8
 *.certSigningRequest
 *.cer
+
+# Test Results and Coverage
+TestResults.xcresult/
+coverage_report.txt
