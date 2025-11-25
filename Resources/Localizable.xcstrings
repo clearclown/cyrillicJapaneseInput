@@ -180,12 +180,12 @@
         }
       }
     },
-    "「Zenzai」はazooKeyの新しいかな漢字変換システムです。" : {
+    "「Zenzai」はPismoの新しいかな漢字変換システムです。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zenzai is azooKey’s new kana-kanji conversion system."
+            "value" : "Zenzai is Pismo’s new kana-kanji conversion system."
           }
         }
       }
@@ -867,12 +867,12 @@
         }
       }
     },
-    "1. 設定 → ユーザ辞書 → azooKeyユーザ辞書 を開く" : {
+    "1. 設定 → ユーザ辞書 → Pismoユーザ辞書 を開く" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "1. Open Settings → User Dictionary → azooKey User Dictionary"
+            "value" : "1. Open Settings → User Dictionary → Pismo User Dictionary"
           }
         },
         "ja" : {
@@ -974,12 +974,12 @@
         }
       }
     },
-    "azooKeyが使えます！" : {
+    "Pismoが使えます！" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You can use azooKey now!"
+            "value" : "You can use Pismo now!"
           }
         },
         "ja" : {
@@ -990,12 +990,12 @@
         }
       }
     },
-    "azooKeyが開かれました！" : {
+    "Pismoが開かれました！" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You enabled azooKey!"
+            "value" : "You enabled Pismo!"
           }
         },
         "ja" : {
@@ -1006,12 +1006,12 @@
         }
       }
     },
-    "azooKeyではキーボード上で文字を拡大して表示することができます。" : {
+    "Pismoではキーボード上で文字を拡大して表示することができます。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "On azooKey, you can zoom letters and check them."
+            "value" : "On Pismo, you can zoom letters and check them."
           }
         },
         "ja" : {
@@ -1022,12 +1022,12 @@
         }
       }
     },
-    "azooKeyでは一部キーのカスタマイズが可能です。「設定」タブから変更できます。" : {
+    "Pismoでは一部キーのカスタマイズが可能です。「設定」タブから変更できます。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "With azooKey, you can customize some of the keys. You can change keys on the Settings tab."
+            "value" : "With Pismo, you can customize some of the keys. You can change keys on the Settings tab."
           }
         },
         "ja" : {
@@ -1038,12 +1038,12 @@
         }
       }
     },
-    "azooKeyでは片手モードを利用可能です。" : {
+    "Pismoでは片手モードを利用可能です。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In azooKey, you can use one-handed mode."
+            "value" : "In Pismo, you can use one-handed mode."
           }
         },
         "ja" : {
@@ -1054,7 +1054,7 @@
         }
       }
     },
-    "azooKeyとアプリの相性の問題で、入力がうまくいかないケースがあります。" : {
+    "Pismoとアプリの相性の問題で、入力がうまくいかないケースがあります。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1070,12 +1070,12 @@
         }
       }
     },
-    "azooKeyのソースコードを閲覧する" : {
+    "Pismoのソースコードを閲覧する" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Review the implementation of azooKey"
+            "value" : "Review the implementation of Pismo"
           }
         },
         "ja" : {
@@ -1086,12 +1086,12 @@
         }
       }
     },
-    "azooKeyのロゴ" : {
+    "Pismoのロゴ" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "logo of azooKey"
+            "value" : "logo of Pismo"
           }
         },
         "ja" : {
@@ -1102,12 +1102,12 @@
         }
       }
     },
-    "azooKeyの開発に協力" : {
+    "Pismoの開発に協力" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Support azooKey development"
+            "value" : "Support Pismo development"
           }
         },
         "ja" : {
@@ -1118,12 +1118,12 @@
         }
       }
     },
-    "azooKeyは、キーボードの振動フィードバックや、キーボードからのペーストを実現するために、フルアクセスの許可が必要です。フルアクセスを許可していただくことで、これらの機能が使用できます。" : {
+    "Pismoは、キーボードの振動フィードバックや、キーボードからのペーストを実現するために、フルアクセスの許可が必要です。フルアクセスを許可していただくことで、これらの機能が使用できます。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "azooKey requires full access permission in order to enable features such as keyboard haptics and pasting from the keyboard. By granting full access, these features can be utilized."
+            "value" : "Pismo requires full access permission in order to enable features such as keyboard haptics and pasting from the keyboard. By granting full access, these features can be utilized."
           }
         },
         "ja" : {
@@ -1134,12 +1134,12 @@
         }
       }
     },
-    "azooKeyはオープンソースソフトウェアであり、GitHubでソースコードを公開しています。" : {
+    "Pismoはオープンソースソフトウェアであり、GitHubでソースコードを公開しています。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "azooKey is open source software and its source code is available on GitHub."
+            "value" : "Pismo is open source software and its source code is available on GitHub."
           }
         },
         "ja" : {
@@ -1150,12 +1150,12 @@
         }
       }
     },
-    "azooKeyはクリップボードの履歴を保存するため、定期的にクリップボードをチェックします。また、ペーストする際にもクリップボードの情報を利用します。" : {
+    "Pismoはクリップボードの履歴を保存するため、定期的にクリップボードをチェックします。また、ペーストする際にもクリップボードの情報を利用します。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "azooKey periodically checks the clipboard to save its history, and also uses its information when pasting."
+            "value" : "Pismo periodically checks the clipboard to save its history, and also uses its information when pasting."
           }
         },
         "ja" : {
@@ -1166,12 +1166,12 @@
         }
       }
     },
-    "azooKeyは安全なキーボードアプリであり、ユーザの明示的な同意なく、個人情報を外部に送信したり、保存したりすることはありません。" : {
+    "Pismoは安全なキーボードアプリであり、ユーザの明示的な同意なく、個人情報を外部に送信したり、保存したりすることはありません。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "azooKey is a safe keyboard app and does not transmit or store personal information without the explicit consent of the user."
+            "value" : "Pismo is a safe keyboard app and does not transmit or store personal information without the explicit consent of the user."
           }
         },
         "ja" : {
@@ -1182,12 +1182,12 @@
         }
       }
     },
-    "azooKeyユーザ辞書" : {
+    "Pismoユーザ辞書" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "azooKey's Text replacement"
+            "value" : "Pismo's Text replacement"
           }
         },
         "ja" : {
@@ -1198,12 +1198,12 @@
         }
       }
     },
-    "azooKeyをインストールした直後、特定のアプリでキーボードが開かないことがあります。" : {
+    "Pismoをインストールした直後、特定のアプリでキーボードが開かないことがあります。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Immediately after installing azooKey, the keyboard may not open in certain applications."
+            "value" : "Immediately after installing Pismo, the keyboard may not open in certain applications."
           }
         },
         "ja" : {
@@ -1214,12 +1214,12 @@
         }
       }
     },
-    "azooKeyをオンにして" : {
+    "Pismoをオンにして" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Turn on azooKey"
+            "value" : "Turn on Pismo"
           }
         },
         "ja" : {
@@ -1230,12 +1230,12 @@
         }
       }
     },
-    "azooKeyをお楽しみください！" : {
+    "Pismoをお楽しみください！" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enjoy azooKey!"
+            "value" : "Enjoy Pismo!"
           }
         },
         "ja" : {
@@ -1246,13 +1246,13 @@
         }
       }
     },
-    "azooKeyを使う前に、iPhoneのキーボードのリストにazooKeyを追加する必要があります" : {
-      "comment" : "Localizable.strings\n  azooKey\n\n  Created by ensan on 2021/02/14.\n  Copyright © 2021 ensan. All rights reserved.",
+    "Pismoを使う前に、iPhoneのキーボードのリストにPismoを追加する必要があります" : {
+      "comment" : "Localizable.strings\n  Pismo\n\n  Created by ensan on 2021/02/14.\n  Copyright © 2021 ensan. All rights reserved.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Before using azooKey, you need to add azooKey into the list of device keyboards"
+            "value" : "Before using Pismo, you need to add Pismo into the list of device keyboards"
           }
         },
         "ja" : {
@@ -1263,12 +1263,12 @@
         }
       }
     },
-    "azooKeyを使ってくれてありがとう！" : {
+    "Pismoを使ってくれてありがとう！" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Thank you for using azooKey!"
+            "value" : "Thank you for using Pismo!"
           }
         },
         "ja" : {
@@ -1279,12 +1279,12 @@
         }
       }
     },
-    "azooKeyを拡張する" : {
+    "Pismoを拡張する" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Extend azooKey"
+            "value" : "Extend Pismo"
           }
         },
         "ja" : {
@@ -1295,22 +1295,22 @@
         }
       }
     },
-    "azooKeyを開く" : {
+    "Pismoを開く" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open azooKey"
+            "value" : "Open Pismo"
           }
         }
       }
     },
-    "azooKey本体アプリを開く" : {
+    "Pismo本体アプリを開く" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open azooKey.app"
+            "value" : "Open Pismo.app"
           }
         },
         "ja" : {
@@ -1368,6 +1368,9 @@
           }
         }
       }
+    },
+    "Hotfix not found" : {
+
     },
     "iCloudから読み込む" : {
       "localizations" : {
@@ -1437,12 +1440,12 @@
         }
       }
     },
-    "macOS版azooKeyで好評な高精度な変換システム「Zenzai」がついにiOS版でも利用できます" : {
+    "macOS版Pismoで好評な高精度な変換システム「Zenzai」がついにiOS版でも利用できます" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The highly accurate conversion system 'Zenzai', popular on macOS azooKey, is now available on iOS."
+            "value" : "The highly accurate conversion system 'Zenzai', popular on macOS Pismo, is now available on iOS."
           }
         }
       }
@@ -1496,6 +1499,9 @@
           }
         }
       }
+    },
+    "QWERTY" : {
+
     },
     "QwertyキーボードでAaキーの代わりにシフトキーを利用します。" : {
       "extractionState" : "manual",
@@ -1647,12 +1653,12 @@
         }
       }
     },
-    "View azooKey on GitHub" : {
+    "View Pismo on GitHub" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "View azooKey on GitHub"
+            "value" : "View Pismo on GitHub"
           }
         },
         "ja" : {
@@ -1845,7 +1851,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tab bar will appear when you press azooKey's icon on the keyboard."
+            "value" : "Tab bar will appear when you press Pismo's icon on the keyboard."
           }
         },
         "ja" : {
@@ -1904,6 +1910,9 @@
           }
         }
       }
+    },
+    "ウクライナ語" : {
+
     },
     "エフォート" : {
       "localizations" : {
@@ -2353,7 +2362,7 @@
         }
       }
     },
-    "カスタムタブをファイルとして外部で作成し、azooKeyに読み込むことができます。より高機能なタブの作成が可能です。詳しくは以下をご覧ください。" : {
+    "カスタムタブをファイルとして外部で作成し、Pismoに読み込むことができます。より高機能なタブの作成が可能です。詳しくは以下をご覧ください。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2666,12 +2675,12 @@
         }
       }
     },
-    "キーボードの地球儀ボタンを長押しし、azooKeyを選択してください" : {
+    "キーボードの地球儀ボタンを長押しし、Pismoを選択してください" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap and hold the globe button on the keyboard, and select azooKey"
+            "value" : "Tap and hold the globe button on the keyboard, and select Pismo"
           }
         },
         "ja" : {
@@ -3178,7 +3187,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "About azooKey"
+            "value" : "About Pismo"
           }
         },
         "ja" : {
@@ -3369,15 +3378,18 @@
         }
       }
     },
-    "このとき、実際のキーボードでは「(」を入力し、「)」を入力し、ついで「確定」を押します。azooKeyは自動でカーソルを移動するので、これで実現したい操作が完了します。" : {
+    "このとき、実際のキーボードでは「(」を入力し、「)」を入力し、ついで「確定」を押します。Pismoは自動でカーソルを移動するので、これで実現したい操作が完了します。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In this case, you would input '(' and then ')', followed by pressing 'Enter' on the actual keyboard. Since azooKey automatically moves the cursor, this sequence accomplishes the desired action."
+            "value" : "In this case, you would input '(' and then ')', followed by pressing 'Enter' on the actual keyboard. Since Pismo automatically moves the cursor, this sequence accomplishes the desired action."
           }
         }
       }
+    },
+    "このバリエーションを削除" : {
+
     },
     "この列を削除" : {
       "localizations" : {
@@ -3526,7 +3538,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Without this operation you cannot use azooKey"
+            "value" : "Without this operation you cannot use Pismo"
           }
         },
         "ja" : {
@@ -3570,12 +3582,12 @@
         }
       }
     },
-    "これはazooKeyの問題ではなく、OS側のデータの更新が遅れている可能性があります。" : {
+    "これはPismoの問題ではなく、OS側のデータの更新が遅れている可能性があります。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This may not be an azooKey issue, but a delay in updating the data on the OS side."
+            "value" : "This may not be an Pismo issue, but a delay in updating the data on the OS side."
           }
         },
         "ja" : {
@@ -3835,6 +3847,7 @@
       }
     },
     "スクロール式のカスタムタブを作る" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3891,6 +3904,9 @@
           }
         }
       }
+    },
+    "セルビア語" : {
+
     },
     "そのまま入力" : {
       "localizations" : {
@@ -4415,6 +4431,9 @@
         }
       }
     },
+    "デバッグ" : {
+
+    },
     "デフォルト" : {
       "localizations" : {
         "en" : {
@@ -4529,7 +4548,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Note that if you have not enabled 'clipboard history,' azooKey will not periodically access the clipboard. Also, the text obtained from the clipboard is only used within the app."
+            "value" : "Note that if you have not enabled 'clipboard history,' Pismo will not periodically access the clipboard. Also, the text obtained from the clipboard is only used within the app."
           }
         },
         "ja" : {
@@ -4540,12 +4559,12 @@
         }
       }
     },
-    "なお、azooKeyはオープンソースであり、誰もが実装を確認することができます。" : {
+    "なお、Pismoはオープンソースであり、誰もが実装を確認することができます。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Additionally, azooKey is an open-source keyboard app, allowing anyone to review the implementation."
+            "value" : "Additionally, Pismo is an open-source keyboard app, allowing anyone to review the implementation."
           }
         },
         "ja" : {
@@ -4655,6 +4674,9 @@
           }
         }
       }
+    },
+    "バリエーションはキーを長押しすると選択できます" : {
+
     },
     "ひらがな" : {
       "localizations" : {
@@ -4849,6 +4871,9 @@
         }
       }
     },
+    "フリック" : {
+
+    },
     "フリックのキーボードでは削除%@キーを左にフリックすると、文頭まで削除することができます。" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4994,6 +5019,7 @@
       }
     },
     "フリック式のカスタムタブを作成することができます。" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5132,6 +5158,9 @@
         }
       }
     },
+    "ブルガリア語(BDS)" : {
+
+    },
     "プレビュー" : {
       "localizations" : {
         "en" : {
@@ -5226,6 +5255,12 @@
           }
         }
       }
+    },
+    "ホットフィックス" : {
+
+    },
+    "マイグレーション状態をリセット" : {
+
     },
     "まず「テンプレートの管理」から新しいテンプレートを作成します。画面右上の%@を押して、テンプレートを追加しましょう。" : {
       "extractionState" : "manual",
@@ -5693,6 +5728,9 @@
         }
       }
     },
+    "レイアウトスタイル" : {
+
+    },
     "レポートに左右の文脈を自動で含めます。左右それぞれ10文字程度まででカットされるので、すべての文章が送信されることはありません。都度、確認画面で含めないよう変更することもできます。" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5773,6 +5811,9 @@
           }
         }
       }
+    },
+    "ロシア語(JCUKEN)" : {
+
     },
     "一度端末を再起動していただくとデータが更新され、キーボードが使えるようになることがあります。" : {
       "localizations" : {
@@ -6337,7 +6378,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "By protecting composing text, azooKey will behave more stably in some web apps. \nSince this is an experimental feature, this feature may be discontinued without notice."
+            "value" : "By protecting composing text, Pismo will behave more stably in some web apps. \nSince this is an experimental feature, this feature may be discontinued without notice."
           }
         },
         "ja" : {
@@ -7467,7 +7508,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You can use caps lock in azooKey."
+            "value" : "You can use caps lock in Pismo."
           }
         },
         "ja" : {
@@ -7607,6 +7648,9 @@
           }
         }
       }
+    },
+    "定型文タブを作る" : {
+
     },
     "小さく表示される文字を設定します。" : {
       "localizations" : {
@@ -8402,6 +8446,9 @@
         }
       }
     },
+    "日本語/英語入力用のタブをフルカスタマイズできます。" : {
+
+    },
     "日本語タブキー" : {
       "localizations" : {
         "en" : {
@@ -8976,6 +9023,7 @@
       }
     },
     "横: %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -8984,6 +9032,9 @@
           }
         }
       }
+    },
+    "横幅: %lld" : {
+
     },
     "横方向キー数" : {
       "localizations" : {
@@ -9371,7 +9422,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Currently, azooKey doesn't support the Japanese flip phone input style."
+            "value" : "Currently, Pismo doesn't support the Japanese flip phone input style."
           }
         },
         "ja" : {
@@ -9463,6 +9514,7 @@
       }
     },
     "登録したい文字や単語を順番に書いていくだけでスクロール式のカスタムタブを作成することができます。" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9477,6 +9529,9 @@
           }
         }
       }
+    },
+    "登録したい文字や単語を順番に書いていくだけで定型文入力に便利なタブを作成できます。" : {
+
     },
     "登録する文字" : {
       "localizations" : {
@@ -9909,6 +9964,9 @@
         }
       }
     },
+    "編集モード" : {
+
+    },
     "編集を中止します。変更はすべて失われます。" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -9948,6 +10006,7 @@
       }
     },
     "縦: %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9956,6 +10015,9 @@
           }
         }
       }
+    },
+    "縦幅: %lld" : {
+
     },
     "縦方向キー数" : {
       "localizations" : {
@@ -11079,12 +11141,12 @@
         }
       }
     },
-    "選択した候補や周辺文脈などの情報をサーバに送信し、azooKeyの変換精度改善に貢献することができます。" : {
+    "選択した候補や周辺文脈などの情報をサーバに送信し、Pismoの変換精度改善に貢献することができます。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You can send the selected candidate, its surrounding context, and other information to help improve azooKey's conversion accuracy."
+            "value" : "You can send the selected candidate, its surrounding context, and other information to help improve Pismo's conversion accuracy."
           }
         },
         "ja" : {
@@ -11169,6 +11231,12 @@
           }
         }
       }
+    },
+    "長押しバリエーション" : {
+
+    },
+    "長押しバリエーションが設定されている場合長押しアクションは動作しません" : {
+
     },
     "長押し後表示される画面で「大きな文字で表示する」をタップします。" : {
       "localizations" : {
