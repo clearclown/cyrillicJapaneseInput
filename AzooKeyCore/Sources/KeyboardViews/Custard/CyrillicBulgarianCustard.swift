@@ -94,11 +94,11 @@ public extension Custard {
                 // Revised Row 4 (Bottom):
                 // .gridFit(.init(x: 10, y: 2)): .custom(.input("Б")), // Replaced Del
 
-                // Row 4: 123 Globe Space - Enter
-                .gridFit(.init(x: 0, y: 3, width: 2, height: 1)): .custom(.numberTab()),
-                .gridFit(.init(x: 2, y: 3)): .system(.changeKeyboard),
-                .gridFit(.init(x: 3, y: 3, width: 5, height: 1)): .custom(.flickSpace()),
-                .gridFit(.init(x: 8, y: 3)): .custom(.input("-")), // Hyphen
+                // Row 4: Shift Globe Space ー Enter
+                .gridFit(.init(x: 0, y: 3)): .system(.upperLower), // Shift
+                .gridFit(.init(x: 1, y: 3)): .system(.changeKeyboard), // Globe
+                .gridFit(.init(x: 2, y: 3, width: 6, height: 1)): .custom(.flickSpace()), // Space (wider)
+                .gridFit(.init(x: 8, y: 3)): .custom(.input("ー")), // 長音符 (伸ばし棒)
                 .gridFit(.init(x: 9, y: 3, width: 2, height: 1)): .system(.enter), // Enter
             ]
         )
@@ -115,13 +115,4 @@ private extension CustardInterfaceCustomKey {
         )
     }
 
-    /// QWERTY style number keyboard tab key
-    static func numberTab() -> CustardInterfaceCustomKey {
-        return CustardInterfaceCustomKey(
-            design: .init(label: .text("123"), color: .special),
-            press_actions: [.moveTab(.system(.qwerty_numbers))],
-            longpress_actions: .init(start: [.toggleTabBar], repeat: []),
-            variations: []
-        )
-    }
 }
