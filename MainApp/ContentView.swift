@@ -76,7 +76,7 @@ struct ContentView: View {
                 }
             }
             .onOpenURL { url in
-                if url.scheme == "Pismo" {
+                if url.scheme == "pismo" {
                     // Deep link handling for Pismo scheme
                     let host = url.host?.lowercased()
                     let last = url.lastPathComponent.lowercased()
@@ -88,7 +88,7 @@ struct ContentView: View {
                     }
                 }
                 // Non-Pismo scheme: treat as file import
-                if url.scheme != "Pismo" {
+                if url.scheme != "pismo" {
                     importFileURL = url
                 }
             }
