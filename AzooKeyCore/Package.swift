@@ -8,11 +8,12 @@ let swiftSettings: [SwiftSetting] = [
     .interoperabilityMode(.Cxx),
 ]
 
-#if canImport(FoundationModels)
-let isXcodeVersion26 = true
-#else
+// Temporarily disabled to avoid llama framework duplication issue
+// #if canImport(FoundationModels)
+// let isXcodeVersion26 = true
+// #else
 let isXcodeVersion26 = false
-#endif
+// #endif
 
 let xcode26AdditionalTargets: [Target] = [
     .binaryTarget(
@@ -21,7 +22,7 @@ let xcode26AdditionalTargets: [Target] = [
         // さらに`AzooKeyUtils`でも`llama`を要求しないとビルドは通らない。
         // ただし、Xcode 26より前の場合は逆にこの対応を入れると動作しないので、Xcodeバージョンを確認する必要がある
         name: "llama",
-        url: "https://github.com/azooKey/llama.cpp/releases/download/b4846/signed-llama.xcframework.zip",
+        url: "https://github.com/ensan-hcl/llama.cpp/releases/download/b4846/signed-llama.xcframework.zip",
         // this can be computed `swift package compute-checksum llama-b4844-xcframework.zip`
         checksum: "db3b13169df8870375f212e6ac21194225f1c85f7911d595ab64c8c790068e0a"
     ),
@@ -63,8 +64,8 @@ let package = Package(
         // MARK: `_: .upToNextMinor(Version)` or `exact: Version` or `revision: Version`.
         // MARK: For develop branch, you can use `revision:` specification.
         // MARK: For main branch, you must use `upToNextMinor` specification.
-        .package(url: "https://github.com/azooKey/AzooKeyKanaKanjiConverter", revision: "fa3eeddeb8e7cfa881e725359ae6fe158b89721f", traits: ["ZenzaiCPU"]),
-        .package(url: "https://github.com/azooKey/CustardKit", revision: "563635caf1213dd6b2baff63ed1b0cf254b9d78a"),
+        .package(url: "https://github.com/ensan-hcl/AzooKeyKanaKanjiConverter", revision: "fa3eeddeb8e7cfa881e725359ae6fe158b89721f", traits: ["ZenzaiCPU"]),
+        .package(url: "https://github.com/ensan-hcl/CustardKit", revision: "563635caf1213dd6b2baff63ed1b0cf254b9d78a"),
     ],
     targets: [
         .target(
