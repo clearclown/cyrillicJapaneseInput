@@ -11,6 +11,10 @@ public enum LanguageLayout: Codable, Hashable, Sendable {
     case flick
     case qwerty
     case custard(String)
+    case cyrillicStandard
+    case cyrillicUkrainian
+    case cyrillicBulgarian
+    case cyrillicSerbian
 }
 
 public extension LanguageLayout {
@@ -18,6 +22,10 @@ public extension LanguageLayout {
         case flick
         case qwerty
         case custard
+        case cyrillicStandard
+        case cyrillicUkrainian
+        case cyrillicBulgarian
+        case cyrillicSerbian
     }
 
     func encode(to encoder: any Encoder) throws {
@@ -29,6 +37,14 @@ public extension LanguageLayout {
             try container.encode(true, forKey: .qwerty)
         case let .custard(value):
             try container.encode(value, forKey: .custard)
+        case .cyrillicStandard:
+            try container.encode(true, forKey: .cyrillicStandard)
+        case .cyrillicUkrainian:
+            try container.encode(true, forKey: .cyrillicUkrainian)
+        case .cyrillicBulgarian:
+            try container.encode(true, forKey: .cyrillicBulgarian)
+        case .cyrillicSerbian:
+            try container.encode(true, forKey: .cyrillicSerbian)
         }
     }
 
@@ -53,6 +69,14 @@ public extension LanguageLayout {
                 forKey: .custard
             )
             self = .custard(value)
+        case .cyrillicStandard:
+            self = .cyrillicStandard
+        case .cyrillicUkrainian:
+            self = .cyrillicUkrainian
+        case .cyrillicBulgarian:
+            self = .cyrillicBulgarian
+        case .cyrillicSerbian:
+            self = .cyrillicSerbian
         }
     }
 }

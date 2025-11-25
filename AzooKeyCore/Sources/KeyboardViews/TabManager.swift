@@ -1,6 +1,6 @@
 //
 //  TabManager.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2021/02/20.
 //  Copyright © 2021 ensan. All rights reserved.
@@ -125,6 +125,8 @@ public struct TabManager {
                 return .qwerty_abc
             case let .custard(identifier):
                 return .custard((try? config.custardManager.custard(identifier: identifier)) ?? .errorMessage)
+            case .cyrillicStandard, .cyrillicUkrainian, .cyrillicBulgarian, .cyrillicSerbian:
+                return .flick_abc  // Cyrillic layouts are not applicable to English input
             }
         case .japanese:
             switch config.japaneseLayout {
@@ -134,6 +136,14 @@ public struct TabManager {
                 return .qwerty_hira
             case let .custard(identifier):
                 return .custard((try? config.custardManager.custard(identifier: identifier)) ?? .errorMessage)
+            case .cyrillicStandard:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_standard")) ?? .errorMessage)
+            case .cyrillicUkrainian:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_ukrainian")) ?? .errorMessage)
+            case .cyrillicBulgarian:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_bulgarian")) ?? .errorMessage)
+            case .cyrillicSerbian:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_serbian")) ?? .errorMessage)
             }
         }
     }

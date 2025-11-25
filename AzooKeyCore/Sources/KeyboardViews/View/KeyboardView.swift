@@ -1,6 +1,6 @@
 //
 //  KeyboardView.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2020/04/08.
 //  Copyright © 2020 ensan. All rights reserved.
@@ -192,6 +192,7 @@ public struct KeyboardView<Extension: ApplicationSpecificKeyboardViewExtension>:
         case .qwerty_symbols:
             renderUnified(modelsDict: QwertyLayoutProvider<Extension>.symbolsKeyboard(), width: 10, height: 4)
         case let .custard(custard):
+            // Check if it's a cyrillic custard and possibly inject settings or specific behaviors if needed
             CustomKeyboardView<Extension>(custard: custard)
         case let .special(tab):
             switch tab {

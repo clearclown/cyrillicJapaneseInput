@@ -15,12 +15,19 @@ import AzooKeyUtils
 extension LanguageLayout {
     var label: LocalizedStringKey {
         switch self {
-        case .flick:
-            return "フリック入力"
-        case .qwerty:
-            return "ローマ字入力"
+        case .flick, .qwerty:
+            // Legacy layouts - redirect to Cyrillic Standard
+            return "ロシア語(JCUKEN)"
         case let .custard(identifier):
             return LocalizedStringKey(identifier)
+        case .cyrillicStandard:
+            return "ロシア語(JCUKEN)"
+        case .cyrillicUkrainian:
+            return "ウクライナ語"
+        case .cyrillicBulgarian:
+            return "ブルガリア語(BDS)"
+        case .cyrillicSerbian:
+            return "セルビア語"
         }
     }
 }
@@ -53,14 +60,16 @@ struct LanguageLayoutSettingView<SettingKey: LanguageLayoutKeyboardSetting>: Vie
         self.setTogether = setTogether
         self._selection = State(initialValue: SettingKey.value)
         self.types = {
-            let keyboardlanguage: KeyboardLanguage
-            switch language {
-            case .japanese:
-                keyboardlanguage = .ja_JP
-            case .english:
-                keyboardlanguage = .en_US
-            }
-            return [.flick, .qwerty] + CustardManager.load().availableCustard(for: keyboardlanguage).map {.custard($0)}
+            // Pismo: Cyrillic keyboards only - no flick/qwerty
+            var layouts: [LanguageLayout] = [
+                .cyrillicStandard,
+                .cyrillicUkrainian,
+                .cyrillicBulgarian,
+                .cyrillicSerbian
+            ]
+            // Add any user-made custards for Japanese
+            layouts += CustardManager.load().availableCustard(for: .ja_JP).map {.custard($0)}
+            return layouts
         }()
     }
 
@@ -90,6 +99,14 @@ struct LanguageLayoutSettingView<SettingKey: LanguageLayoutKeyboardSetting>: Vie
             } else {
                 return .custard(.errorMessage)
             }
+        case (.cyrillicStandard, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_standard")) ?? .errorMessage)
+        case (.cyrillicUkrainian, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_ukrainian")) ?? .errorMessage)
+        case (.cyrillicBulgarian, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_bulgarian")) ?? .errorMessage)
+        case (.cyrillicSerbian, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_serbian")) ?? .errorMessage)
         }
     }
 
