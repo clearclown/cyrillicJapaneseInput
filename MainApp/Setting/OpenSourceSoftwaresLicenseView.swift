@@ -96,6 +96,16 @@ struct OpenSourceSoftwaresLicenseView: View {
             Section {
                 Text("本アプリケーションは多くのオープンソースソフトウェアを用いて作成されています。この場を借りて感謝申し上げます。")
             }
+            Section {
+                Text(verbatim: "azooKey").font(.title).padding()
+                Text("PismoはazooKeyをベースに開発されています。azooKeyはオープンソースの日本語キーボードアプリで、ensanさんによって開発されています。")
+                FallbackLink("License (MIT)", destination: "https://github.com/ensan-hcl/azooKey/blob/develop/LICENSE")
+                FallbackLink(
+                    verbatim: "azooKey - GitHub",
+                    destination: "https://github.com/ensan-hcl/azooKey"
+                )
+                Text(verbatim: "Copyright (c) 2020-2024 ensan. All rights reserved.")
+            }
             Group {
                 Section {
                     Text(verbatim: "SudachiDict").font(.title).padding()
@@ -164,10 +174,10 @@ struct OpenSourceSoftwaresLicenseView: View {
                 Section {
                     Text(verbatim: "CustardKit").font(.title).padding()
                     Text("本アプリケーションで利用可能なカスタムタブのデータ構造の記述をCustardKitとしてオープンソースで公開し、アプリ内でも使用しています。")
-                    FallbackLink("License", destination: "https://github.com/azooKey/CustardKit/blob/main/LICENSE")
+                    FallbackLink("License", destination: "https://github.com/Pismo/CustardKit/blob/main/LICENSE")
                     FallbackLink(
                         verbatim: "CustardKit",
-                        destination: "https://github.com/azooKey/CustardKit"
+                        destination: "https://github.com/Pismo/CustardKit"
                     )
                 }
                 Group {
@@ -193,9 +203,9 @@ struct OpenSourceSoftwaresLicenseView: View {
             }
             Section {
                 HStack {
-                    FunnyAzooKeyIcon()
+                    FunnyPismoIcon()
                     Spacer()
-                    Text("azooKeyを使ってくれてありがとう！")
+                    Text("Pismoを使ってくれてありがとう！")
                 }
             }
         }
@@ -204,7 +214,7 @@ struct OpenSourceSoftwaresLicenseView: View {
     }
 }
 
-private struct FunnyAzooKeyIcon: View {
+private struct FunnyPismoIcon: View {
     init(stage: Stage = .normal) {
         self._stage = .init(initialValue: stage)
     }
@@ -232,7 +242,7 @@ private struct FunnyAzooKeyIcon: View {
     @State private var stage: Stage = .normal
 
     private var iconCore: some View {
-        AzooKeyIcon(fontSize: 60)
+        PismoIcon(fontSize: 60)
             .matchedGeometryEffect(id: "icon", in: namespace)
     }
 
@@ -256,7 +266,7 @@ private struct FunnyAzooKeyIcon: View {
                         }
                     }
             case .king:
-                AzooKeyIcon(fontSize: 60, looks: .king)
+                PismoIcon(fontSize: 60, looks: .king)
                     .matchedGeometryEffect(id: "icon", in: namespace)
                     .keyframeAnimator(initialValue: KingAnimationValue()) { content, value in
                         content
@@ -279,7 +289,7 @@ private struct FunnyAzooKeyIcon: View {
                         }
                     }
             case .fire:
-                AzooKeyIcon(fontSize: 60, looks: .fire)
+                PismoIcon(fontSize: 60, looks: .fire)
                     .matchedGeometryEffect(id: "icon", in: namespace)
                     .keyframeAnimator(initialValue: FireAnimationValue()) { content, value in
                         content
@@ -305,8 +315,8 @@ private struct FunnyAzooKeyIcon: View {
 
 #Preview {
     VStack {
-        FunnyAzooKeyIcon(stage: .normal)
-        FunnyAzooKeyIcon(stage: .king)
-        FunnyAzooKeyIcon(stage: .fire)
+        FunnyPismoIcon(stage: .normal)
+        FunnyPismoIcon(stage: .king)
+        FunnyPismoIcon(stage: .fire)
     }
 }
