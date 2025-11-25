@@ -61,7 +61,7 @@ public extension Custard {
                 // Let's fit remaining chars: Џ, Ц, В, Б, Н, М, Đ, Ж.
                 // 8 chars.
 
-                .gridFit(.init(x: 0, y: 2)): .system(.upperLower),
+                .gridFit(.init(x: 0, y: 2)): .custom(.shiftKey()),
                 .gridFit(.init(x: 1, y: 2)): .custom(.input("Џ")),
                 .gridFit(.init(x: 2, y: 2)): .custom(.input("Ц")),
                 .gridFit(.init(x: 3, y: 2)): .custom(.input("В")),
@@ -74,11 +74,11 @@ public extension Custard {
                 .gridFit(.init(x: 10, y: 2)): .custom(.flickDelete()),
 
                 // Row 4: Shift Globe Space ー Enter
-                .gridFit(.init(x: 0, y: 3)): .system(.upperLower), // Shift
+                .gridFit(.init(x: 0, y: 3)): .custom(.shiftKey()), // Shift
                 .gridFit(.init(x: 1, y: 3)): .system(.changeKeyboard), // Globe
                 .gridFit(.init(x: 2, y: 3, width: 6, height: 1)): .custom(.flickSpace()), // Space (wider)
                 .gridFit(.init(x: 8, y: 3)): .custom(.input("ー")), // 長音符 (伸ばし棒)
-                .gridFit(.init(x: 9, y: 3, width: 2, height: 1)): .system(.enter), // Enter
+                .gridFit(.init(x: 9, y: 3, width: 2, height: 1)): .custom(.enterKey()), // Enter
             ]
         )
     )
@@ -94,4 +94,21 @@ private extension CustardInterfaceCustomKey {
         )
     }
 
+    static func shiftKey() -> CustardInterfaceCustomKey {
+        return CustardInterfaceCustomKey(
+            design: .init(label: .systemImage("shift"), color: .special),
+            press_actions: [.toggleCapsLockState],
+            longpress_actions: .init(start: [], repeat: []),
+            variations: []
+        )
+    }
+
+    static func enterKey() -> CustardInterfaceCustomKey {
+        return CustardInterfaceCustomKey(
+            design: .init(label: .systemImage("return"), color: .special),
+            press_actions: [.complete],
+            longpress_actions: .init(start: [], repeat: []),
+            variations: []
+        )
+    }
 }

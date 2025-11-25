@@ -64,7 +64,7 @@ public extension Custard {
                 .gridFit(.init(x: 10, y: 1)): .custom(.input("Ч")),
 
                 // Row 4 (Bottom letters): Shift Ю Й Ъ Э Ф Х П Р Л Б Del
-                .gridFit(.init(x: 0, y: 2)): .system(.upperLower),
+                .gridFit(.init(x: 0, y: 2)): .custom(.shiftKey()),
                 .gridFit(.init(x: 1, y: 2)): .custom(.input("Ю")),
                 .gridFit(.init(x: 2, y: 2)): .custom(.input("Й")),
                 .gridFit(.init(x: 3, y: 2)): .custom(.input("Ъ")),
@@ -95,11 +95,11 @@ public extension Custard {
                 // .gridFit(.init(x: 10, y: 2)): .custom(.input("Б")), // Replaced Del
 
                 // Row 4: Shift Globe Space ー Enter
-                .gridFit(.init(x: 0, y: 3)): .system(.upperLower), // Shift
+                .gridFit(.init(x: 0, y: 3)): .custom(.shiftKey()), // Shift
                 .gridFit(.init(x: 1, y: 3)): .system(.changeKeyboard), // Globe
                 .gridFit(.init(x: 2, y: 3, width: 6, height: 1)): .custom(.flickSpace()), // Space (wider)
                 .gridFit(.init(x: 8, y: 3)): .custom(.input("ー")), // 長音符 (伸ばし棒)
-                .gridFit(.init(x: 9, y: 3, width: 2, height: 1)): .system(.enter), // Enter
+                .gridFit(.init(x: 9, y: 3, width: 2, height: 1)): .custom(.enterKey()), // Enter
             ]
         )
     )
@@ -115,4 +115,21 @@ private extension CustardInterfaceCustomKey {
         )
     }
 
+    static func shiftKey() -> CustardInterfaceCustomKey {
+        return CustardInterfaceCustomKey(
+            design: .init(label: .systemImage("shift"), color: .special),
+            press_actions: [.toggleCapsLockState],
+            longpress_actions: .init(start: [], repeat: []),
+            variations: []
+        )
+    }
+
+    static func enterKey() -> CustardInterfaceCustomKey {
+        return CustardInterfaceCustomKey(
+            design: .init(label: .systemImage("return"), color: .special),
+            press_actions: [.complete],
+            longpress_actions: .init(start: [], repeat: []),
+            variations: []
+        )
+    }
 }
