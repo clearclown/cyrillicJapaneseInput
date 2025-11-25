@@ -24,12 +24,12 @@
 		1A7F37832A69874C009AC382 /* KeyboardThemes in Frameworks */ = {isa = PBXBuildFile; productRef = 1A7F37822A69874C009AC382 /* KeyboardThemes */; };
 		1A7F37882A6A1A90009AC382 /* KeyboardViews in Frameworks */ = {isa = PBXBuildFile; productRef = 1A7F37872A6A1A90009AC382 /* KeyboardViews */; };
 		1A7F378A2A6A1A99009AC382 /* KeyboardViews in Frameworks */ = {isa = PBXBuildFile; productRef = 1A7F37892A6A1A99009AC382 /* KeyboardViews */; };
-		1A7F547126A96A5F0032E91E /* AzooKeyIcon-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1AE191FB25D7E3B40044EE4B /* AzooKeyIcon-Regular.otf */; };
+		1A7F547126A96A5F0032E91E /* PismoIcon-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1AE191FB25D7E3B40044EE4B /* PismoIcon-Regular.otf */; };
 		1ABDFC352A18C60A00CED3A3 /* KanaKanjiConverterModule in Frameworks */ = {isa = PBXBuildFile; productRef = 1ABDFC342A18C60A00CED3A3 /* KanaKanjiConverterModule */; };
 		1AC03159251103EF004CA505 /* Designs.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AC03158251103EF004CA505 /* Designs.xcassets */; };
 		1ACEEFF72566786A00899DA2 /* kaomoji_dict.tsv in Resources */ = {isa = PBXBuildFile; fileRef = 1ACEEFF62566786A00899DA2 /* kaomoji_dict.tsv */; };
 		1AD96FB82A22F9C800FD4EA4 /* SwiftUIUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD96FB72A22F9C800FD4EA4 /* SwiftUIUtils */; };
-		1AE191FC25D7E3B40044EE4B /* AzooKeyIcon-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1AE191FB25D7E3B40044EE4B /* AzooKeyIcon-Regular.otf */; };
+		1AE191FC25D7E3B40044EE4B /* PismoIcon-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1AE191FB25D7E3B40044EE4B /* PismoIcon-Regular.otf */; };
 		1AED0A5F2A6D22C3005B87E5 /* AzooKeyUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 1AED0A5E2A6D22C3005B87E5 /* AzooKeyUtils */; };
 		1AED0A612A6D22CB005B87E5 /* AzooKeyUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 1AED0A602A6D22CB005B87E5 /* AzooKeyUtils */; };
 		1AF306022A00070000B4DAC3 /* KanaKanjiConverterModule in Frameworks */ = {isa = PBXBuildFile; productRef = 1AF306012A00070000B4DAC3 /* KanaKanjiConverterModule */; };
@@ -104,25 +104,25 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1A09112B2A20B13C00ABFC72 /* Dictionary */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Dictionary; path = ../azooKey_dictionary_storage/Dictionary; sourceTree = "<group>"; };
-		1A3DC1C22500D44A002CAA93 /* azooKey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = azooKey.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A09112B2A20B13C00ABFC72 /* Dictionary */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Dictionary; path = ../pismo_dictionary_storage/Dictionary; sourceTree = "<group>"; };
+		1A3DC1C22500D44A002CAA93 /* Pismo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pismo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A3DC1C92500D44B002CAA93 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1A3DC1CB2500D44E002CAA93 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A3DC1D32500D44E002CAA93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1A3DC1D82500D44E002CAA93 /* azooKeyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = azooKeyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1A3DC1E32500D44E002CAA93 /* azooKeyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = azooKeyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A3DC1D82500D44E002CAA93 /* PismoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PismoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A3DC1E32500D44E002CAA93 /* PismoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PismoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A3DC1F92500D488002CAA93 /* Keyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Keyboard.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A3DC1FD2500D488002CAA93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1A5B1CDF26D1E495007D4E1C /* MainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainApp.swift; sourceTree = "<group>"; };
 		1A60058425275CB9008E2B92 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		1A64A896257B4AFD0022C081 /* UpdateInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateInformationView.swift; sourceTree = "<group>"; };
 		1AC03158251103EF004CA505 /* Designs.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Designs.xcassets; sourceTree = "<group>"; };
-		1AC0315E25120AA2004CA505 /* azooKey.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = azooKey.entitlements; sourceTree = "<group>"; };
+		1AC0315E25120AA2004CA505 /* Pismo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Pismo.entitlements; sourceTree = "<group>"; };
 		1AC0315F25120B3B004CA505 /* Keyboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Keyboard.entitlements; sourceTree = "<group>"; };
 		1ACEEFF62566786A00899DA2 /* kaomoji_dict.tsv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = kaomoji_dict.tsv; sourceTree = "<group>"; };
-		1AE191FB25D7E3B40044EE4B /* AzooKeyIcon-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AzooKeyIcon-Regular.otf"; sourceTree = "<group>"; };
+		1AE191FB25D7E3B40044EE4B /* PismoIcon-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PismoIcon-Regular.otf"; sourceTree = "<group>"; };
 		1AF3060029FE6C2800B4DAC3 /* AzooKeyCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AzooKeyCore; sourceTree = "<group>"; };
-		1AF6A55825FE0DA70037D5ED /* charID.chid */ = {isa = PBXFileReference; lastKnownFileType = file; name = charID.chid; path = ../../azooKey_dictionary_storage/Dictionary/louds/charID.chid; sourceTree = "<group>"; };
+		1AF6A55825FE0DA70037D5ED /* charID.chid */ = {isa = PBXFileReference; lastKnownFileType = file; name = charID.chid; path = ../../pismo_dictionary_storage/Dictionary/louds/charID.chid; sourceTree = "<group>"; };
 		557D9DFE2ABF2B9D0028F3A0 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		557D9E002ABF320F0028F3A0 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		55EA62DE2BD4FCF20056B5BA /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -133,52 +133,45 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		5568293F2E82E78500F08475 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				azooKey.icon,
-			);
-			target = 1A3DC1C12500D44A002CAA93 /* azooKey */;
-		};
 		559E8F492CAC294600E016FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				KeyboardActionManager.swift,
 				KeyboardViewController.swift,
 			);
-			target = 1A3DC1D72500D44E002CAA93 /* azooKeyTests */;
+			target = 1A3DC1D72500D44E002CAA93 /* PismoTests */;
 		};
 		559E90622CAC29E900E016FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 1A3DC1D72500D44E002CAA93 /* azooKeyTests */;
+			target = 1A3DC1D72500D44E002CAA93 /* PismoTests */;
 		};
 		559E90672CAC29EC00E016FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				MainAppUITests.swift,
 			);
-			target = 1A3DC1E22500D44E002CAA93 /* azooKeyUITests */;
+			target = 1A3DC1E22500D44E002CAA93 /* PismoUITests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		55252D7C2DBCC53800F0C8CA /* EmojiDictionary */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); name = EmojiDictionary; path = azooKey_emoji_dictionary_storage/EmojiDictionary; sourceTree = SOURCE_ROOT; };
-		5568293C2E82E77600F08475 /* Resources */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (5568293F2E82E78500F08475 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Resources; sourceTree = "<group>"; };
+		55252D7C2DBCC53800F0C8CA /* EmojiDictionary */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); name = EmojiDictionary; path = pismo_emoji_dictionary_storage/EmojiDictionary; sourceTree = SOURCE_ROOT; };
+		5568293C2E82E77600F08475 /* Resources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Resources; sourceTree = "<group>"; };
 		559E8F3E2CAC294600E016FA /* Display */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (559E8F492CAC294600E016FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Display; sourceTree = "<group>"; };
 		559E8F4C2CAC295000E016FA /* InternalSetting */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = InternalSetting; sourceTree = "<group>"; };
 		559E8F542CAC295500E016FA /* Utils */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Utils; sourceTree = "<group>"; };
 		559E8F6A2CAC296000E016FA /* General */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = General; sourceTree = "<group>"; };
 		559E8F7B2CAC297900E016FA /* DataUpdateView */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = DataUpdateView; sourceTree = "<group>"; };
 		559E8F872CAC297900E016FA /* Theme */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Theme; sourceTree = "<group>"; };
-		559E8F8F2CAC297900E016FA /* EnableAzooKeyView */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EnableAzooKeyView; sourceTree = "<group>"; };
+		559E8F8F2CAC297900E016FA /* EnablePismoView */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EnablePismoView; sourceTree = "<group>"; };
 		559E8FBD2CAC297900E016FA /* Setting */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Setting; sourceTree = "<group>"; };
 		559E8FE22CAC297900E016FA /* Customize */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Customize; sourceTree = "<group>"; };
 		559E902B2CAC29AC00E016FA /* Tips */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Tips; sourceTree = "<group>"; };
 		559E90562CAC29E400E016FA /* Preview Content */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Preview Content"; sourceTree = "<group>"; };
-		559E905E2CAC29E900E016FA /* azooKeyTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (559E90622CAC29E900E016FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = azooKeyTests; sourceTree = "<group>"; };
+		559E905E2CAC29E900E016FA /* PismoTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (559E90622CAC29E900E016FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = PismoTests; sourceTree = "<group>"; };
 		559E90652CAC29EC00E016FA /* MainAppUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (559E90672CAC29EC00E016FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = MainAppUITests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -231,7 +224,7 @@
 				1AF3060029FE6C2800B4DAC3 /* AzooKeyCore */,
 				1AA346B42567F26000B41A16 /* Resources */,
 				1A3DC1C42500D44A002CAA93 /* MainApp */,
-				559E905E2CAC29E900E016FA /* azooKeyTests */,
+				559E905E2CAC29E900E016FA /* PismoTests */,
 				559E90652CAC29EC00E016FA /* MainAppUITests */,
 				1A3DC1FA2500D488002CAA93 /* Keyboard */,
 				1A3DC1C32500D44A002CAA93 /* Products */,
@@ -242,9 +235,9 @@
 		1A3DC1C32500D44A002CAA93 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1A3DC1C22500D44A002CAA93 /* azooKey.app */,
-				1A3DC1D82500D44E002CAA93 /* azooKeyTests.xctest */,
-				1A3DC1E32500D44E002CAA93 /* azooKeyUITests.xctest */,
+				1A3DC1C22500D44A002CAA93 /* Pismo.app */,
+				1A3DC1D82500D44E002CAA93 /* PismoTests.xctest */,
+				1A3DC1E32500D44E002CAA93 /* PismoUITests.xctest */,
 				1A3DC1F92500D488002CAA93 /* Keyboard.appex */,
 			);
 			name = Products;
@@ -253,7 +246,7 @@
 		1A3DC1C42500D44A002CAA93 /* MainApp */ = {
 			isa = PBXGroup;
 			children = (
-				1AC0315E25120AA2004CA505 /* azooKey.entitlements */,
+				1AC0315E25120AA2004CA505 /* Pismo.entitlements */,
 				1A5B1CDF26D1E495007D4E1C /* MainApp.swift */,
 				1A3DC1C92500D44B002CAA93 /* ContentView.swift */,
 				559E8F4C2CAC295000E016FA /* InternalSetting */,
@@ -265,7 +258,7 @@
 				559E8FE22CAC297900E016FA /* Customize */,
 				559E8FBD2CAC297900E016FA /* Setting */,
 				559E8F7B2CAC297900E016FA /* DataUpdateView */,
-				559E8F8F2CAC297900E016FA /* EnableAzooKeyView */,
+				559E8F8F2CAC297900E016FA /* EnablePismoView */,
 				1A64A896257B4AFD0022C081 /* UpdateInformationView.swift */,
 				5568293C2E82E77600F08475 /* Resources */,
 				1A3DC1CB2500D44E002CAA93 /* Assets.xcassets */,
@@ -314,7 +307,7 @@
 				1AC03158251103EF004CA505 /* Designs.xcassets */,
 				557D9DFE2ABF2B9D0028F3A0 /* InfoPlist.xcstrings */,
 				557D9E002ABF320F0028F3A0 /* Localizable.xcstrings */,
-				1AE191FB25D7E3B40044EE4B /* AzooKeyIcon-Regular.otf */,
+				1AE191FB25D7E3B40044EE4B /* PismoIcon-Regular.otf */,
 				55252D7C2DBCC53800F0C8CA /* EmojiDictionary */,
 			);
 			path = Resources;
@@ -323,9 +316,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1A3DC1C12500D44A002CAA93 /* azooKey */ = {
+		1A3DC1C12500D44A002CAA93 /* Pismo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1A3DC1EC2500D44E002CAA93 /* Build configuration list for PBXNativeTarget "azooKey" */;
+			buildConfigurationList = 1A3DC1EC2500D44E002CAA93 /* Build configuration list for PBXNativeTarget "Pismo" */;
 			buildPhases = (
 				1A3DC1BE2500D44A002CAA93 /* Sources */,
 				1A3DC1BF2500D44A002CAA93 /* Frameworks */,
@@ -347,13 +340,13 @@
 				559E8F6A2CAC296000E016FA /* General */,
 				559E8F7B2CAC297900E016FA /* DataUpdateView */,
 				559E8F872CAC297900E016FA /* Theme */,
-				559E8F8F2CAC297900E016FA /* EnableAzooKeyView */,
+				559E8F8F2CAC297900E016FA /* EnablePismoView */,
 				559E8FBD2CAC297900E016FA /* Setting */,
 				559E8FE22CAC297900E016FA /* Customize */,
 				559E902B2CAC29AC00E016FA /* Tips */,
 				559E90562CAC29E400E016FA /* Preview Content */,
 			);
-			name = azooKey;
+			name = Pismo;
 			packageProductDependencies = (
 				1AF306012A00070000B4DAC3 /* KanaKanjiConverterModule */,
 				1A7F37732A683428009AC382 /* SwiftUIUtils */,
@@ -362,12 +355,12 @@
 				1AED0A5E2A6D22C3005B87E5 /* AzooKeyUtils */,
 			);
 			productName = MainApp;
-			productReference = 1A3DC1C22500D44A002CAA93 /* azooKey.app */;
+			productReference = 1A3DC1C22500D44A002CAA93 /* Pismo.app */;
 			productType = "com.apple.product-type.application";
 		};
-		1A3DC1D72500D44E002CAA93 /* azooKeyTests */ = {
+		1A3DC1D72500D44E002CAA93 /* PismoTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1A3DC1EF2500D44E002CAA93 /* Build configuration list for PBXNativeTarget "azooKeyTests" */;
+			buildConfigurationList = 1A3DC1EF2500D44E002CAA93 /* Build configuration list for PBXNativeTarget "PismoTests" */;
 			buildPhases = (
 				1A3DC1D42500D44E002CAA93 /* Sources */,
 				1A3DC1D52500D44E002CAA93 /* Frameworks */,
@@ -380,19 +373,19 @@
 			);
 			fileSystemSynchronizedGroups = (
 				559E8F3E2CAC294600E016FA /* Display */,
-				559E905E2CAC29E900E016FA /* azooKeyTests */,
+				559E905E2CAC29E900E016FA /* PismoTests */,
 			);
-			name = azooKeyTests;
+			name = PismoTests;
 			packageProductDependencies = (
 				1ABDFC342A18C60A00CED3A3 /* KanaKanjiConverterModule */,
 			);
-			productName = azooKeyTests;
-			productReference = 1A3DC1D82500D44E002CAA93 /* azooKeyTests.xctest */;
+			productName = PismoTests;
+			productReference = 1A3DC1D82500D44E002CAA93 /* PismoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		1A3DC1E22500D44E002CAA93 /* azooKeyUITests */ = {
+		1A3DC1E22500D44E002CAA93 /* PismoUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1A3DC1F22500D44E002CAA93 /* Build configuration list for PBXNativeTarget "azooKeyUITests" */;
+			buildConfigurationList = 1A3DC1F22500D44E002CAA93 /* Build configuration list for PBXNativeTarget "PismoUITests" */;
 			buildPhases = (
 				1A3DC1DF2500D44E002CAA93 /* Sources */,
 				1A3DC1E02500D44E002CAA93 /* Frameworks */,
@@ -403,9 +396,9 @@
 			dependencies = (
 				1A3DC1E52500D44E002CAA93 /* PBXTargetDependency */,
 			);
-			name = azooKeyUITests;
+			name = PismoUITests;
 			productName = MainAppUITests;
-			productReference = 1A3DC1E32500D44E002CAA93 /* azooKeyUITests.xctest */;
+			productReference = 1A3DC1E32500D44E002CAA93 /* PismoUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 		1A3DC1F82500D488002CAA93 /* Keyboard */ = {
@@ -464,7 +457,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1A3DC1BD2500D44A002CAA93 /* Build configuration list for PBXProject "azooKey" */;
+			buildConfigurationList = 1A3DC1BD2500D44A002CAA93 /* Build configuration list for PBXProject "Pismo" */;
 			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = ja;
 			hasScannedForEncodings = 0;
@@ -480,9 +473,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1A3DC1C12500D44A002CAA93 /* azooKey */,
-				1A3DC1D72500D44E002CAA93 /* azooKeyTests */,
-				1A3DC1E22500D44E002CAA93 /* azooKeyUITests */,
+				1A3DC1C12500D44A002CAA93 /* Pismo */,
+				1A3DC1D72500D44E002CAA93 /* PismoTests */,
+				1A3DC1E22500D44E002CAA93 /* PismoUITests */,
 				1A3DC1F82500D488002CAA93 /* Keyboard */,
 			);
 		};
@@ -496,7 +489,7 @@
 				1ACEEFF72566786A00899DA2 /* kaomoji_dict.tsv in Resources */,
 				557D9E012ABF320F0028F3A0 /* Localizable.xcstrings in Resources */,
 				557D9DFF2ABF2B9D0028F3A0 /* InfoPlist.xcstrings in Resources */,
-				1AE191FC25D7E3B40044EE4B /* AzooKeyIcon-Regular.otf in Resources */,
+				1AE191FC25D7E3B40044EE4B /* PismoIcon-Regular.otf in Resources */,
 				1AF679B625CEE92600F3987B /* Designs.xcassets in Resources */,
 				1A60058525275CB9008E2B92 /* Settings.bundle in Resources */,
 				1AF6A55925FE0DA70037D5ED /* charID.chid in Resources */,
@@ -530,7 +523,7 @@
 				1A09112C2A20B13C00ABFC72 /* Dictionary in Resources */,
 				1AC03159251103EF004CA505 /* Designs.xcassets in Resources */,
 				557D9E022ABF320F0028F3A0 /* Localizable.xcstrings in Resources */,
-				1A7F547126A96A5F0032E91E /* AzooKeyIcon-Regular.otf in Resources */,
+				1A7F547126A96A5F0032E91E /* PismoIcon-Regular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -616,12 +609,12 @@
 /* Begin PBXTargetDependency section */
 		1A3DC1DA2500D44E002CAA93 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 1A3DC1C12500D44A002CAA93 /* azooKey */;
+			target = 1A3DC1C12500D44A002CAA93 /* Pismo */;
 			targetProxy = 1A3DC1D92500D44E002CAA93 /* PBXContainerItemProxy */;
 		};
 		1A3DC1E52500D44E002CAA93 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 1A3DC1C12500D44A002CAA93 /* azooKey */;
+			target = 1A3DC1C12500D44A002CAA93 /* Pismo */;
 			targetProxy = 1A3DC1E42500D44E002CAA93 /* PBXContainerItemProxy */;
 		};
 		1A3DC1FF2500D488002CAA93 /* PBXTargetDependency */ = {
@@ -776,12 +769,13 @@
 		1A3DC1ED2500D44E002CAA93 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = azooKey;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_USE_OPTIMIZATION_PROFILE = YES;
-				CODE_SIGN_ENTITLEMENTS = MainApp/azooKey.entitlements;
+				CODE_SIGN_ENTITLEMENTS = MainApp/Pismo.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"MainApp/Preview Content\"";
+				DEVELOPMENT_TEAM = Q9DB95D8L9;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = MainApp/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -792,12 +786,13 @@
 				);
 				MARKETING_VERSION = 3.0.2;
 				OTHER_SWIFT_FLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = DevEn3.azooKey;
-				PRODUCT_NAME = azooKey;
+				PRODUCT_BUNDLE_IDENTIFIER = com;
+				PRODUCT_NAME = Pismo;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_UPCOMING_FEATURE_EXISTENTIAL_ANY = YES;
@@ -809,12 +804,13 @@
 		1A3DC1EE2500D44E002CAA93 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = azooKey;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_USE_OPTIMIZATION_PROFILE = YES;
-				CODE_SIGN_ENTITLEMENTS = MainApp/azooKey.entitlements;
+				CODE_SIGN_ENTITLEMENTS = MainApp/Pismo.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"MainApp/Preview Content\"";
+				DEVELOPMENT_TEAM = Q9DB95D8L9;
 				ENABLE_PREVIEWS = YES;
 				"GCC_OPTIMIZATION_LEVEL[arch=*]" = s;
 				INFOPLIST_FILE = MainApp/Info.plist;
@@ -827,12 +823,13 @@
 				LLVM_LTO = YES_THIN;
 				MARKETING_VERSION = 3.0.2;
 				OTHER_SWIFT_FLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = DevEn3.azooKey;
-				PRODUCT_NAME = azooKey;
+				PRODUCT_BUNDLE_IDENTIFIER = com;
+				PRODUCT_NAME = Pismo;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_STRICT_CONCURRENCY = targeted;
 				SWIFT_UPCOMING_FEATURE_EXISTENTIAL_ANY = YES;
@@ -846,7 +843,8 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = azooKeyTests/Info.plist;
+				DEVELOPMENT_TEAM = Q9DB95D8L9;
+				INFOPLIST_FILE = PismoTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -854,12 +852,16 @@
 					"@loader_path/Frameworks",
 				);
 				LLVM_LTO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = DevEn3.azooKeyTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ablaze.pismo.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/azooKey.app/azooKey";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pismo.app/Pismo";
 			};
 			name = Debug;
 		};
@@ -868,7 +870,8 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = azooKeyTests/Info.plist;
+				DEVELOPMENT_TEAM = Q9DB95D8L9;
+				INFOPLIST_FILE = PismoTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -876,13 +879,17 @@
 					"@loader_path/Frameworks",
 				);
 				LLVM_LTO = YES_THIN;
-				PRODUCT_BUNDLE_IDENTIFIER = DevEn3.azooKeyTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ablaze.pismo.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)//azooKey.app/azooKey";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pismo.app/Pismo";
 			};
 			name = Release;
 		};
@@ -899,7 +906,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = DevEn3.MainAppUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = ablaze.pismo.uitests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
@@ -922,7 +929,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = DevEn3.MainAppUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = ablaze.pismo.uitests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
@@ -951,7 +958,7 @@
 				);
 				MARKETING_VERSION = 3.0.2;
 				OTHER_SWIFT_FLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = DevEn3.azooKey.keyboard;
+				PRODUCT_BUNDLE_IDENTIFIER = ablaze.pismo.keyboard;
 				PRODUCT_NAME = Keyboard;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -985,7 +992,7 @@
 				LLVM_LTO = YES_THIN;
 				MARKETING_VERSION = 3.0.2;
 				OTHER_SWIFT_FLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = DevEn3.azooKey.keyboard;
+				PRODUCT_BUNDLE_IDENTIFIER = ablaze.pismo.keyboard;
 				PRODUCT_NAME = Keyboard;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -1002,7 +1009,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1A3DC1BD2500D44A002CAA93 /* Build configuration list for PBXProject "azooKey" */ = {
+		1A3DC1BD2500D44A002CAA93 /* Build configuration list for PBXProject "Pismo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1A3DC1EA2500D44E002CAA93 /* Debug */,
@@ -1011,7 +1018,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1A3DC1EC2500D44E002CAA93 /* Build configuration list for PBXNativeTarget "azooKey" */ = {
+		1A3DC1EC2500D44E002CAA93 /* Build configuration list for PBXNativeTarget "Pismo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1A3DC1ED2500D44E002CAA93 /* Debug */,
@@ -1020,7 +1027,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1A3DC1EF2500D44E002CAA93 /* Build configuration list for PBXNativeTarget "azooKeyTests" */ = {
+		1A3DC1EF2500D44E002CAA93 /* Build configuration list for PBXNativeTarget "PismoTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1A3DC1F02500D44E002CAA93 /* Debug */,
@@ -1029,7 +1036,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1A3DC1F22500D44E002CAA93 /* Build configuration list for PBXNativeTarget "azooKeyUITests" */ = {
+		1A3DC1F22500D44E002CAA93 /* Build configuration list for PBXNativeTarget "PismoUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1A3DC1F32500D44E002CAA93 /* Debug */,

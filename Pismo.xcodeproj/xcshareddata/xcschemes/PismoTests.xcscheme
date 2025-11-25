@@ -5,47 +5,22 @@
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
-      <BuildActionEntries>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1A3DC1C12500D44A002CAA93"
-               BuildableName = "azooKey.app"
-               BlueprintName = "azooKey"
-               ReferencedContainer = "container:azooKey.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-      </BuildActionEntries>
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      codeCoverageEnabled = "YES">
       <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1A3DC1D72500D44E002CAA93"
-               BuildableName = "azooKeyTests.xctest"
-               BlueprintName = "azooKeyTests"
-               ReferencedContainer = "container:azooKey.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1A3DC1E22500D44E002CAA93"
-               BuildableName = "azooKeyUITests.xctest"
-               BlueprintName = "azooKeyUITests"
-               ReferencedContainer = "container:azooKey.xcodeproj">
+               BuildableName = "PismoTests.xctest"
+               BlueprintName = "PismoTests"
+               ReferencedContainer = "container:Pismo.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -65,9 +40,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A3DC1C12500D44A002CAA93"
-            BuildableName = "azooKey.app"
-            BlueprintName = "azooKey"
-            ReferencedContainer = "container:azooKey.xcodeproj">
+            BuildableName = "Pismo.app"
+            BlueprintName = "Pismo"
+            ReferencedContainer = "container:Pismo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -77,16 +52,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A3DC1C12500D44A002CAA93"
-            BuildableName = "azooKey.app"
-            BlueprintName = "azooKey"
-            ReferencedContainer = "container:azooKey.xcodeproj">
+            BuildableName = "Pismo.app"
+            BlueprintName = "Pismo"
+            ReferencedContainer = "container:Pismo.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

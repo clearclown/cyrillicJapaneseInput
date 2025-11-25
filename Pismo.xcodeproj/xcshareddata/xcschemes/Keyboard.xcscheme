@@ -18,7 +18,7 @@
                BlueprintIdentifier = "1A3DC1F82500D488002CAA93"
                BuildableName = "Keyboard.appex"
                BlueprintName = "Keyboard"
-               ReferencedContainer = "container:azooKey.xcodeproj">
+               ReferencedContainer = "container:Pismo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -30,9 +30,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1A3DC1C12500D44A002CAA93"
-               BuildableName = "azooKey.app"
-               BlueprintName = "azooKey"
-               ReferencedContainer = "container:azooKey.xcodeproj">
+               BuildableName = "Pismo.app"
+               BlueprintName = "Pismo"
+               ReferencedContainer = "container:Pismo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -66,9 +66,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A3DC1C12500D44A002CAA93"
-            BuildableName = "azooKey.app"
-            BlueprintName = "azooKey"
-            ReferencedContainer = "container:azooKey.xcodeproj">
+            BuildableName = "Pismo.app"
+            BlueprintName = "Pismo"
+            ReferencedContainer = "container:Pismo.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>
