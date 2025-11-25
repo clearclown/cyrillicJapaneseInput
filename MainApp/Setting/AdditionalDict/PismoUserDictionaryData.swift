@@ -1,5 +1,5 @@
 //
-//  AzooKeyUserDictionaryData.swift
+//  PismoUserDictionaryData.swift
 //  MainApp
 //
 //  Created by ensan on 2020/12/23.

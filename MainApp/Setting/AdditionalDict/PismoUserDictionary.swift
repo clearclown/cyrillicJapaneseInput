@@ -1,5 +1,5 @@
 //
-//  AzooKeyUserDictionary.swift
+//  PismoUserDictionary.swift
 //  MainApp
 //
 //  Created by ensan on 2020/12/05.
@@ -19,7 +19,7 @@ import SwiftUtils
 
 private final class UserDictManagerVariables: ObservableObject {
     @Published var items: [UserDictionaryData] = [
-        UserDictionaryData(ruby: "あずーきー", word: "azooKey", isVerb: false, isPersonName: true, isPlaceName: false, id: 0)
+        UserDictionaryData(ruby: "あずーきー", word: "Pismo", isVerb: false, isPersonName: true, isPlaceName: false, id: 0)
     ]
     @Published var mode: Mode = .list
     @Published var selectedItem: EditableUserDictionaryData?
@@ -45,7 +45,7 @@ private final class UserDictManagerVariables: ObservableObject {
     }
 }
 
-struct AzooKeyUserDictionaryView: View {
+struct PismoUserDictionaryView: View {
     @ObservedObject private var variables: UserDictManagerVariables = UserDictManagerVariables()
     @EnvironmentObject private var appStates: MainAppStates
 
