@@ -11,9 +11,20 @@ import Foundation
 import SwiftUtils
 
 public enum SharedStore {
-    @MainActor public static let userDefaults = UserDefaults(suiteName: Self.appGroupKey)!
+    @MainActor public static let userDefaults = UserDefaults(suiteName: Self.appGroupKey) ?? UserDefaults.standard
     public static let bundleName = "com.pismo.Pismo.keyboard"
     public static let appGroupKey = "group.com.pismo.keyboard"
+
+    /// Returns the App Group container URL, or falls back to Documents directory if unavailable
+    /// (e.g., in simulator without proper provisioning)
+    public static var containerURL: URL {
+        if let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupKey) {
+            return containerURL
+        } else {
+            debug("App Group container unavailable, using Documents directory as fallback")
+            return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        }
+    }
 
     private static var appVersionString: String? {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String

@@ -136,7 +136,7 @@ public enum AzooKeyMessageProvider: ApplicationSpecificKeyboardViewMessageProvid
                 button: .one(.openContainerURL(text: "更新", url: "Pismo://", autoDone: false)),
                 precondition: {
                     // ユーザ辞書に登録があるのが条件。
-                    let directoryPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: SharedStore.appGroupKey)!
+                    let directoryPath = SharedStore.containerURL
                     let binaryFilePath = directoryPath.appendingPathComponent("user.louds", isDirectory: false).path
                     return FileManager.default.fileExists(atPath: binaryFilePath)
                 },
@@ -149,7 +149,7 @@ public enum AzooKeyMessageProvider: ApplicationSpecificKeyboardViewMessageProvid
                 },
                 containerAppShouldMakeItDone: {
                     // ユーザ辞書に登録がない場合はDoneにして良い。
-                    let directoryPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: SharedStore.appGroupKey)!
+                    let directoryPath = SharedStore.containerURL
                     let binaryFilePath = directoryPath.appendingPathComponent("user.louds", isDirectory: false).path
                     return !FileManager.default.fileExists(atPath: binaryFilePath)
                 }
