@@ -69,7 +69,7 @@ struct SettingTabView: View {
                         BoolSettingView(.useShiftKey)
                             .searchKeys("シフトキー")
                         // Version 2.2.2以前にインストールしており、UseShiftKey.valueがtrueの人にのみこのオプションを表示する
-                        if #unavailable(iOS 18), let initialVersion = SharedStore.initialAppVersion, initialVersion <= .azooKey_v2_2_2, UseShiftKey.value == true {
+                        if #unavailable(iOS 18), let initialVersion = SharedStore.initialAppVersion, initialVersion <= .Pismo_v2_2_2, UseShiftKey.value == true {
                             BoolSettingView(.keepDeprecatedShiftKeyBehavior)
                                 .searchKeys("シフトキー")
                         }
@@ -158,8 +158,8 @@ struct SettingTabView: View {
                 Section("ユーザ辞書") {
                     BoolSettingView(.useOSUserDict)
                         .searchKeys("ユーザ辞書", "追加辞書")
-                    NavigationLink("azooKeyユーザ辞書") {
-                        AzooKeyUserDictionaryView()
+                    NavigationLink("Pismoユーザ辞書") {
+                        PismoUserDictionaryView()
                     }
                     .searchKeys("ユーザ辞書", "追加辞書")
                     // MARK: ホットフィックスの項目はデバッグ版のみで表示
@@ -201,8 +201,8 @@ struct SettingTabView: View {
                 .searchKeys("カスタムタブ", "タブ", "カスタマイズ")
 
                 Section("オープンソースソフトウェア") {
-                    Text("azooKeyはオープンソースソフトウェアであり、GitHubでソースコードを公開しています。")
-                    FallbackLink("View azooKey on GitHub", destination: URL(string: "https://github.com/azooKey/azooKey")!)
+                    Text("Pismoはオープンソースソフトウェアであり、GitHubでソースコードを公開しています。")
+                    FallbackLink("View Pismo on GitHub", destination: URL(string: "https://github.com/Pismo/Pismo")!)
                     NavigationLink("Acknowledgements") {
                         OpenSourceSoftwaresLicenseView()
                     }
@@ -225,7 +225,7 @@ struct SettingTabView: View {
                     }
                     .searchKeys("更新履歴", "アップデート情報", "変更", "バージョン")
                     LabeledContent("URL Scheme") {
-                        Text(verbatim: "azooKey://")
+                        Text(verbatim: "Pismo://")
                             .monospaced()
                     }
                     .searchKeys("URLスキーム")

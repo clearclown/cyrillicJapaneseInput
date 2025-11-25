@@ -21,14 +21,14 @@ struct HeaderLogoView: View {
             switch colorScheme {
             case .light:
                 Text(verbatim: "A")
-                    .font(Design.fonts.azooKeyIconFont(iconSize * 0.75))
-                    .accessibilityLabel("azooKeyのロゴ")
+                    .font(Design.fonts.PismoIconFont(iconSize * 0.75))
+                    .accessibilityLabel("Pismoのロゴ")
             case .dark:
                 Text(verbatim: "B")
-                    .font(Design.fonts.azooKeyIconFont(iconSize * 0.75))
-                    .accessibilityLabel("azooKeyのロゴ")
+                    .font(Design.fonts.PismoIconFont(iconSize * 0.75))
+                    .accessibilityLabel("Pismoのロゴ")
             @unknown default:
-                Text(verbatim: "azooKey")
+                Text(verbatim: "Pismo")
                     .font(Font(UIFont.systemFont(ofSize: iconSize)))
             }
         }

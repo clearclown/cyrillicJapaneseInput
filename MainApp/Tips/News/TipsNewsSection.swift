@@ -1,6 +1,6 @@
 //
 //  TipsNewsSection.swift
-//  azooKey
+//  Pismo
 //
 //  Created by miwa on 2023/11/11.
 //  Copyright © 2023 DevEn3. All rights reserved.

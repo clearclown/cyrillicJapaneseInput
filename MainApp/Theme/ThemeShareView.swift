@@ -65,7 +65,7 @@ struct ThemeShareView: View {
         }.sheet(isPresented: self.$showActivityView, content: {
             if let image = shareImage.image {
                 ActivityView(
-                    activityItems: [TextActivityItem("azooKeyで着せ替えました！", hashtags: ["#azooKey"], links: ["https://apps.apple.com/jp/app/azookey/id1542709230"]), ImageActivityItem(image)],
+                    activityItems: [TextActivityItem("Pismoで着せ替えました！", hashtags: ["#Pismo"], links: ["https://apps.apple.com/jp/app/azookey/id1542709230"]), ImageActivityItem(image)],
                     applicationActivities: nil
                 )
             }
@@ -74,10 +74,10 @@ struct ThemeShareView: View {
 
     @MainActor private func shareOnTwitter() {
         let parameters = [
-            "text": "azooKeyで着せ替えました！",
+            "text": "Pismoで着せ替えました！",
             "url": "https://apps.apple.com/jp/app/azookey/id1542709230",
-            "hashtags": "azooKey",
-            "related": "azooKey_dev",
+            "hashtags": "Pismo",
+            "related": "Pismo_dev",
         ]
         // 作成したテキストをエンコード
         let encodedText = parameters.map {"\($0.key)=\($0.value)"}.joined(separator: "&").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)

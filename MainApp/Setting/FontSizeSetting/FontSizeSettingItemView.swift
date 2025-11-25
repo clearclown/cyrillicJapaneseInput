@@ -80,7 +80,7 @@ private struct KeyView: View {
             return CGSize(width: screenWidth / 5.6, height: screenWidth / 8)
         case .qwerty:
             return CGSize(width: screenWidth / 12.2, height: screenWidth / 9)
-        case .custard:
+        case .custard, .cyrillicStandard, .cyrillicUkrainian, .cyrillicBulgarian, .cyrillicSerbian:
             return CGSize(width: screenWidth / 5.6, height: screenWidth / 8)
         }
     }

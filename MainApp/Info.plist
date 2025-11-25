@@ -2,15 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UILaunchScreen</key>
-	<dict>
-		<key>UIColorName</key>
-		<string></string>
-	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>azooKey</string>
+	<string>Pismo</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -20,7 +15,7 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>azooKey.custard</string>
+				<string>pismo.custard</string>
 			</array>
 		</dict>
 		<dict>
@@ -30,7 +25,7 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>azooKey.json</string>
+				<string>pismo.json</string>
 			</array>
 		</dict>
 	</array>
@@ -52,10 +47,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>DevEn3.azooKey</string>
+			<string>pismo</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>azooKey</string>
+				<string>pismo</string>
 			</array>
 		</dict>
 	</array>
@@ -74,7 +69,7 @@
 	<string>Use contacts to better conversion using name data</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>AzooKeyIcon-Regular.otf</string>
+		<string>PismoIcon-Regular.otf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
@@ -82,6 +77,11 @@
 		<false/>
 		<key>UISceneConfigurations</key>
 		<dict/>
+	</dict>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string></string>
 	</dict>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
@@ -123,7 +123,7 @@
 			<key>UTTypeIconFiles</key>
 			<array/>
 			<key>UTTypeIdentifier</key>
-			<string>azooKey.custard</string>
+			<string>pismo.custard</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -146,7 +146,7 @@
 			<key>UTTypeIconFiles</key>
 			<array/>
 			<key>UTTypeIdentifier</key>
-			<string>azooKey.json</string>
+			<string>pismo.json</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>

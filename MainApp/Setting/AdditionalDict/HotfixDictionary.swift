@@ -78,7 +78,7 @@ extension HotfixDictionaryV1 {
     /// - Returns: The latest tag string (e.g., "v20250504123045") or `nil` on HTTP error.
     static func getLatestTag() async throws -> String? {
         // GitHub REST API – latest release endpoint
-        let url = URL(string: "https://api.github.com/repos/azooKey/azooKey_hotfix_dictionary_storage/releases/latest")!
+        let url = URL(string: "https://api.github.com/repos/Pismo/Pismo_hotfix_dictionary_storage/releases/latest")!
         var request = URLRequest(url: url)
         // Use the recommended Accept header for the REST API v3
         request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
@@ -98,16 +98,16 @@ extension HotfixDictionaryV1 {
     }
 
     static var cachedTag: String? {
-        UserDefaults.standard.string(forKey: "azooKey_hotfix_dictionary_storage_latest_tag")
+        UserDefaults.standard.string(forKey: "Pismo_hotfix_dictionary_storage_latest_tag")
     }
     static var lastCheckDate: Date? {
-        guard let date = UserDefaults.standard.string(forKey: "azooKey_hotfix_dictionary_storage_last_check_date") else {
+        guard let date = UserDefaults.standard.string(forKey: "Pismo_hotfix_dictionary_storage_last_check_date") else {
             return nil
         }
         return ISO8601DateFormatter().date(from: date)
     }
     static func setLastCheckDate() {
-        UserDefaults.standard.set(ISO8601DateFormatter().string(from: Date()), forKey: "azooKey_hotfix_dictionary_storage_last_check_date")
+        UserDefaults.standard.set(ISO8601DateFormatter().string(from: Date()), forKey: "Pismo_hotfix_dictionary_storage_last_check_date")
     }
 
     static func checkUpdate() async throws -> (updated: Bool, latestTag: String?) {
@@ -117,20 +117,20 @@ extension HotfixDictionaryV1 {
     }
 
     static func update(latestTag: String) async throws {
-        let release = "https://github.com/azooKey/azooKey_hotfix_dictionary_storage/releases/download/\(latestTag)/data_v1.json"
+        let release = "https://github.com/Pismo/Pismo_hotfix_dictionary_storage/releases/download/\(latestTag)/data_v1.json"
         let hotfixDictionary = try await HotfixDictionaryV1.load(from: URL(string: release)!)
         if hotfixDictionary.metadata.status == .active {
             // UserDefaults.standardに保存
-            UserDefaults.standard.setValue(try JSONEncoder().encode(hotfixDictionary), forKey: "azooKey_hotfix_dictionary_storage")
+            UserDefaults.standard.setValue(try JSONEncoder().encode(hotfixDictionary), forKey: "Pismo_hotfix_dictionary_storage")
         } else {
             // 削除
-            UserDefaults.standard.removeObject(forKey: "azooKey_hotfix_dictionary_storage")
+            UserDefaults.standard.removeObject(forKey: "Pismo_hotfix_dictionary_storage")
         }
         await MainActor.run {
             AdditionalDictManager().userDictUpdate()
         }
         // 最新タグを保存
-        UserDefaults.standard.set(latestTag, forKey: "azooKey_hotfix_dictionary_storage_latest_tag")
+        UserDefaults.standard.set(latestTag, forKey: "Pismo_hotfix_dictionary_storage_latest_tag")
     }
 
     static func updateIfRequired(ignoreFrequency: Bool = false) async throws {

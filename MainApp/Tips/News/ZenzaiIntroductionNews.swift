@@ -5,7 +5,7 @@ struct ZenzaiIntroductionNews: View {
         TipsContentView("Zenzaiについて") {
             TipsContentParagraph {
                 Text("「ニューラルかな漢字変換システム Zenzai」がiOSでも使えるようになりました。")
-                Text("macOS版azooKeyで好評な高精度な変換システム「Zenzai」がついにiOS版でも利用できます")
+                Text("macOS版Pismoで好評な高精度な変換システム「Zenzai」がついにiOS版でも利用できます")
                 Text("「Zenzaiを有効化」をONにしてお試しください")
             }
             NavigationLink("Zenzaiを設定") {

@@ -37,12 +37,12 @@ final class MainAppStates: ObservableObject {
         SemiStaticStates.shared.setScreenWidth(UIScreen.main.bounds.width)
     }
 
-    func setTutorialProgress(_ progress: EnableAzooKeyViewProgress) {
+    func setTutorialProgress(_ progress: EnablePismoViewProgress) {
         UserDefaults.standard.set(progress.rawValue, forKey: "tutorial_progress")
     }
-    private func resumeTutorialProgress() -> EnableAzooKeyViewProgress? {
+    private func resumeTutorialProgress() -> EnablePismoViewProgress? {
         if let progressString = UserDefaults.standard.string(forKey: "tutorial_progress") {
-            return EnableAzooKeyViewProgress(rawValue: progressString)
+            return EnablePismoViewProgress(rawValue: progressString)
         } else {
             return nil
         }
@@ -75,7 +75,7 @@ struct MainApp: App {
                         messageManager.done($0.id)
                     }
                     // 設定を上書きする
-                    if let initialVersion = SharedStore.initialAppVersion, initialVersion > .azooKey_v2_2_2 {
+                    if let initialVersion = SharedStore.initialAppVersion, initialVersion > .Pismo_v2_2_2 {
                         // Version 2.2.3以降にインストールしたユーザにはこのオプションを有効化しない
                         KeepDeprecatedShiftKeyBehavior.value = false
                     }

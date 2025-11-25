@@ -54,6 +54,14 @@ struct ThemeTabView: View {
             return .qwerty_hira
         case let .custard(identifier):
             return .custard((try? CustardManager.load().custard(identifier: identifier)) ?? .errorMessage)
+        case .cyrillicStandard:
+            return .custard((try? CustardManager.load().custard(identifier: "cyrillic_standard")) ?? .errorMessage)
+        case .cyrillicUkrainian:
+            return .custard((try? CustardManager.load().custard(identifier: "cyrillic_ukrainian")) ?? .errorMessage)
+        case .cyrillicBulgarian:
+            return .custard((try? CustardManager.load().custard(identifier: "cyrillic_bulgarian")) ?? .errorMessage)
+        case .cyrillicSerbian:
+            return .custard((try? CustardManager.load().custard(identifier: "cyrillic_serbian")) ?? .errorMessage)
         }
     }
 

@@ -1,6 +1,6 @@
 //
 //  ShareWordView.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2023/04/15.
 //  Copyright © 2023 ensan. All rights reserved.

@@ -59,7 +59,7 @@ struct UserDictionaryUpdater {
         }
 
         let hotfix: [HotfixDictionaryV1.Entry]
-        if let data = UserDefaults.standard.data(forKey: "azooKey_hotfix_dictionary_storage"),
+        if let data = UserDefaults.standard.data(forKey: "Pismo_hotfix_dictionary_storage"),
            let dictionary = try? HotfixDictionaryV1.load(from: data) {
             var entries = dictionary.data
             entries.append(
@@ -77,7 +77,7 @@ struct UserDictionaryUpdater {
             print(entries)
             hotfix = entries
         } else {
-            print("azooKey_hotfix_dictionary_storage not found")
+            print("Pismo_hotfix_dictionary_storage not found")
             hotfix = []
         }
 

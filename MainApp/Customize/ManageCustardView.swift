@@ -312,8 +312,8 @@ struct ManageCustardView: View {
                     }
                 }
                 Section {
-                    Text("カスタムタブをファイルとして外部で作成し、azooKeyに読み込むことができます。より高機能なタブの作成が可能です。詳しくは以下をご覧ください。")
-                    FallbackLink("カスタムタブファイルの作り方", destination: "https://github.com/azooKey/CustardKit")
+                    Text("カスタムタブをファイルとして外部で作成し、Pismoに読み込むことができます。より高機能なタブの作成が可能です。詳しくは以下をご覧ください。")
+                    FallbackLink("カスタムタブファイルの作り方", destination: "https://github.com/Pismo/CustardKit")
                 }
             }
         }
@@ -463,14 +463,14 @@ struct ManageCustardView: View {
     }
 
     private func loadWebCustard() {
-        guard let url = URL(string: "https://azooKey.netlify.app/static/custard/all") else {
+        guard let url = URL(string: "https://Pismo.netlify.app/static/custard/all") else {
             return
         }
         Task {
             let result = try await URLSession.shared.data(from: url).0
             let decoder = JSONDecoder()
             guard let decodedResponse = try? decoder.decode(WebCustardList.self, from: result) else {
-                debug("Failed to load https://azooKey.netlify.app/static/custard/all")
+                debug("Failed to load https://Pismo.netlify.app/static/custard/all")
                 return
             }
             self.webCustards = decodedResponse

@@ -62,10 +62,10 @@ struct ContentView: View {
                 // キーボードは有効化されているが正しく終了していない場合
                 if appStates.isKeyboardActivated && !appStates.tutorialFinishedSuccessfully() {
                     // 「最初の設定」を再表示する
-                    EnableAzooKeyView(resumeProgress: .setting)
+                    EnablePismoView(resumeProgress: .setting)
                 } else {
                     // 最初からやる
-                    EnableAzooKeyView()
+                    EnablePismoView()
                 }
             })
             .onChange(of: selection) { (_, value) in
@@ -76,8 +76,8 @@ struct ContentView: View {
                 }
             }
             .onOpenURL { url in
-                if url.scheme == "azooKey" {
-                    // Deep link handling for azooKey scheme
+                if url.scheme == "Pismo" {
+                    // Deep link handling for Pismo scheme
                     let host = url.host?.lowercased()
                     let last = url.lastPathComponent.lowercased()
                     if host == "settings" && last == "zenzai" {
@@ -87,8 +87,8 @@ struct ContentView: View {
                         return
                     }
                 }
-                // Non-azooKey scheme: treat as file import
-                if url.scheme != "azooKey" {
+                // Non-Pismo scheme: treat as file import
+                if url.scheme != "Pismo" {
                     importFileURL = url
                 }
             }

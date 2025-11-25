@@ -1,6 +1,6 @@
 //
 //  SearchQueriedView.swift
-//  azooKey
+//  Pismo
 //
 //  Created by miwa on 2024/04/07.
 //  Copyright © 2024 DevEn3. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  PasteFromOtherAppsPermissionTipsView.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2023/04/01.
 //  Copyright © 2023 ensan. All rights reserved.
@@ -14,7 +14,7 @@ struct PasteFromOtherAppsPermissionTipsView: View {
             TipsContentParagraph {
                 Text("「クリップボードの履歴」や「ペーストボタン」の機能を利用している際、頻繁に「ペーストの許可」を求めるダイアログが出ることがあります。")
                 TipsImage(.pasteRequestDialogue)
-                Text("azooKeyはクリップボードの履歴を保存するため、定期的にクリップボードをチェックします。また、ペーストする際にもクリップボードの情報を利用します。")
+                Text("Pismoはクリップボードの履歴を保存するため、定期的にクリップボードをチェックします。また、ペーストする際にもクリップボードの情報を利用します。")
             }
             TipsContentParagraph {
                 Text("設定アプリで「ほかのAppからペースト」を「許可」にすることで、ダイアログが出なくなります。")

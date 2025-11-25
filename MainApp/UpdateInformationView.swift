@@ -17,19 +17,19 @@ struct UpdateInformationView: View {
                 Group {
                     VersionView("3.0.2", releaseDate: "2025年10月15日") {
                         ParagraphView("フィードバックを簡単に送信する機能を追加しました。") {
-                            "「azooKeyの開発に協力」を設定すると、誤変換レポートの提案がキーボードの利用中に提案されるようになります"
+                            "「Pismoの開発に協力」を設定すると、誤変換レポートの提案がキーボードの利用中に提案されるようになります"
                         }
                         ParagraphView("不具合を修正しました。") {
                             "片手モードが再起動時に解除される問題を修正しました"
                         }
                     }
-                    NavigationLink("azooKeyの開発に協力") {
+                    NavigationLink("Pismoの開発に協力") {
                         ContributionDetailView()
                     }
                     VersionView("3.0.1", releaseDate: "2025年09月30日") {
                         ParagraphView("機能を改善しました。") {
                             "iOS 26の新しいデザインに本体アプリが対応しました"
-                            "「azooKeyユーザ辞書」で「時刻・ランダム変換」をサポートしました"
+                            "「Pismoユーザ辞書」で「時刻・ランダム変換」をサポートしました"
                             "Apple Intelligenceをサポートする端末で「えもじ」と入力した場合に、文脈に応じた絵文字推薦を行うようになりました"
                         }
                         ParagraphView("機能を整理しました。") {
@@ -40,7 +40,7 @@ struct UpdateInformationView: View {
                     }
                     VersionView("3.0", releaseDate: "2025年09月10日") {
                         ParagraphView("「ニューラルかな漢字変換システム Zenzai」がiOSでも使えるようになりました。") {
-                            "macOS版azooKeyで好評な高精度な変換システム「Zenzai」がついにiOS版でも利用できます"
+                            "macOS版Pismoで好評な高精度な変換システム「Zenzai」がついにiOS版でも利用できます"
                             "「Zenzaiを有効化」をONにしてお試しください"
                         }
                         ParagraphView("機能を改善しました。") {
@@ -261,7 +261,7 @@ struct UpdateInformationView: View {
                     VersionView("2.0.1", releaseDate: "2023年02月10日") {
                         ParagraphView("不具合を修正しました。") {
                             "辞書データの不具合を修正し、変換が自然になりました"
-                            "iPadのフローティングキーボードでazooKeyが使いやすくなりました"
+                            "iPadのフローティングキーボードでPismoが使いやすくなりました"
                         }
                         ParagraphView("その他パフォーマンスの改善を行いました。")
                     }
@@ -277,11 +277,11 @@ struct UpdateInformationView: View {
                             "入力中の誤り訂正で濁点がつきすぎる問題を改善"
                         }
                         ParagraphView("お知らせ。") {
-                            "azooKey 2.0はオープンソースソフトウェアになりました。ソースコードを誰でも閲覧し、利用することができます。ソースコードはGitHubで公開しています。"
+                            "Pismo 2.0はオープンソースソフトウェアになりました。ソースコードを誰でも閲覧し、利用することができます。ソースコードはGitHubで公開しています。"
                         }
                         ParagraphView("その他デザインの軽微な改善を行いました。")
                     }
-                    FallbackLink("View azooKey on GitHub", destination: URL(string: "https://github.com/azooKey/azooKey")!)
+                    FallbackLink("View Pismo on GitHub", destination: URL(string: "https://github.com/Pismo/Pismo")!)
                 }
             }
             // version 1系
@@ -326,7 +326,7 @@ struct UpdateInformationView: View {
                             "編集中、行・列の削除が可能になりました"
                         }
                         ParagraphView("「入力中のテキストを保護」する機能を追加しました。") {
-                            "この機能を有効化すると、一部のWebアプリでazooKeyの挙動が安定します"
+                            "この機能を有効化すると、一部のWebアプリでPismoの挙動が安定します"
                             "実験的な機能であり、不具合があったり挙動に変更があったりする可能性があります"
                         }
                         ParagraphView("新しいカーソルバーのベータ版を追加しました。") {
@@ -458,7 +458,7 @@ struct UpdateInformationView: View {
                         ParagraphView("機能を追加しました。") {
                             "着せ替え機能を追加"
                             "端末の標準のユーザ辞書を読み込む設定を追加"
-                            "URL scheme(azooKey://)に対応"
+                            "URL scheme(Pismo://)に対応"
                         }
                         ParagraphView("機能を改善しました。") {
                             "パフォーマンスの改善"
@@ -541,7 +541,7 @@ struct UpdateInformationView: View {
 
                     VersionView("1.2", releaseDate: "2020年12月09日") {
                         ParagraphView("機能を追加しました。") {
-                            "azooKeyユーザ辞書機能を追加"
+                            "Pismoユーザ辞書機能を追加"
                             "キーの文字サイズを変更する機能を追加"
                             "ローマ字での日本語入力中、英単語の変換候補も表示するよう変更"
                         }
@@ -566,7 +566,7 @@ struct UpdateInformationView: View {
                 }
 
                 VersionView("1.0", releaseDate: "2020年12月04日") {
-                    ParagraphView("azooKeyを公開しました。")
+                    ParagraphView("Pismoを公開しました。")
                 }
             }
         }.navigationBarTitle(Text("更新履歴"), displayMode: .inline)

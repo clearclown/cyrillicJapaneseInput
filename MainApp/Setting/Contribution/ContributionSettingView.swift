@@ -6,7 +6,7 @@ import SwiftUIUtils
 struct ContributionSettingsSection: View {
     var body: some View {
         Section(header: Text("フィードバック")) {
-            NavigationLink("azooKeyの開発に協力") {
+            NavigationLink("Pismoの開発に協力") {
                 ContributionDetailView()
             }
             NavigationLink("変換候補の追加") {
@@ -99,7 +99,7 @@ struct ContributionDetailView: View {
                     .font(.footnote)
             }
         }
-        .navigationTitle("azooKeyの開発に協力")
+        .navigationTitle("Pismoの開発に協力")
         .onAppear {
             frequency.reload()
             nickname.reload()
@@ -145,7 +145,7 @@ private struct WrongConversionReportConsentSheet: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("選択した候補や周辺文脈などの情報をサーバに送信し、azooKeyの変換精度改善に貢献することができます。")
+                    Text("選択した候補や周辺文脈などの情報をサーバに送信し、Pismoの変換精度改善に貢献することができます。")
                     Text("この機能をONにすると、キーボードの利用中に以下のような送信の提案が表示されるようになります。")
                     MockReportSuggestionView()
                     Text("勝手に情報が送信されることはありません。「報告」ボタンを押した際にのみ実際の送信が行われます。")

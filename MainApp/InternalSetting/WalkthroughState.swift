@@ -1,6 +1,6 @@
 //
 //  WalkthroughState.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2021/03/21.
 //  Copyright © 2021 ensan. All rights reserved.

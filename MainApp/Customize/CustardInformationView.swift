@@ -322,8 +322,8 @@ struct CustardInformationView: View {
                 ActivityView(
                     activityItems: [
                         TextActivityItem(
-                            "azooKeyでカスタムタブを作りました！",
-                            hashtags: ["#azooKey"],
+                            "Pismoでカスタムタブを作りました！",
+                            hashtags: ["#Pismo"],
                             links: [item.url.absoluteString]
                         ),
                         ImageActivityItem(item.image),
@@ -406,7 +406,7 @@ private struct CheckboxToggleStyle: ToggleStyle {
 
 // MARK: - Keychain helper (simple wrapper)
 private enum KeychainHelper {
-    private static let service = "azooKey.CustardInformationView.CustardShare"
+    private static let service = "Pismo.CustardInformationView.CustardShare"
 
     /// Save or update the delete token in Keychain (Generic Password).
     static func saveDeleteToken(_ token: String, for id: String) {
