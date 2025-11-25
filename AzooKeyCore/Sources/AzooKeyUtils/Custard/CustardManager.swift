@@ -1,6 +1,6 @@
 //
 //  CustardManager.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2021/02/21.
 //  Copyright © 2021 ensan. All rights reserved.
@@ -131,7 +131,26 @@ public struct CustardManager: CustardManagerProtocol {
         return userMadeCustard
     }
 
+    public func userCustard(identifier: String) throws -> UserMadeCustard {
+        return try userMadeCustardData(identifier: identifier)
+    }
+
     public func custard(identifier: String) throws -> Custard {
+        // First check for built-in Cyrillic keyboards
+        switch identifier {
+        case "cyrillic_standard":
+            return .cyrillicStandard
+        case "cyrillic_ukrainian":
+            return .cyrillicUkrainian
+        case "cyrillic_bulgarian":
+            return .cyrillicBulgarian
+        case "cyrillic_serbian":
+            return .cyrillicSerbian
+        default:
+            break
+        }
+
+        // Then check for user-made custards from file system
         let fileName = Self.fileName(identifier)
         let fileURL = Self.fileURL(name: "\(fileName)_main.custard")
         let data = try Data(contentsOf: fileURL)

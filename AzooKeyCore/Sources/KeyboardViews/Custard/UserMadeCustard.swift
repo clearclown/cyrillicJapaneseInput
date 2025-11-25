@@ -1,6 +1,6 @@
 //
 //  UserMadeCustard.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2021/02/23.
 //  Copyright © 2021 ensan. All rights reserved.
@@ -8,7 +8,6 @@
 
 import CustardKit
 import Foundation
-import KeyboardViews
 
 public enum UserMadeCustard: Codable, Sendable {
     case gridScroll(UserMadeGridScrollCustard)
