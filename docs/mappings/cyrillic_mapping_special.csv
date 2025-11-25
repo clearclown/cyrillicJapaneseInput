@@ -1,0 +1,6 @@
+Type,Output,Standard,Analytical,Note
+n,ん,н,н,Allophone usually ignored in input
+sokuon,っ,(double consonant),ъ,Hard sign for analytical (e.g. ъt -> tt)
+long_vowel,ー,(double vowel),(double vowel),e.g. oo -> ー
+separator_a,んあ,н'а,нъа,Syllable separator n-a
+separator_ya,んや,н'я,нъя,Syllable separator n-ya
