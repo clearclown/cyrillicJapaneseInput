@@ -1,6 +1,6 @@
 //
-//  AzooKeyIconView.swift
-//  AzooKeyIconView
+//  PismoIconView.swift
+//  PismoIconView
 //
 //  Created by ensan on 2021/07/22.
 //  Copyright © 2021 ensan. All rights reserved.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-public struct AzooKeyIcon: View {
+public struct PismoIcon: View {
     @Environment(\.colorScheme) private var colorScheme
     private let color: Color
     private let looks: Looks
@@ -98,9 +98,9 @@ public struct AzooKeyIcon: View {
     private var font: Font {
         switch self.arguments {
         case let .relative(size: size, textStyle: textStyle):
-            return Design.fonts.azooKeyIconFont(size, relativeTo: textStyle)
+            return Design.fonts.PismoIconFont(size, relativeTo: textStyle)
         case let .fixed(size: size):
-            return Design.fonts.azooKeyIconFont(fixedSize: size)
+            return Design.fonts.PismoIconFont(fixedSize: size)
         }
     }
 
