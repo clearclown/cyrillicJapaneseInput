@@ -1,6 +1,6 @@
 //
 //  ConverterTests.swift
-//  azooKeyTests
+//  PismoTests
 //
 //  Created by ensan on 2023/01/30.
 //  Copyright © 2023 ensan. All rights reserved.
@@ -44,7 +44,7 @@ import XCTest
             var c = ComposingText()
             c.insertAtCursorPosition("あずーきーはしんじだいのきーぼーどあぷりです", inputStyle: .direct)
             let results = converter.requestCandidates(c, options: requestOptions())
-            XCTAssertEqual(results.mainResults.first?.text, "azooKeyは新時代のキーボードアプリです")
+            XCTAssertEqual(results.mainResults.first?.text, "Pismoは新時代のキーボードアプリです")
         }
         do {
             let converter = KanaKanjiConverter()
@@ -145,7 +145,7 @@ import XCTest
                 ("つかっている", "使っている"),
                 ("しんだどうぶつ", "死んだ動物"),
                 ("けいさん", "計算"),
-                ("azooKeyをつかう", "azooKeyを使う"),
+                ("Pismoをつかう", "Pismoを使う"),
                 ("じどうAIそうじゅう。", "自動AI操縦。"),
             ]
 
@@ -641,7 +641,7 @@ import XCTest
         let content = String(data: data, encoding: .utf8)!
 
         var mozcScore: Double = 0
-        var azooKeyScore: Double = 0
+        var PismoScore: Double = 0
         var cases = 0
         for line in content.split(separator: "\n") {
             if line.hasPrefix("#") {
@@ -675,7 +675,7 @@ import XCTest
             }
 
             if command == .suggestionNotExpected {
-                // azooKeyでは扱えないため
+                // Pismoでは扱えないため
                 continue
             }
 
@@ -691,9 +691,9 @@ import XCTest
             options.requireJapanesePrediction = false
             let results = converter.requestCandidates(c, options: options).mainResults
             cases += 1
-            let azooKeyStatus = mozcEvaluation(command: command, argument: argument, results: results)
-            if azooKeyStatus {
-                azooKeyScore += 1
+            let PismoStatus = mozcEvaluation(command: command, argument: argument, results: results)
+            if PismoStatus {
+                PismoScore += 1
                 if !mozcStatus {
                     print("\(#function) Success over Mozc: \(commandString) \(argument) for input \(input) \(results.prefix(command.requiredCount).map(\.text)), mozcResult: \(mozcOutput)")
                 }
@@ -705,11 +705,11 @@ import XCTest
                 }
             }
         }
-        print("\(#function) Result: Mozc Score: \(mozcScore), azooKeyScore \(azooKeyScore), count \(cases)")
+        print("\(#function) Result: Mozc Score: \(mozcScore), PismoScore \(PismoScore), count \(cases)")
         XCTAssertTrue(mozcScore > 0)
-        XCTAssertTrue(azooKeyScore > 0)
-        XCTExpectFailure("azooKey is not as accurate as Mozc currently in this mertics, due to some reason") {
-            XCTAssertTrue(mozcScore < azooKeyScore)
+        XCTAssertTrue(PismoScore > 0)
+        XCTExpectFailure("Pismo is not as accurate as Mozc currently in this mertics, due to some reason") {
+            XCTAssertTrue(mozcScore < PismoScore)
         }
     }
 
