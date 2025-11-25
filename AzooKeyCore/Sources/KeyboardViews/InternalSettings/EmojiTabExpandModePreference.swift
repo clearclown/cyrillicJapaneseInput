@@ -1,6 +1,6 @@
 //
 //  EmojiTabExpandModePreference.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2023/03/19.
 //  Copyright © 2023 ensan. All rights reserved.

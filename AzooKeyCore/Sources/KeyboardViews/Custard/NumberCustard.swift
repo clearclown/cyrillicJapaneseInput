@@ -1,6 +1,6 @@
 //
 //  NumberCustard.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2022/10/29.
 //  Copyright © 2022 ensan. All rights reserved.
@@ -136,7 +136,7 @@ extension Custard {
     }
 
     static let numberPad = Custard(
-        identifier: "azooKey_internal_number_pad",
+        identifier: "Pismo_internal_number_pad",
         language: .none,
         input_style: .direct,
         metadata: CustardMetadata(custard_version: .v1_2, display_name: "数字"),
@@ -162,7 +162,7 @@ extension Custard {
 
     // 正の10進数を打つキーボード
     static let decimalPad = Custard(
-        identifier: "azooKey_internal_decimal_pad",
+        identifier: "Pismo_internal_decimal_pad",
         language: .none,
         input_style: .direct,
         metadata: CustardMetadata(custard_version: .v1_2, display_name: "数字"),
@@ -188,7 +188,7 @@ extension Custard {
 
     // 電話番号を打つキーボード
     static let phonePad = Custard(
-        identifier: "azooKey_internal_phone_pad",
+        identifier: "Pismo_internal_phone_pad",
         language: .none,
         input_style: .direct,
         metadata: CustardMetadata(custard_version: .v1_2, display_name: "数字"),

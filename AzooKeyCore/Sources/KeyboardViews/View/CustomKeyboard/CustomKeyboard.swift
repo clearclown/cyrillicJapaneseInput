@@ -1,6 +1,6 @@
 //
 //  VerticalCustomKeyboard.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2021/02/18.
 //  Copyright © 2021 ensan. All rights reserved.

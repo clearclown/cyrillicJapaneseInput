@@ -25,7 +25,7 @@ struct TabBarButton<Extension: ApplicationSpecificKeyboardViewExtension>: View {
     }
 
     var body: some View {
-        KeyboardBarButton<Extension>(label: .azooKeyIcon(isXmas ? .santaClaus : isSummerDay ? .strawHat : .normal)) {
+        KeyboardBarButton<Extension>(label: .PismoIcon(isXmas ? .santaClaus : isSummerDay ? .strawHat : .normal)) {
             self.action.registerAction(.setTabBar(.toggle), variableStates: variableStates)
         }
     }

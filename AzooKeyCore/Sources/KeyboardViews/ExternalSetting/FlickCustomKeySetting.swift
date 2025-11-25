@@ -1,6 +1,6 @@
 //
 //  KeyFlickSetting.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2020/10/04.
 //  Copyright © 2020 ensan. All rights reserved.

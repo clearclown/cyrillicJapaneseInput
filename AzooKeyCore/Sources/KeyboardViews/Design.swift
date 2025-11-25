@@ -213,12 +213,12 @@ public enum Design {
 
     public enum Fonts: Sendable {
         case `default`
-        func azooKeyIconFont(fixedSize: CGFloat) -> Font {
-            Font.custom("AzooKeyIcon-Regular", fixedSize: fixedSize)
+        func PismoIconFont(fixedSize: CGFloat) -> Font {
+            Font.custom("PismoIcon-Regular", fixedSize: fixedSize)
         }
 
-        public func azooKeyIconFont(_ size: CGFloat, relativeTo style: Font.TextStyle = .body) -> Font {
-            Font.custom("AzooKeyIcon-Regular", size: size, relativeTo: style)
+        public func PismoIconFont(_ size: CGFloat, relativeTo style: Font.TextStyle = .body) -> Font {
+            Font.custom("PismoIcon-Regular", size: size, relativeTo: style)
         }
 
         @MainActor public func iconFontSize(keyViewFontSizePreference: CGFloat) -> CGFloat {
