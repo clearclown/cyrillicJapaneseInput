@@ -1,9 +1,10 @@
 //
 //  SharedStore.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2020/11/20.
 //  Copyright © 2020 ensan. All rights reserved.
+//  Modified for Pismo by ablaze 2025.
 //
 
 import Foundation
@@ -11,8 +12,8 @@ import SwiftUtils
 
 public enum SharedStore {
     @MainActor public static let userDefaults = UserDefaults(suiteName: Self.appGroupKey)!
-    public static let bundleName = "DevEn3.azooKey.keyboard"
-    public static let appGroupKey = "group.com.azooKey.keyboard"
+    public static let bundleName = "ablaze.pismo.keyboard"
+    public static let appGroupKey = "group.ablaze.pismo.keyboard"
 
     private static var appVersionString: String? {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
@@ -74,7 +75,7 @@ public enum SharedStore {
 
         var parameters = "entry.\(importanceKey)=3&entry.\(wordKey)=\(word)&entry.\(rubyKey)=\(ruby.isEmpty ? "読み記入なし" : ruby)"
 
-        let note = (note ?? "備考記入なし") + "\n" + "アプリ内フォームから送信" + "\n" + "azooKeyのバージョン: \(SharedStore.appVersionString ?? "不明")"
+        let note = (note ?? "備考記入なし") + "\n" + "アプリ内フォームから送信" + "\n" + "Pismoのバージョン: \(SharedStore.appVersionString ?? "不明")"
         parameters += "&entry.\(noteKey)=\(note)"
 
         parameters += "&entry.\(categoryKey)=__other_option__"
