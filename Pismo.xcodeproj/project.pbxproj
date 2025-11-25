@@ -786,7 +786,7 @@
 				);
 				MARKETING_VERSION = 3.0.2;
 				OTHER_SWIFT_FLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pismo.Pismo;
 				PRODUCT_NAME = Pismo;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -823,7 +823,7 @@
 				LLVM_LTO = YES_THIN;
 				MARKETING_VERSION = 3.0.2;
 				OTHER_SWIFT_FLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pismo.Pismo;
 				PRODUCT_NAME = Pismo;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -852,7 +852,7 @@
 					"@loader_path/Frameworks",
 				);
 				LLVM_LTO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = ablaze.pismo.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pismo.Pismo.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -879,7 +879,7 @@
 					"@loader_path/Frameworks",
 				);
 				LLVM_LTO = YES_THIN;
-				PRODUCT_BUNDLE_IDENTIFIER = ablaze.pismo.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pismo.Pismo.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -906,7 +906,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ablaze.pismo.uitests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pismo.Pismo.uitests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
@@ -929,7 +929,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ablaze.pismo.uitests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pismo.Pismo.uitests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
@@ -958,7 +958,7 @@
 				);
 				MARKETING_VERSION = 3.0.2;
 				OTHER_SWIFT_FLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = ablaze.pismo.keyboard;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pismo.Pismo.keyboard;
 				PRODUCT_NAME = Keyboard;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -992,7 +992,7 @@
 				LLVM_LTO = YES_THIN;
 				MARKETING_VERSION = 3.0.2;
 				OTHER_SWIFT_FLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = ablaze.pismo.keyboard;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pismo.Pismo.keyboard;
 				PRODUCT_NAME = Keyboard;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
