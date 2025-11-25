@@ -1,5 +1,5 @@
 //
-//  EnableAzooKeyViewComponent.swift
+//  EnablePismoViewComponent.swift
 //  MainApp
 //
 //  Created by ensan on 2020/11/18.
@@ -8,9 +8,9 @@
 
 import SwiftUI
 import SwiftUIUtils
-import struct KeyboardViews.AzooKeyIcon
+import struct KeyboardViews.PismoIcon
 
-struct EnableAzooKeyViewHeader: View {
+struct EnablePismoViewHeader: View {
     private let text: LocalizedStringKey
     init(_ text: LocalizedStringKey) {
         self.text = text
@@ -19,7 +19,7 @@ struct EnableAzooKeyViewHeader: View {
     var body: some View {
         CenterAlignedView {
             HStack {
-                AzooKeyIcon(fontSize: 30, relativeTo: .title)
+                PismoIcon(fontSize: 30, relativeTo: .title)
                 Text(text)
                     .font(.title.bold())
             }
@@ -29,7 +29,7 @@ struct EnableAzooKeyViewHeader: View {
     }
 }
 
-struct EnableAzooKeyViewText: View {
+struct EnablePismoViewText: View {
     private let text: LocalizedStringKey
     private let systemName: String
     init(_ text: LocalizedStringKey, with systemName: String) {
@@ -48,7 +48,7 @@ struct EnableAzooKeyViewText: View {
     }
 }
 
-struct EnableAzooKeyViewButton: View {
+struct EnablePismoViewButton: View {
     enum Style {
         case emphasized, destructive
     }
@@ -89,7 +89,7 @@ struct EnableAzooKeyViewButton: View {
     }
 }
 
-struct EnableAzooKeyViewImage: View {
+struct EnablePismoViewImage: View {
     private let resource: ImageResource
     init(_ resource: ImageResource) {
         self.resource = resource

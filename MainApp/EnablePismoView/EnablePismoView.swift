@@ -1,5 +1,5 @@
 //
-//  EnableAzooKeyView.swift
+//  EnablePismoView.swift
 //  MainApp
 //
 //  Created by ensan on 2020/11/18.
@@ -11,7 +11,7 @@ import SwiftUI
 import SwiftUIUtils
 import func SwiftUtils.debug
 
-enum EnableAzooKeyViewProgress: String, Hashable, Codable, Sendable {
+enum EnablePismoViewProgress: String, Hashable, Codable, Sendable {
     case menu
     case append
     case setting
@@ -19,9 +19,9 @@ enum EnableAzooKeyViewProgress: String, Hashable, Codable, Sendable {
 }
 
 @MainActor
-struct EnableAzooKeyView: View {
+struct EnablePismoView: View {
     @EnvironmentObject private var appStates: MainAppStates
-    @State private var step: EnableAzooKeyViewProgress = .menu {
+    @State private var step: EnablePismoViewProgress = .menu {
         didSet {
             self.appStates.setTutorialProgress(step)
         }
@@ -29,7 +29,7 @@ struct EnableAzooKeyView: View {
     @State private var text = ""
     @State private var showDoneMessage = false
 
-    init(resumeProgress: EnableAzooKeyViewProgress? = nil) {
+    init(resumeProgress: EnablePismoViewProgress? = nil) {
         if let resumeProgress {
             self._step = .init(initialValue: resumeProgress)
         }
@@ -46,9 +46,9 @@ struct EnableAzooKeyView: View {
                             CenterAlignedView {
                                 HeaderLogoView()
                             }
-                            EnableAzooKeyViewText("azooKeyを使う前に、iPhoneのキーボードのリストにazooKeyを追加する必要があります", with: "exclamationmark.triangle.fill")
+                            EnablePismoViewText("Pismoを使う前に、iPhoneのキーボードのリストにPismoを追加する必要があります", with: "exclamationmark.triangle.fill")
                             CenterAlignedView {
-                                EnableAzooKeyViewButton("手順を見る", systemName: "arrowtriangle.right.fill") {
+                                EnablePismoViewButton("手順を見る", systemName: "arrowtriangle.right.fill") {
                                     self.step = .append
                                 }
                             }
@@ -59,27 +59,27 @@ struct EnableAzooKeyView: View {
                     case .append:
                         VStack(alignment: .leading, spacing: 20) {
 
-                            EnableAzooKeyViewHeader("追加する")
-                            EnableAzooKeyViewText("下にスクロールして「追加する」を押して", with: "plus.circle")
-                            EnableAzooKeyViewText("「キーボード」を押して", with: "keyboard")
+                            EnablePismoViewHeader("追加する")
+                            EnablePismoViewText("下にスクロールして「追加する」を押して", with: "plus.circle")
+                            EnablePismoViewText("「キーボード」を押して", with: "keyboard")
                             CenterAlignedView {
-                                EnableAzooKeyViewImage(.initSettingKeyboardImageHand)
+                                EnablePismoViewImage(.initSettingKeyboardImageHand)
                             }
-                            EnableAzooKeyViewText("azooKeyをオンにして", with: "square.and.line.vertical.and.square.fill")
+                            EnablePismoViewText("Pismoをオンにして", with: "square.and.line.vertical.and.square.fill")
                             CenterAlignedView {
-                                EnableAzooKeyViewImage(.initSettingAzooKeySwitchImageHand)
+                                EnablePismoViewImage(.initSettingAzooKeySwitchImageHand)
                             }
-                            EnableAzooKeyViewText("このアプリを再び開いてください", with: "arrow.turn.down.left")
+                            EnablePismoViewText("このアプリを再び開いてください", with: "arrow.turn.down.left")
                             CenterAlignedView {
-                                EnableAzooKeyViewButton("追加する", systemName: "plus.circle") {
+                                EnablePismoViewButton("追加する", systemName: "plus.circle") {
                                     if let url = URL(string: UIApplication.openSettingsURLString) {
                                         UIApplication.shared.open(url, options: [:], completionHandler: nil)
                                     }
                                 }
                             }
-                            EnableAzooKeyViewText("この設定をしないとキーボードが使えません", with: "exclamationmark.triangle.fill")
+                            EnablePismoViewText("この設定をしないとキーボードが使えません", with: "exclamationmark.triangle.fill")
                             CenterAlignedView {
-                                EnableAzooKeyViewButton("閉じる", systemName: "xmark", style: .destructive) {
+                                EnablePismoViewButton("閉じる", systemName: "xmark", style: .destructive) {
                                     appStates.requireFirstOpenView = false
                                 }
                             }
@@ -89,26 +89,26 @@ struct EnableAzooKeyView: View {
                         }
                     case .setting:
                         VStack(alignment: .leading, spacing: 20) {
-                            EnableAzooKeyViewHeader("最初の設定")
+                            EnablePismoViewHeader("最初の設定")
                             Group {
                                 Divider()
-                                EnableAzooKeyViewText("キーボードの種類をお選びください", with: "keyboard")
+                                EnablePismoViewText("キーボードの種類をお選びください", with: "keyboard")
                                 LanguageLayoutSettingView(.japaneseKeyboardLayout, setTogether: true)
                             }
                             Group {
                                 Divider()
-                                EnableAzooKeyViewText("ライブ変換を使用しますか？", with: "character.cursor.ibeam")
+                                EnablePismoViewText("ライブ変換を使用しますか？", with: "character.cursor.ibeam")
                                 BoolSettingView(.liveConversion)
                             }
                             Group {
                                 Divider()
-                                EnableAzooKeyViewText("Zenzai（高性能端末向けの高精度なニューラルかな漢字変換システム）を使用しますか？", with: "z.square.fill")
+                                EnablePismoViewText("Zenzai（高性能端末向けの高精度なニューラルかな漢字変換システム）を使用しますか？", with: "z.square.fill")
                                 BoolSettingView(.zenzaiEnable)
                             }
                             Divider()
-                            EnableAzooKeyViewText("設定は「設定タブ」でいつでも変えられます", with: "gearshape")
+                            EnablePismoViewText("設定は「設定タブ」でいつでも変えられます", with: "gearshape")
                             CenterAlignedView {
-                                EnableAzooKeyViewButton("完了", systemName: "checkmark") {
+                                EnablePismoViewButton("完了", systemName: "checkmark") {
                                     self.step = .finish
                                 }
                             }
@@ -119,17 +119,17 @@ struct EnableAzooKeyView: View {
 
                     case .finish:
                         VStack(alignment: .leading, spacing: 20) {
-                            EnableAzooKeyViewHeader("azooKeyが使えます！")
-                            EnableAzooKeyViewText("準備は完了です！", with: "checkmark")
+                            EnablePismoViewHeader("Pismoが使えます！")
+                            EnablePismoViewText("準備は完了です！", with: "checkmark")
                             if showDoneMessage {
-                                EnableAzooKeyViewText("azooKeyが開かれました！", with: "checkmark")
+                                EnablePismoViewText("Pismoが開かれました！", with: "checkmark")
                                 CenterAlignedView {
-                                    EnableAzooKeyViewButton("始める", systemName: "arrowshape.turn.up.right.fill") {
+                                    EnablePismoViewButton("始める", systemName: "arrowshape.turn.up.right.fill") {
                                         appStates.requireFirstOpenView = false
                                     }
                                 }
                             } else {
-                                EnableAzooKeyViewText("キーボードの地球儀ボタンを長押しし、azooKeyを選択してください", with: "globe")
+                                EnablePismoViewText("キーボードの地球儀ボタンを長押しし、Pismoを選択してください", with: "globe")
                             }
                             TextField("キーボードを開く", text: $text)
                                 .textFieldStyle(.roundedBorder)
@@ -139,13 +139,13 @@ struct EnableAzooKeyView: View {
                                 }
                             if !showDoneMessage {
                                 CenterAlignedView {
-                                    EnableAzooKeyViewImage(.initSettingGlobeTap)
+                                    EnablePismoViewImage(.initSettingGlobeTap)
                                 }
                             }
-                            EnableAzooKeyViewText("azooKeyをお楽しみください！", with: "star.fill")
+                            EnablePismoViewText("Pismoをお楽しみください！", with: "star.fill")
                             if !showDoneMessage {
                                 CenterAlignedView {
-                                    EnableAzooKeyViewButton("始める", systemName: "arrowshape.turn.up.right.fill") {
+                                    EnablePismoViewButton("始める", systemName: "arrowshape.turn.up.right.fill") {
                                         appStates.requireFirstOpenView = false
                                     }
                                 }
