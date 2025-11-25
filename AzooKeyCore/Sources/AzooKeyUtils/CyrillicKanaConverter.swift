@@ -61,21 +61,22 @@ public final class CyrillicKanaConverter {
         // 長い順にマッチを試みる
         // suffixCandidate = bufferSuffix + input
 
-        for i in (0..<min(buffer.count, maxSuffixLength)).reversed() {
+        // バッファのsuffix + 新規入力で候補を生成
+        // i=0 の場合は suffix が空なので inputUpper 単体でチェックすることになる
+        for i in (0...min(buffer.count, maxSuffixLength)).reversed() {
             let suffix = String(buffer.suffix(i))
-            let candidate = suffix + inputUpper
+            let candidate = suffix.uppercased() + inputUpper
+
+            // プレフィックス一致チェック (Wait状態) - 完全一致より優先
+            // より長いマッピングの可能性がある場合は待機する
+            if mappingPrefixes.contains(candidate) {
+                // 待機するなら、そのまま入力文字を追加するだけ
+                return InputOperation(deleteLast: 0, input: input)
+            }
 
             // 完全一致チェック
             if let kana = mapping[candidate] {
                 return InputOperation(deleteLast: i, input: kana)
-            }
-
-            // プレフィックス一致チェック (Wait状態)
-            if mappingPrefixes.contains(candidate) {
-                // 待機するなら、そのまま入力文字を追加するだけ
-                // (delete: 0, input: input)
-                // ただし、inputが小文字の場合はそのまま小文字を入れたいかもしれない
-                return InputOperation(deleteLast: 0, input: input)
             }
         }
 
@@ -156,7 +157,7 @@ public final class CyrillicKanaConverter {
             ("ho", "ほ", "Хо", "Хо", "Хо", "Хо", "Хо"),
             ("ma", "ま", "Ма", "Ма", "Ма", "Ма", "Ма"),
             ("mi", "み", "Ми", "Мі", "Мі", "Ми", "Ми"),
-            ("mu", "む", "Му", "Му", "Му", "Мъ, Му", "Му"), // Typo fix attempt
+            ("mu", "む", "Му", "Му", "Му", "Мъ", "Му"),
             ("me", "め", "Мэ", "Мэ", "Мэ", "Ме", "Мэ"),
             ("mo", "も", "Мо", "Мо", "Мо", "Мо", "Мо"),
             ("ya", "や", "Я", "Я", "Я", "Я", "Ја"),
@@ -170,7 +171,7 @@ public final class CyrillicKanaConverter {
             ("wa", "わ", "Ва", "Ва", "Ўа", "Ва", "Ва"),
             ("wi", "ゐ", "Ви", "Ві", "Ўі", "Ви", "Ви"),
             ("we", "ゑ", "Вэ", "Вэ", "Ўэ", "Ве", "Вэ"),
-            ("wo", "を", "О", "О", "Ўо", "О", "О"), // Special case: usually WO is 'wo' but here mapped to O
+            // "wo" (を) is intentionally omitted - О maps to お (o)
             ("n", "ん", "Н", "Н", "Н", "Н", "Н")
         ]
 
@@ -186,19 +187,18 @@ public final class CyrillicKanaConverter {
             ("ze", "ぜ", "Дзэ", "Дзэ", "Дзэ", "Дзе", "Дзэ"),
             ("zo", "ぞ", "Дзо", "Дзо", "Дзо", "Дзо", "Дзо"),
             ("da", "だ", "Да", "Да", "Да", "Да", "Да"),
-            ("ji_d", "ぢ", "Дзи", "Дзі", "Дзі", "Дзи", "Дзи"),
-            ("zu_d", "づ", "Дзу", "Дзу", "Дзу", "Дзъ", "Дзу"),
+            // ぢ (ji_d) and づ (zu_d) are phonetically same as じ/ず, handled by same keys
             ("de", "で", "Дэ", "Дэ", "Дэ", "Де", "Дэ"),
             ("do", "ど", "До", "До", "До", "До", "До"),
             ("ba", "ば", "Ба", "Ба", "Ба", "Ба", "Ба"),
             ("bi", "び", "Би", "Бі", "Бі", "Би", "Би"),
             ("bu", "ぶ", "Бу", "Бу", "Бу", "Бъ", "Бу"),
-            ("be", "べ", "Бэ", "Бэ", "Бе", "Бэ", "Бэ"),
+            ("be", "べ", "Бэ", "Бэ", "Бэ", "Бе", "Бэ"),
             ("bo", "ぼ", "Бо", "Бо", "Бо", "Бо", "Бо"),
             ("pa", "ぱ", "Па", "Па", "Па", "Па", "Па"),
             ("pi", "ぴ", "Пи", "Пі", "Пі", "Пи", "Пи"),
             ("pu", "ぷ", "Пу", "Пу", "Пу", "Пъ", "Пу"),
-            ("pe", "ぺ", "Пэ", "Пэ", "Пе", "Пэ", "Пэ"),
+            ("pe", "ぺ", "Пэ", "Пэ", "Пэ", "Пе", "Пэ"),
             ("po", "ぽ", "По", "По", "По", "По", "По")
         ]
 
