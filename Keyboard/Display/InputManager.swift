@@ -47,6 +47,32 @@ final class InputManager {
         self.kanaKanjiConverter.setKeyboardLanguage(value)
     }
 
+    /// キリル文字プロファイルを更新するAPI
+    @MainActor func setCyrillicProfile(for identifier: String) {
+        switch identifier {
+        case "cyrillic_standard":
+            self.cyrillicConverter.setProfile(.standard)
+        case "cyrillic_ukrainian":
+            self.cyrillicConverter.setProfile(.ukrainian)
+        case "cyrillic_belarusian":
+            self.cyrillicConverter.setProfile(.belarusian)
+        case "cyrillic_bulgarian":
+            self.cyrillicConverter.setProfile(.bulgarian)
+        case "cyrillic_serbian":
+            self.cyrillicConverter.setProfile(.serbian)
+        default:
+            // Default to standard if unknown cyrillic identifier, or ignore if not cyrillic
+            if identifier.starts(with: "cyrillic_") {
+                self.cyrillicConverter.setProfile(.standard)
+            }
+        }
+    }
+
+    // キリル文字プロファイルの更新用API (Private)
+    @MainActor func setCyrillicProfile(_ profile: CyrillicKanaConverter.Profile) {
+        self.cyrillicConverter.setProfile(profile)
+    }
+
     /// システム側でproxyを操作した結果、`textDidChange`などがよばれてしまう場合に、その呼び出しをスキップするため、フラグを事前に立てる
     private var previousSystemOperation: SystemOperationType?
     enum SystemOperationType {
@@ -60,6 +86,8 @@ final class InputManager {
 
     // 変換結果の通知用関数
     private var updateResult: (((inout ResultModel) -> Void) -> Void)?
+
+    private let cyrillicConverter = CyrillicKanaConverter()
 
     private var liveConversionEnabled: Bool {
         liveConversionManager.enabled && !self.isSelected
@@ -176,7 +204,7 @@ final class InputManager {
             textReplacer: self.textReplacer,
             specialCandidateProviders: providers,
             zenzaiMode: zenzaiMode,
-            metadata: .init(versionString: "azooKey version " + (SharedStore.currentAppVersion?.description ?? "Unknown")))
+            metadata: .init(versionString: "Pismo version " + (SharedStore.currentAppVersion?.description ?? "Unknown")))
     }
 
     @MainActor private func getConvertRequestOptionsForPrediction() -> (ConvertRequestOptions, denylist: Set<String>) {
@@ -481,6 +509,24 @@ final class InputManager {
     ///   - simpleInsert: `ComposingText`を作るのではなく、直接文字を入力し、変換候補を表示しない。
     ///   - inputStyle: 入力スタイル
     @MainActor func input(text: String, requireSetResult: Bool = true, simpleInsert: Bool = false, inputStyle: InputStyle) {
+        // キリル文字入力のインターセプト
+        if !simpleInsert && text.range(of: "\\p{Cyrillic}", options: .regularExpression) != nil {
+            // 現在のバッファ（カーソル前）を取得
+            let currentBuffer = self.composingText.convertTargetBeforeCursor
+            let operation = self.cyrillicConverter.process(input: text, composingText: String(currentBuffer))
+
+            // 処理結果が入力と同一で削除もない場合は、ループを防ぐために通常処理へ進む
+            if operation.deleteLast == 0 && operation.input == text {
+                // Fall through
+            } else {
+                if operation.deleteLast > 0 {
+                    self.deleteBackward(convertTargetCount: operation.deleteLast, requireSetResult: false)
+                }
+                self.input(text: operation.input, requireSetResult: requireSetResult, simpleInsert: simpleInsert, inputStyle: inputStyle)
+                return
+            }
+        }
+
         // 直接入力の条件
         if simpleInsert         // flag
             || text == "\n"     // 改行
@@ -1000,6 +1046,9 @@ final class InputManager {
         }
 
         if let updateResult {
+            // isSelectedでなくても、結果があれば候補を表示するように変更
+            // 以前は !self.isSelected の場合のみ候補を表示するロジックがView側にあるかもしれないが、
+            // データ自体は常に更新して渡すことで、予測変換候補として表示されることを期待する
             updateResult { model in
                 model.setResults(results.mainResults)
                 model.resetSupplementaryCandidates()

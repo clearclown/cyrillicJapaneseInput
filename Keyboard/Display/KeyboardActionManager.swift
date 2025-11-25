@@ -1,6 +1,6 @@
 //
 //  KeyboardActionManager.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2020/04/10.
 //  Copyright © 2020 ensan. All rights reserved.
@@ -253,6 +253,13 @@ final class KeyboardActionManager: UserActionManager, @unchecked Sendable {
             // タブ移動ではシフトを解除しない
             self.dismissReportInterfacesIfNeeded(variableStates: variableStates)
             variableStates.setTab(type)
+
+            // タブ移動時にキリル文字プロファイルを同期する
+            if let existentialTab = try? variableStates.tabManager.existentialTab() {
+                if case let .custard(custard) = existentialTab {
+                    self.inputManager.setCyrillicProfile(for: custard.identifier)
+                }
+            }
 
         case let .setUpsideComponent(type):
             self.applyUpsideComponent(type, variableStates: variableStates)
