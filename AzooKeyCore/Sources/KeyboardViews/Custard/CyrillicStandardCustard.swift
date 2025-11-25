@@ -61,8 +61,8 @@ public extension Custard {
                 .gridFit(.init(x: 9, y: 2)): .custom(.input("Ю")),
                 .gridFit(.init(x: 10, y: 2)): .custom(.flickDelete()), // Backspace
 
-                // Row 4: Shift Globe Space ー Enter
-                .gridFit(.init(x: 0, y: 3)): .custom(.shiftKey()), // Shift
+                // Row 4: ☆123 Globe Space ー Enter
+                .gridFit(.init(x: 0, y: 3)): .custom(.symbolsTabKey()), // Numbers/Symbols
                 .gridFit(.init(x: 1, y: 3)): .system(.changeKeyboard), // Globe
                 .gridFit(.init(x: 2, y: 3, width: 6, height: 1)): .custom(.flickSpace()), // Space (wider)
                 .gridFit(.init(x: 8, y: 3)): .custom(.input("ー")), // 長音符 (伸ばし棒)
@@ -85,7 +85,7 @@ private extension CustardInterfaceCustomKey {
     static func shiftKey() -> CustardInterfaceCustomKey {
         return CustardInterfaceCustomKey(
             design: .init(label: .systemImage("shift"), color: .special),
-            press_actions: [.toggleCapsLockState],
+            press_actions: [.replaceDefault(.default)],
             longpress_actions: .init(start: [], repeat: []),
             variations: []
         )
@@ -96,6 +96,15 @@ private extension CustardInterfaceCustomKey {
             design: .init(label: .systemImage("return"), color: .special),
             press_actions: [.complete],
             longpress_actions: .init(start: [], repeat: []),
+            variations: []
+        )
+    }
+
+    static func symbolsTabKey() -> CustardInterfaceCustomKey {
+        return CustardInterfaceCustomKey(
+            design: .init(label: .text("☆123"), color: .special),
+            press_actions: [.moveTab(.system(.flick_numbersymbols))],
+            longpress_actions: .init(start: [.toggleTabBar], repeat: []),
             variations: []
         )
     }
