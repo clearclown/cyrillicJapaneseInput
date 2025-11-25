@@ -46,7 +46,7 @@ public extension BoolKeyboardSettingKey {
 public struct LiveConversionInputMode: BoolKeyboardSettingKey {
     public static let title: LocalizedStringKey = "ライブ変換"
     public static let explanation: LocalizedStringKey = "入力中の文字列を自動的に変換します。"
-    public static let defaultValue = true
+    public static let defaultValue = false
     public static let key: String = "live_conversion"
 }
 
@@ -281,6 +281,18 @@ public struct EnableClipboardHistoryManagerTab: BoolKeyboardSettingKey {
 
 public extension KeyboardSettingKey where Self == EnableClipboardHistoryManagerTab {
     static var enableClipboardHistoryManagerTab: Self { .init() }
+}
+
+/// 数字入力の標準テンキースタイルを使用する設定
+public struct UseStandardNumpad: BoolKeyboardSettingKey {
+    public static let title: LocalizedStringKey = "標準テンキーを使う"
+    public static let explanation: LocalizedStringKey = "数字入力でフリック式の代わりに標準テンキー配列を使用します。"
+    public static let defaultValue = true
+    public static let key: String = "use_standard_numpad"
+}
+
+public extension KeyboardSettingKey where Self == UseStandardNumpad {
+    static var useStandardNumpad: Self { .init() }
 }
 
 /// 削除した設定を記録するためのenum。おもに`key`の情報を残すため、ソースに維持している。

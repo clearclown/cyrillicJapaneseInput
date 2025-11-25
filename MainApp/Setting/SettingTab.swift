@@ -16,29 +16,6 @@ struct SettingTabView: View {
     @State private var path: [CustomizeTabView.Path] = []
     @Environment(\.requestReview) var requestReview
     @EnvironmentObject private var appStates: MainAppStates
-    private func canFlickLayout(_ layout: LanguageLayout) -> Bool {
-        if layout == .flick {
-            return true
-        }
-        if case .custard = layout {
-            return true
-        }
-        return false
-    }
-
-    private func canQwertyLayout(_ layout: LanguageLayout) -> Bool {
-        if layout == .qwerty {
-            return true
-        }
-        return false
-    }
-
-    private func isCustard(_ layout: LanguageLayout) -> Bool {
-        if case .custard = layout {
-            return true
-        }
-        return false
-    }
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -48,7 +25,7 @@ struct SettingTabView: View {
                         KeyboardLayoutTypeDetailsView()
                     }
                 }
-                .searchKeys("キーボードの種類", "レイアウト", "フリック", "ローマ字")
+                .searchKeys("キーボードの種類", "レイアウト", "キリル", "テンキー", "数字", "数字入力")
 
                 Section("ライブ変換") {
                     BoolSettingView(.liveConversion)
@@ -57,29 +34,6 @@ struct SettingTabView: View {
                     }
                 }
                 .searchKeys("ライブ変換", "自動変換", "自動確定")
-
-                Section("カスタムキー") {
-                    CustomKeysSettingView(settingAdaptive: true)
-                        .searchKeys("カスタムキー", "カスタマイズ")
-                    if !self.isCustard(appStates.japaneseLayout) || !self.isCustard(appStates.englishLayout) {
-                        BoolSettingView(.useNextCandidateKey)
-                            .searchKeys("次候補キー")
-                    }
-                    if self.canQwertyLayout(appStates.englishLayout) {
-                        BoolSettingView(.useShiftKey)
-                            .searchKeys("シフトキー")
-                        // Version 2.2.2以前にインストールしており、UseShiftKey.valueがtrueの人にのみこのオプションを表示する
-                        if #unavailable(iOS 18), let initialVersion = SharedStore.initialAppVersion, initialVersion <= .Pismo_v2_2_2, UseShiftKey.value == true {
-                            BoolSettingView(.keepDeprecatedShiftKeyBehavior)
-                                .searchKeys("シフトキー")
-                        }
-                    }
-                    if !SemiStaticStates.shared.needsInputModeSwitchKey, self.canFlickLayout(appStates.japaneseLayout) {
-                        BoolSettingView(.enablePasteButton)
-                            .searchKeys("ペーストボタン", "ペーストキー", "貼り付け")
-                    }
-                }
-                .inheritSearchKeys()
 
                 Section("バー") {
                     BoolSettingView(.useReflectStyleCursorBar)
@@ -126,10 +80,6 @@ struct SettingTabView: View {
                 Section("操作性") {
                     BoolSettingView(.hideResetButtonInOneHandedMode)
                         .searchKeys("片手モード", "解除ボタン")
-                    if self.canFlickLayout(appStates.japaneseLayout) {
-                        FlickSensitivitySettingView(.flickSensitivity)
-                            .searchKeys("フリックの感度", "感度")
-                    }
                 }
                 .inheritSearchKeys()
 
@@ -199,6 +149,25 @@ struct SettingTabView: View {
                     }
                 }
                 .searchKeys("カスタムタブ", "タブ", "カスタマイズ")
+
+                Section("言語") {
+                    NavigationLink("アプリの表示言語") {
+                        AppLanguageSettingView()
+                    }
+                }
+                .searchKeys("言語", "Language", "English", "日本語")
+
+                Section("Coming Soon") {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("他のキリル文字言語への対応を検討中です")
+                            .font(.subheadline)
+                        Text("カザフ語・ウズベク語・キルギス語・タジク語・モンゴル語・タタール語など")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 4)
+                }
+                .searchKeys("Coming Soon", "キリル", "カザフ", "ウズベク", "モンゴル")
 
                 Section("オープンソースソフトウェア") {
                     Text("Pismoはオープンソースソフトウェアであり、GitHubでソースコードを公開しています。")

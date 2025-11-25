@@ -28,55 +28,42 @@ public extension Custard {
                 // Let's put Ґ on Longpress of Г, and Ї on Longpress of Ъ (or separate key if space allows).
                 // Wait, UKR doesn't use Ъ. It uses Ї there.
 
-                .gridFit(.init(x: 0, y: 0)): .custom(.input("Й")),
-                .gridFit(.init(x: 1, y: 0)): .custom(.input("Ц")),
-                .gridFit(.init(x: 2, y: 0)): .custom(.input("У")),
-                .gridFit(.init(x: 3, y: 0)): .custom(.input("К")),
-                .gridFit(.init(x: 4, y: 0)): .custom(.input("Е")),
-                .gridFit(.init(x: 5, y: 0)): .custom(.input("Н")),
-                .gridFit(.init(x: 6, y: 0)): .custom(.input("Г").withLongPress("Ґ")), // Г with Ґ
-                .gridFit(.init(x: 7, y: 0)): .custom(.input("Ш")),
-                .gridFit(.init(x: 8, y: 0)): .custom(.input("Щ")),
-                .gridFit(.init(x: 9, y: 0)): .custom(.input("З")),
-                .gridFit(.init(x: 10, y: 0)): .custom(.input("Х")),
+                .gridFit(.init(x: 0, y: 0)): .custom(.input("й")),
+                .gridFit(.init(x: 1, y: 0)): .custom(.input("ц")),
+                .gridFit(.init(x: 2, y: 0)): .custom(.input("у")),
+                .gridFit(.init(x: 3, y: 0)): .custom(.input("к")),
+                .gridFit(.init(x: 4, y: 0)): .custom(.input("е")),
+                .gridFit(.init(x: 5, y: 0)): .custom(.input("н")),
+                .gridFit(.init(x: 6, y: 0)): .custom(.input("г").withLongPress("ґ")), // г with ґ
+                .gridFit(.init(x: 7, y: 0)): .custom(.input("ш")),
+                .gridFit(.init(x: 8, y: 0)): .custom(.input("щ")),
+                .gridFit(.init(x: 9, y: 0)): .custom(.input("з")),
+                .gridFit(.init(x: 10, y: 0)): .custom(.input("х")),
 
-                // Row 2: Ф І В А П Р О Л Д Ж Є
-                // RUS: Ф Ы В А П Р О Л Д Ж Э
-                // UKR replaces Ы with І, and Э with Є.
-                .gridFit(.init(x: 0, y: 1)): .custom(.input("Ф")),
-                .gridFit(.init(x: 1, y: 1)): .custom(.input("І")), // І instead of Ы
-                .gridFit(.init(x: 2, y: 1)): .custom(.input("В")),
-                .gridFit(.init(x: 3, y: 1)): .custom(.input("А")),
-                .gridFit(.init(x: 4, y: 1)): .custom(.input("П")),
-                .gridFit(.init(x: 5, y: 1)): .custom(.input("Р")),
-                .gridFit(.init(x: 6, y: 1)): .custom(.input("О")),
-                .gridFit(.init(x: 7, y: 1)): .custom(.input("Л")),
-                .gridFit(.init(x: 8, y: 1)): .custom(.input("Д")),
-                .gridFit(.init(x: 9, y: 1)): .custom(.input("Ж")),
-                .gridFit(.init(x: 10, y: 1)): .custom(.input("Є")), // Є instead of Э
+                // Row 2: ф і в а п р о л д ж є (小文字デフォルト)
+                .gridFit(.init(x: 0, y: 1)): .custom(.input("ф")),
+                .gridFit(.init(x: 1, y: 1)): .custom(.input("і")), // і instead of ы
+                .gridFit(.init(x: 2, y: 1)): .custom(.input("в")),
+                .gridFit(.init(x: 3, y: 1)): .custom(.input("а")),
+                .gridFit(.init(x: 4, y: 1)): .custom(.input("п")),
+                .gridFit(.init(x: 5, y: 1)): .custom(.input("р")),
+                .gridFit(.init(x: 6, y: 1)): .custom(.input("о")),
+                .gridFit(.init(x: 7, y: 1)): .custom(.input("л")),
+                .gridFit(.init(x: 8, y: 1)): .custom(.input("д")),
+                .gridFit(.init(x: 9, y: 1)): .custom(.input("ж")),
+                .gridFit(.init(x: 10, y: 1)): .custom(.input("є")), // є instead of э
 
-                // Row 3: Shift Я Ч С М И Т Ь Б Ю Del
-                // UKR: Shift Я Ч С М И Т Ь Б Ю .
-                // UKR "И" corresponds to RUS "Ы" sound-wise but key position is same as RUS "И".
-                // Wait, Standard UKR: ... М И Т Ь Б Ю .
-                // RUS: ... М И Т Ь Б Ю .
-                // Positions are mostly same.
-                // Where is Ї? Usually right of Х (Row 1).
-                // Since we only have 11 cols, let's put Ї on longpress of І or somewhere?
-                // Better: Put Ї on Row 1 Col 10 (replace X? No).
-                // Let's put Ї as a variation of І or separate key if we expand layout.
-                // For now: Longpress of І -> Ї.
-
+                // Row 3: Shift я ч с м и т ь б ю Del (小文字デフォルト)
                 .gridFit(.init(x: 0, y: 2)): .custom(.shiftKey()),
-                .gridFit(.init(x: 1, y: 2)): .custom(.input("Я")),
-                .gridFit(.init(x: 2, y: 2)): .custom(.input("Ч")),
-                .gridFit(.init(x: 3, y: 2)): .custom(.input("С")),
-                .gridFit(.init(x: 4, y: 2)): .custom(.input("М")),
-                .gridFit(.init(x: 5, y: 2)): .custom(.input("И").withLongPress("Ї")), // И, Ї on longpress for access
-                .gridFit(.init(x: 6, y: 2)): .custom(.input("Т")),
-                .gridFit(.init(x: 7, y: 2)): .custom(.input("Ь")),
-                .gridFit(.init(x: 8, y: 2)): .custom(.input("Б")),
-                .gridFit(.init(x: 9, y: 2)): .custom(.input("Ю")),
+                .gridFit(.init(x: 1, y: 2)): .custom(.input("я")),
+                .gridFit(.init(x: 2, y: 2)): .custom(.input("ч")),
+                .gridFit(.init(x: 3, y: 2)): .custom(.input("с")),
+                .gridFit(.init(x: 4, y: 2)): .custom(.input("м")),
+                .gridFit(.init(x: 5, y: 2)): .custom(.input("и").withLongPress("ї")), // и, ї on longpress
+                .gridFit(.init(x: 6, y: 2)): .custom(.input("т")),
+                .gridFit(.init(x: 7, y: 2)): .custom(.input("ь")),
+                .gridFit(.init(x: 8, y: 2)): .custom(.input("б")),
+                .gridFit(.init(x: 9, y: 2)): .custom(.input("ю")),
                 .gridFit(.init(x: 10, y: 2)): .custom(.flickDelete()),
 
                 // Row 4: ☆123 Globe Space ー Enter
@@ -84,7 +71,7 @@ public extension Custard {
                 .gridFit(.init(x: 1, y: 3)): .system(.changeKeyboard), // Globe
                 .gridFit(.init(x: 2, y: 3, width: 6, height: 1)): .custom(.flickSpace()), // Space (wider)
                 .gridFit(.init(x: 8, y: 3)): .custom(.input("ー")), // 長音符 (伸ばし棒)
-                .gridFit(.init(x: 9, y: 3, width: 2, height: 1)): .custom(.enterKey()), // Enter
+                .gridFit(.init(x: 9, y: 3, width: 2, height: 1)): .system(.enter), // Enter (iOS標準)
             ]
         )
     )
@@ -109,16 +96,7 @@ private extension CustardInterfaceCustomKey {
     static func shiftKey() -> CustardInterfaceCustomKey {
         return CustardInterfaceCustomKey(
             design: .init(label: .systemImage("shift"), color: .special),
-            press_actions: [.replaceDefault(.default)],
-            longpress_actions: .init(start: [], repeat: []),
-            variations: []
-        )
-    }
-
-    static func enterKey() -> CustardInterfaceCustomKey {
-        return CustardInterfaceCustomKey(
-            design: .init(label: .systemImage("return"), color: .special),
-            press_actions: [.complete],
+            press_actions: [.toggleCapsLockState],
             longpress_actions: .init(start: [], repeat: []),
             variations: []
         )

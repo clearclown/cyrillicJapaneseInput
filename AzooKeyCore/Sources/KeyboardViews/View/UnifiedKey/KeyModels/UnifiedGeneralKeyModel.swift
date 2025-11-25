@@ -73,8 +73,23 @@ struct UnifiedGeneralKeyModel<Extension: ApplicationSpecificKeyboardViewExtensio
     (arr: [QwertyVariationsModel.VariationElement], direction: VariationsViewDirection) { (linearVariations, linearDirection)
     }
 
-    func label<ThemeExtension>(width: CGFloat, theme _: ThemeData<ThemeExtension>, states _: VariableStates, color _: Color?) -> KeyLabel<Extension> where ThemeExtension: ApplicationSpecificKeyboardViewExtensionLayoutDependentDefaultThemeProvidable {
-        KeyLabel(labelType, width: width)
+    func label<ThemeExtension>(width: CGFloat, theme _: ThemeData<ThemeExtension>, states: VariableStates, color _: Color?) -> KeyLabel<Extension> where ThemeExtension: ApplicationSpecificKeyboardViewExtensionLayoutDependentDefaultThemeProvidable {
+        // キリル文字の場合、Shift/CapsLock状態で大文字に変換
+        if states.boolStates.isCapsLocked || states.boolStates.isShifted,
+           case let .text(text) = labelType,
+           Self.isCyrillicLetter(text) {
+            return KeyLabel(.text(text.uppercased()), width: width)
+        }
+        return KeyLabel(labelType, width: width)
+    }
+
+    /// 文字列がキリル文字のみで構成されているかチェック
+    private static func isCyrillicLetter(_ text: String) -> Bool {
+        guard !text.isEmpty else { return false }
+        return text.unicodeScalars.allSatisfy { scalar in
+            // キリル文字のUnicode範囲: U+0400–U+04FF (基本), U+0500–U+052F (拡張)
+            (0x0400...0x052F).contains(scalar.value)
+        }
     }
 
     @MainActor

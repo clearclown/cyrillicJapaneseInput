@@ -37,46 +37,43 @@ public extension Custard {
                 // Row 4: ( Shift )  ю  й  ъ  э  ф  х  п  р  л  б
 
                 // We need to fit this into 11 columns.
-                // Row 2 (Top letters): , У Е И Ш Щ К С Д З Ц
+                // Row 2 (Top letters): , у е и ш щ к с д з ц (小文字デフォルト)
                 .gridFit(.init(x: 0, y: 0)): .custom(.input(",")),
-                .gridFit(.init(x: 1, y: 0)): .custom(.input("У")),
-                .gridFit(.init(x: 2, y: 0)): .custom(.input("Е")),
-                .gridFit(.init(x: 3, y: 0)): .custom(.input("И")),
-                .gridFit(.init(x: 4, y: 0)): .custom(.input("Ш")),
-                .gridFit(.init(x: 5, y: 0)): .custom(.input("Щ")),
-                .gridFit(.init(x: 6, y: 0)): .custom(.input("К")),
-                .gridFit(.init(x: 7, y: 0)): .custom(.input("С")),
-                .gridFit(.init(x: 8, y: 0)): .custom(.input("Д")),
-                .gridFit(.init(x: 9, y: 0)): .custom(.input("З")),
-                .gridFit(.init(x: 10, y: 0)): .custom(.input("Ц")),
+                .gridFit(.init(x: 1, y: 0)): .custom(.input("у")),
+                .gridFit(.init(x: 2, y: 0)): .custom(.input("е")),
+                .gridFit(.init(x: 3, y: 0)): .custom(.input("и")),
+                .gridFit(.init(x: 4, y: 0)): .custom(.input("ш")),
+                .gridFit(.init(x: 5, y: 0)): .custom(.input("щ")),
+                .gridFit(.init(x: 6, y: 0)): .custom(.input("к")),
+                .gridFit(.init(x: 7, y: 0)): .custom(.input("с")),
+                .gridFit(.init(x: 8, y: 0)): .custom(.input("д")),
+                .gridFit(.init(x: 9, y: 0)): .custom(.input("з")),
+                .gridFit(.init(x: 10, y: 0)): .custom(.input("ц")),
 
-                // Row 3 (Middle letters): Ь Я А О Ж Г Т Н В М Ч
-                .gridFit(.init(x: 0, y: 1)): .custom(.input("Ь")),
-                .gridFit(.init(x: 1, y: 1)): .custom(.input("Я")),
-                .gridFit(.init(x: 2, y: 1)): .custom(.input("А")),
-                .gridFit(.init(x: 3, y: 1)): .custom(.input("О")),
-                .gridFit(.init(x: 4, y: 1)): .custom(.input("Ж")),
-                .gridFit(.init(x: 5, y: 1)): .custom(.input("Г")),
-                .gridFit(.init(x: 6, y: 1)): .custom(.input("Т")),
-                .gridFit(.init(x: 7, y: 1)): .custom(.input("Н")),
-                .gridFit(.init(x: 8, y: 1)): .custom(.input("В")),
-                .gridFit(.init(x: 9, y: 1)): .custom(.input("М")),
-                .gridFit(.init(x: 10, y: 1)): .custom(.input("Ч")),
+                // Row 3 (Middle letters): ь я а о ж г т н в м ч (小文字デフォルト)
+                .gridFit(.init(x: 0, y: 1)): .custom(.input("ь")),
+                .gridFit(.init(x: 1, y: 1)): .custom(.input("я")),
+                .gridFit(.init(x: 2, y: 1)): .custom(.input("а")),
+                .gridFit(.init(x: 3, y: 1)): .custom(.input("о")),
+                .gridFit(.init(x: 4, y: 1)): .custom(.input("ж")),
+                .gridFit(.init(x: 5, y: 1)): .custom(.input("г")),
+                .gridFit(.init(x: 6, y: 1)): .custom(.input("т")),
+                .gridFit(.init(x: 7, y: 1)): .custom(.input("н")),
+                .gridFit(.init(x: 8, y: 1)): .custom(.input("в")),
+                .gridFit(.init(x: 9, y: 1)): .custom(.input("м")),
+                .gridFit(.init(x: 10, y: 1)): .custom(.input("ч")),
 
-                // Row 4 (Bottom letters): Shift Ю Й Ъ Э Ф Х П Р Л Б Del
+                // Row 4 (Bottom letters): Shift ю й ъ э ф х п р л Del (小文字デフォルト)
                 .gridFit(.init(x: 0, y: 2)): .custom(.shiftKey()),
-                .gridFit(.init(x: 1, y: 2)): .custom(.input("Ю")),
-                .gridFit(.init(x: 2, y: 2)): .custom(.input("Й")),
-                .gridFit(.init(x: 3, y: 2)): .custom(.input("Ъ")),
-                .gridFit(.init(x: 4, y: 2)): .custom(.input("Э")), // Note: BUL keyboard usually doesn't have Э in standard BDS? It might be needed for Russian loanwords/compatibility.
-                // Wait, BDS 5237:2006 has "Э" (reversed E) near Enter?
-                // Standard Japanese conversion might not use Э for Bulgarian profile (since E is e).
-                // But we keep it for completeness.
-                .gridFit(.init(x: 5, y: 2)): .custom(.input("Ф")),
-                .gridFit(.init(x: 6, y: 2)): .custom(.input("Х")),
-                .gridFit(.init(x: 7, y: 2)): .custom(.input("П")),
-                .gridFit(.init(x: 8, y: 2)): .custom(.input("Р")),
-                .gridFit(.init(x: 9, y: 2)): .custom(.input("Л")),
+                .gridFit(.init(x: 1, y: 2)): .custom(.input("ю")),
+                .gridFit(.init(x: 2, y: 2)): .custom(.input("й")),
+                .gridFit(.init(x: 3, y: 2)): .custom(.input("ъ")),
+                .gridFit(.init(x: 4, y: 2)): .custom(.input("э")),
+                .gridFit(.init(x: 5, y: 2)): .custom(.input("ф")),
+                .gridFit(.init(x: 6, y: 2)): .custom(.input("х")),
+                .gridFit(.init(x: 7, y: 2)): .custom(.input("п")),
+                .gridFit(.init(x: 8, y: 2)): .custom(.input("р")),
+                .gridFit(.init(x: 9, y: 2)): .custom(.input("л")),
                 .gridFit(.init(x: 10, y: 2)): .custom(.flickDelete()),
 
                 // "Б" is missing in the above row count (11 slots).
@@ -99,7 +96,7 @@ public extension Custard {
                 .gridFit(.init(x: 1, y: 3)): .system(.changeKeyboard), // Globe
                 .gridFit(.init(x: 2, y: 3, width: 6, height: 1)): .custom(.flickSpace()), // Space (wider)
                 .gridFit(.init(x: 8, y: 3)): .custom(.input("ー")), // 長音符 (伸ばし棒)
-                .gridFit(.init(x: 9, y: 3, width: 2, height: 1)): .custom(.enterKey()), // Enter
+                .gridFit(.init(x: 9, y: 3, width: 2, height: 1)): .system(.enter), // Enter (iOS標準)
             ]
         )
     )
@@ -118,16 +115,7 @@ private extension CustardInterfaceCustomKey {
     static func shiftKey() -> CustardInterfaceCustomKey {
         return CustardInterfaceCustomKey(
             design: .init(label: .systemImage("shift"), color: .special),
-            press_actions: [.replaceDefault(.default)],
-            longpress_actions: .init(start: [], repeat: []),
-            variations: []
-        )
-    }
-
-    static func enterKey() -> CustardInterfaceCustomKey {
-        return CustardInterfaceCustomKey(
-            design: .init(label: .systemImage("return"), color: .special),
-            press_actions: [.complete],
+            press_actions: [.toggleCapsLockState],
             longpress_actions: .init(start: [], repeat: []),
             variations: []
         )

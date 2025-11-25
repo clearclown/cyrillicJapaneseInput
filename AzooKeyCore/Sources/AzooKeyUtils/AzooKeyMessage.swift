@@ -53,16 +53,17 @@ public enum AzooKeyMessageProvider: ApplicationSpecificKeyboardViewMessageProvid
 
     public static var messages: [MessageData<MessageIdentifier>] {
         [
+            // Pismo: キリル文字キーボードなのでZenzai紹介ポップアップは無効化
             MessageData(
                 id: .ver3_0_zenzai_introduction,
                 title: "Zenzaiを導入しました",
                 description: "ニューラル言語モデルを用いた最先端の高精度なかな漢字変換システム「Zenzai」を設定から有効化できます。",
                 button: .two(primary: .openContainerURL(text: "設定する", url: "Pismo://settings/zenzai", autoDone: true), secondary: .later),
                 precondition: {
-                    true
+                    false  // Pismo: 常に非表示
                 },
                 silentDoneCondition: {
-                    EnableZenzai.value
+                    true   // Pismo: 常にDone扱い
                 },
                 containerAppShouldMakeItDone: { false }
             ),

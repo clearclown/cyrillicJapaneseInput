@@ -183,6 +183,10 @@ public struct KeyboardView<Extension: ApplicationSpecificKeyboardViewExtension>:
             CustomKeyboardView<Extension>(custard: settingAppliedFlickCustard(.flickEnglish))
         case .flick_numbersymbols:
             CustomKeyboardView<Extension>(custard: settingAppliedFlickCustard(.flickNumberSymbols))
+        case .standard_numpad:
+            CustomKeyboardView<Extension>(custard: .standardNumpad)
+        case .standard_symbols:
+            CustomKeyboardView<Extension>(custard: .standardSymbols)
         case .qwerty_hira:
             renderUnified(modelsDict: QwertyLayoutProvider<Extension>.hiraKeyboard(), width: 10, height: 4)
         case .qwerty_abc:

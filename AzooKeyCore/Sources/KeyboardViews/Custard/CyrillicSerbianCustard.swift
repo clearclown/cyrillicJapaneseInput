@@ -21,55 +21,42 @@ public extension Custard {
             keyStyle: .pcStyle,
             keyLayout: .gridFit(.init(rowCount: 11, columnCount: 4)),
             keys: [
-                // Row 1: Љ Њ Е Р Т З У И О П Ш
-                // (Standard Serbian: Љ Њ Е Р Т З У И О П Ш Đ)
-                // 11 keys: Љ Њ Е Р Т З У И О П Ш
-                .gridFit(.init(x: 0, y: 0)): .custom(.input("Љ")),
-                .gridFit(.init(x: 1, y: 0)): .custom(.input("Њ")),
-                .gridFit(.init(x: 2, y: 0)): .custom(.input("Е")),
-                .gridFit(.init(x: 3, y: 0)): .custom(.input("Р")),
-                .gridFit(.init(x: 4, y: 0)): .custom(.input("Т")),
-                .gridFit(.init(x: 5, y: 0)): .custom(.input("З")),
-                .gridFit(.init(x: 6, y: 0)): .custom(.input("У")),
-                .gridFit(.init(x: 7, y: 0)): .custom(.input("И")),
-                .gridFit(.init(x: 8, y: 0)): .custom(.input("О")),
-                .gridFit(.init(x: 9, y: 0)): .custom(.input("П")),
-                .gridFit(.init(x: 10, y: 0)): .custom(.input("Ш")),
+                // Row 1: љ њ е р т з у и о п ш (小文字デフォルト)
+                .gridFit(.init(x: 0, y: 0)): .custom(.input("љ")),
+                .gridFit(.init(x: 1, y: 0)): .custom(.input("њ")),
+                .gridFit(.init(x: 2, y: 0)): .custom(.input("е")),
+                .gridFit(.init(x: 3, y: 0)): .custom(.input("р")),
+                .gridFit(.init(x: 4, y: 0)): .custom(.input("т")),
+                .gridFit(.init(x: 5, y: 0)): .custom(.input("з")),
+                .gridFit(.init(x: 6, y: 0)): .custom(.input("у")),
+                .gridFit(.init(x: 7, y: 0)): .custom(.input("и")),
+                .gridFit(.init(x: 8, y: 0)): .custom(.input("о")),
+                .gridFit(.init(x: 9, y: 0)): .custom(.input("п")),
+                .gridFit(.init(x: 10, y: 0)): .custom(.input("ш")),
 
-                // Row 2: А С Д Ф Г Х Ј К Л Ч Ћ
-                // (Standard: А С Д Ф Г Х Ј К Л Ч Ћ Ž)
-                // 11 keys: А С Д Ф Г Х Ј К Л Ч Ћ
-                .gridFit(.init(x: 0, y: 1)): .custom(.input("А")),
-                .gridFit(.init(x: 1, y: 1)): .custom(.input("С")),
-                .gridFit(.init(x: 2, y: 1)): .custom(.input("Д")),
-                .gridFit(.init(x: 3, y: 1)): .custom(.input("Ф")),
-                .gridFit(.init(x: 4, y: 1)): .custom(.input("Г")),
-                .gridFit(.init(x: 5, y: 1)): .custom(.input("Х")),
-                .gridFit(.init(x: 6, y: 1)): .custom(.input("Ј")),
-                .gridFit(.init(x: 7, y: 1)): .custom(.input("К")),
-                .gridFit(.init(x: 8, y: 1)): .custom(.input("Л")),
-                .gridFit(.init(x: 9, y: 1)): .custom(.input("Ч")),
-                .gridFit(.init(x: 10, y: 1)): .custom(.input("Ћ")),
+                // Row 2: а с д ф г х ј к л ч ћ (小文字デフォルト)
+                .gridFit(.init(x: 0, y: 1)): .custom(.input("а")),
+                .gridFit(.init(x: 1, y: 1)): .custom(.input("с")),
+                .gridFit(.init(x: 2, y: 1)): .custom(.input("д")),
+                .gridFit(.init(x: 3, y: 1)): .custom(.input("ф")),
+                .gridFit(.init(x: 4, y: 1)): .custom(.input("г")),
+                .gridFit(.init(x: 5, y: 1)): .custom(.input("х")),
+                .gridFit(.init(x: 6, y: 1)): .custom(.input("ј")),
+                .gridFit(.init(x: 7, y: 1)): .custom(.input("к")),
+                .gridFit(.init(x: 8, y: 1)): .custom(.input("л")),
+                .gridFit(.init(x: 9, y: 1)): .custom(.input("ч")),
+                .gridFit(.init(x: 10, y: 1)): .custom(.input("ћ")),
 
-                // Row 3: Shift Џ Ц В Б Н М , . Del
-                // (Standard: Z X C V B N M ...)
-                // Serbian is QWERTZ based.
-                // Row 3: (Shift) < Z > Џ Ц В Б Н М ( ... )
-                // Wait, Serbian QWERTZ has Z on top row (checked).
-                // Bottom row starts with < > ? No, standard letters:
-                // Џ, Ц, В, Б, Н, М, Đ, Ж?
-                // Let's fit remaining chars: Џ, Ц, В, Б, Н, М, Đ, Ж.
-                // 8 chars.
-
+                // Row 3: Shift џ ц в б н м đ ж , Del (小文字デフォルト)
                 .gridFit(.init(x: 0, y: 2)): .custom(.shiftKey()),
-                .gridFit(.init(x: 1, y: 2)): .custom(.input("Џ")),
-                .gridFit(.init(x: 2, y: 2)): .custom(.input("Ц")),
-                .gridFit(.init(x: 3, y: 2)): .custom(.input("В")),
-                .gridFit(.init(x: 4, y: 2)): .custom(.input("Б")),
-                .gridFit(.init(x: 5, y: 2)): .custom(.input("Н")),
-                .gridFit(.init(x: 6, y: 2)): .custom(.input("М")),
-                .gridFit(.init(x: 7, y: 2)): .custom(.input("Đ")), // Đ (Dje)
-                .gridFit(.init(x: 8, y: 2)): .custom(.input("Ж")), // Ž (Zhe)
+                .gridFit(.init(x: 1, y: 2)): .custom(.input("џ")),
+                .gridFit(.init(x: 2, y: 2)): .custom(.input("ц")),
+                .gridFit(.init(x: 3, y: 2)): .custom(.input("в")),
+                .gridFit(.init(x: 4, y: 2)): .custom(.input("б")),
+                .gridFit(.init(x: 5, y: 2)): .custom(.input("н")),
+                .gridFit(.init(x: 6, y: 2)): .custom(.input("м")),
+                .gridFit(.init(x: 7, y: 2)): .custom(.input("đ")), // đ (Dje)
+                .gridFit(.init(x: 8, y: 2)): .custom(.input("ж")), // ж (Zhe)
                 .gridFit(.init(x: 9, y: 2)): .custom(.input(",")),
                 .gridFit(.init(x: 10, y: 2)): .custom(.flickDelete()),
 
@@ -78,7 +65,7 @@ public extension Custard {
                 .gridFit(.init(x: 1, y: 3)): .system(.changeKeyboard), // Globe
                 .gridFit(.init(x: 2, y: 3, width: 6, height: 1)): .custom(.flickSpace()), // Space (wider)
                 .gridFit(.init(x: 8, y: 3)): .custom(.input("ー")), // 長音符 (伸ばし棒)
-                .gridFit(.init(x: 9, y: 3, width: 2, height: 1)): .custom(.enterKey()), // Enter
+                .gridFit(.init(x: 9, y: 3, width: 2, height: 1)): .system(.enter), // Enter (iOS標準)
             ]
         )
     )
@@ -97,16 +84,7 @@ private extension CustardInterfaceCustomKey {
     static func shiftKey() -> CustardInterfaceCustomKey {
         return CustardInterfaceCustomKey(
             design: .init(label: .systemImage("shift"), color: .special),
-            press_actions: [.replaceDefault(.default)],
-            longpress_actions: .init(start: [], repeat: []),
-            variations: []
-        )
-    }
-
-    static func enterKey() -> CustardInterfaceCustomKey {
-        return CustardInterfaceCustomKey(
-            design: .init(label: .systemImage("return"), color: .special),
-            press_actions: [.complete],
+            press_actions: [.toggleCapsLockState],
             longpress_actions: .init(start: [], repeat: []),
             variations: []
         )

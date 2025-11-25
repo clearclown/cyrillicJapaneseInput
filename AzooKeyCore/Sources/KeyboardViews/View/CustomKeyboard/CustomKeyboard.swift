@@ -63,12 +63,8 @@ public extension CustardInterface {
             case let .system(sys):
                 let model: any UnifiedKeyModelProtocol<Extension> = switch sys {
                 case .enter:
-                    switch self.keyStyle {
-                    case .tenkeyStyle:
-                        UnifiedEnterKeyModel<Extension>(textSize: .large)
-                    case .pcStyle:
-                        QwertyAaKeyModel<Extension>()
-                    }
+                    // Enter は常に UnifiedEnterKeyModel を使用（pcStyle でも）
+                    UnifiedEnterKeyModel<Extension>(textSize: .large)
                 case .upperLower:
                     switch self.keyStyle {
                     case .tenkeyStyle:

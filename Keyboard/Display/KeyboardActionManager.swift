@@ -153,9 +153,14 @@ final class KeyboardActionManager: UserActionManager, @unchecked Sendable {
         switch action {
         case let .input(text, simpleInsert):
             self.textEditingActionDidBegin(variableStates: variableStates)
-            if (variableStates.boolStates.isCapsLocked || variableStates.boolStates.isShifted) && [.en_US, .el_GR].contains(variableStates.keyboardLanguage) {
+            let isShifted = variableStates.boolStates.isCapsLocked || variableStates.boolStates.isShifted
+            if isShifted && [.en_US, .el_GR].contains(variableStates.keyboardLanguage) {
                 let input = text.uppercased()
                 self.inputManager.input(text: input, requireSetResult: requireSetResult, simpleInsert: simpleInsert, inputStyle: variableStates.inputStyle)
+            } else if isShifted && Self.isCyrillicLetter(text) {
+                // キリル文字 + Shift: 大文字キリル文字を直接出力（仮名変換をスキップ）
+                let input = text.uppercased()
+                self.inputManager.input(text: input, requireSetResult: requireSetResult, simpleInsert: true, inputStyle: variableStates.inputStyle)
             } else {
                 self.inputManager.input(text: text, requireSetResult: requireSetResult, simpleInsert: simpleInsert, inputStyle: variableStates.inputStyle)
             }
@@ -759,5 +764,14 @@ final class KeyboardActionManager: UserActionManager, @unchecked Sendable {
 
     private func hideLearningMemory() {
         // TODO: Provide up-to-date implementation
+    }
+
+    /// 文字列がキリル文字のみで構成されているかチェック
+    private static func isCyrillicLetter(_ text: String) -> Bool {
+        guard !text.isEmpty else { return false }
+        return text.unicodeScalars.allSatisfy { scalar in
+            // キリル文字のUnicode範囲: U+0400–U+04FF (基本), U+0500–U+052F (拡張)
+            (0x0400...0x052F).contains(scalar.value)
+        }
     }
 }

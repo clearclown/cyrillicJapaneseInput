@@ -76,11 +76,8 @@ struct LanguageLayoutSettingView<SettingKey: LanguageLayoutKeyboardSetting>: Vie
     private let types: [LanguageLayout]
 
     private var labelText: LocalizedStringKey {
-        if setTogether {
-            return "キーボードの種類 (現在: \(selection.label))"
-        } else {
-            return "\(language.name)キーボードの種類 (現在: \(selection.label))"
-        }
+        // Pismo: 現在の選択のみ表示（セクションヘッダーと重複しないように）
+        return "現在: \(selection.label)"
     }
 
     private var tab: KeyboardTab.ExistentialTab {

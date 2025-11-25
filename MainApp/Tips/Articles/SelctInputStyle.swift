@@ -11,12 +11,11 @@ import SwiftUI
 
 struct SelctInputStyleTipsView: View {
     var body: some View {
-        TipsContentView("入力方法を選ぶ") {
+        TipsContentView("キーボードの種類を選ぶ") {
             TipsContentParagraph {
-                Text("日本語と英語それぞれで「ローマ字入力」または「フリック入力」を選ぶことが可能です。")
+                Text("キリル文字キーボードの種類を選択できます。")
             }
-            LanguageLayoutSettingView(.japaneseKeyboardLayout, language: .japanese).padding(.vertical)
-            LanguageLayoutSettingView(.englishKeyboardLayout, language: .english).padding(.vertical)
+            LanguageLayoutSettingView(.japaneseKeyboardLayout, language: .japanese, setTogether: true).padding(.vertical)
             TipsContentParagraph {
                 Text("macOSなどに搭載されている、入力中の文字列を自動的に変換する「ライブ変換」が利用できます。")
                 BoolSettingView(.liveConversion)

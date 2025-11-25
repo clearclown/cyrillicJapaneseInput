@@ -133,7 +133,7 @@ public struct CustardManager: CustardManagerProtocol {
     }
 
     public func custard(identifier: String) throws -> Custard {
-        // First check for built-in Cyrillic keyboards
+        // First check for built-in keyboards
         switch identifier {
         case "cyrillic_standard":
             return .cyrillicStandard
@@ -143,6 +143,8 @@ public struct CustardManager: CustardManagerProtocol {
             return .cyrillicBulgarian
         case "cyrillic_serbian":
             return .cyrillicSerbian
+        case "standard_numpad":
+            return .standardNumpad
         default:
             break
         }

@@ -155,6 +155,10 @@ public struct TabManagerConfig: TabManagerConfiguration {
         AzooKeySettingProvider.englishKeyboardLayout
     }
 
+    public var useStandardNumpad: Bool {
+        UseStandardNumpad.value
+    }
+
     public var custardManager: any KeyboardViews.CustardManagerProtocol {
         CustardManager.load()
     }

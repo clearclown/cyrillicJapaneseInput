@@ -10,17 +10,6 @@ import SwiftUI
 
 struct TipsNewsSection: View {
     @AppStorage("read_terms_of_use_update_2025_05_31") private var readTermsOfUseUpdate_2025_05_31 = false
-    @EnvironmentObject private var appStates: MainAppStates
-
-    @MainActor
-    private var needUseFlickCustomSettingNews: Bool {
-        appStates.japaneseLayout != .qwerty || appStates.englishLayout != .qwerty
-    }
-
-    @MainActor
-    private var needFlickDakutenKeyNews: Bool {
-        appStates.japaneseLayout != .qwerty
-    }
 
     var body: some View {
         if !readTermsOfUseUpdate_2025_05_31 {
@@ -41,23 +30,6 @@ struct TipsNewsSection: View {
                 }
             }
         }
-        Section("新機能") {
-            IconNavigationLink("「ニューラルかな漢字変換システム Zenzai」を導入しました", systemImage: "z.square.fill", style: AngularGradient(colors: [.red, .blue], center: .center)) {
-                ZenzaiIntroductionNews()
-            }
-            if needFlickDakutenKeyNews {
-                IconNavigationLink("日本語フリックのカスタムキーで「濁点化」をサポート", systemImage: "bolt", imageColor: .orange) {
-                    FlickDakutenKeyNews()
-                }
-            }
-            if needUseFlickCustomSettingNews {
-                IconNavigationLink("フリック式のカスタムタブが簡単に作れるようになりました！", systemImage: "wrench.adjustable", imageColor: .orange) {
-                    FlickCustardBaseSelectionNews()
-                }
-            }
-            IconNavigationLink("タブバーにアイコンを使えるようになりました！", systemImage: "heart.rectangle", imageColor: .orange) {
-                TabBarSystemIconNews()
-            }
-        }
+        // Pismo: キリル文字キーボードなので、日本語IME向けのZenzai等の宣伝は非表示
     }
 }

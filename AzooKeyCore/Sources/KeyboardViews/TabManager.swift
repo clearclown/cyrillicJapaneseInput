@@ -13,7 +13,7 @@ import enum KanaKanjiConverterModule.InputStyle
 import enum KanaKanjiConverterModule.KeyboardLanguage
 
 extension TabData {
-    func tab(config: any TabManagerConfiguration) -> KeyboardTab {
+    @MainActor func tab(config: any TabManagerConfiguration) -> KeyboardTab {
         switch self {
         case let .system(tab):
             switch tab {
@@ -22,6 +22,10 @@ extension TabData {
             case .flick_english:
                 return .existential(.flick_abc)
             case .flick_numbersymbols:
+                // 設定に基づいて標準テンキーまたはフリック式を返す
+                if config.useStandardNumpad {
+                    return .existential(.standard_numpad)
+                }
                 return .existential(.flick_numbersymbols)
             case .qwerty_japanese:
                 return .existential(.qwerty_hira)
@@ -30,6 +34,10 @@ extension TabData {
             case .qwerty_numbers:
                 return .existential(.qwerty_numbers)
             case .qwerty_symbols:
+                // 設定に基づいて標準記号キーボードまたはQWERTY式を返す
+                if config.useStandardNumpad {
+                    return .existential(.standard_symbols)
+                }
                 return .existential(.qwerty_symbols)
             case .user_japanese:
                 return .user_dependent(.japanese)
@@ -261,5 +269,6 @@ public struct TabManager {
 public protocol TabManagerConfiguration {
     @MainActor var japaneseLayout: LanguageLayout { get }
     @MainActor var englishLayout: LanguageLayout { get }
+    @MainActor var useStandardNumpad: Bool { get }
     var custardManager: any CustardManagerProtocol { get }
 }
