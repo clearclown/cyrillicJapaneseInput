@@ -1,6 +1,6 @@
 //
 //  AzooKeyMessage.swift
-//  azooKey
+//  Pismo
 //
 //  Created by β α on 2023/07/22.
 //  Copyright © 2023 DevEn3. All rights reserved.
@@ -57,7 +57,7 @@ public enum AzooKeyMessageProvider: ApplicationSpecificKeyboardViewMessageProvid
                 id: .ver3_0_zenzai_introduction,
                 title: "Zenzaiを導入しました",
                 description: "ニューラル言語モデルを用いた最先端の高精度なかな漢字変換システム「Zenzai」を設定から有効化できます。",
-                button: .two(primary: .openContainerURL(text: "設定する", url: "azooKey://settings/zenzai", autoDone: true), secondary: .later),
+                button: .two(primary: .openContainerURL(text: "設定する", url: "Pismo://settings/zenzai", autoDone: true), secondary: .later),
                 precondition: {
                     true
                 },
@@ -70,7 +70,7 @@ public enum AzooKeyMessageProvider: ApplicationSpecificKeyboardViewMessageProvid
                 id: .iOS18_4_new_emoji,
                 title: "お知らせ",
                 description: "iOS18.4で「🫩 (眠そうな顔)」「🫆 (指紋)」「🫟 (飛び散った液体)」などの新しい絵文字が追加されました。本体アプリを開き、データを更新しますか？",
-                button: .two(primary: .openContainerURL(text: "更新", url: "azooKey://", autoDone: false), secondary: .later),
+                button: .two(primary: .openContainerURL(text: "更新", url: "Pismo://", autoDone: false), secondary: .later),
                 precondition: {
                     if #available(iOS 18.4, *) {
                         return true
@@ -80,7 +80,7 @@ public enum AzooKeyMessageProvider: ApplicationSpecificKeyboardViewMessageProvid
                 },
                 silentDoneCondition: {
                     // ダウンロードがv2.4.0以降の場合はDone
-                    if (SharedStore.initialAppVersion ?? .azooKey_v1_7_1) >= .azooKey_v2_4_0 {
+                    if (SharedStore.initialAppVersion ?? .Pismo_v1_7_1) >= .Pismo_v2_4_0 {
                         return true
                     }
                     return false
@@ -91,7 +91,7 @@ public enum AzooKeyMessageProvider: ApplicationSpecificKeyboardViewMessageProvid
                 id: .iOS17_4_new_emoji,
                 title: "お知らせ",
                 description: "iOS17.4で「🙂‍↕️️ (うなづく顔)」「🙂‍↔️️ (首を振る顔)」「🐦‍🔥️ (不死鳥)」などの新しい絵文字が追加されました。本体アプリを開き、データを更新しますか？",
-                button: .two(primary: .openContainerURL(text: "更新", url: "azooKey://", autoDone: false), secondary: .later),
+                button: .two(primary: .openContainerURL(text: "更新", url: "Pismo://", autoDone: false), secondary: .later),
                 precondition: {
                     if #available(iOS 17.4, *) {
                         return true
@@ -101,7 +101,7 @@ public enum AzooKeyMessageProvider: ApplicationSpecificKeyboardViewMessageProvid
                 },
                 silentDoneCondition: {
                     // ダウンロードがv2.2.3以降の場合はDone
-                    if (SharedStore.initialAppVersion ?? .azooKey_v1_7_1) >= .azooKey_v2_2_3 {
+                    if (SharedStore.initialAppVersion ?? .Pismo_v1_7_1) >= .Pismo_v2_2_3 {
                         return true
                     }
                     return false
@@ -112,7 +112,7 @@ public enum AzooKeyMessageProvider: ApplicationSpecificKeyboardViewMessageProvid
                 id: .iOS16_4_new_emoji,
                 title: "お知らせ",
                 description: "iOS16.4で「🫨 (震える顔)」「🩵 (水色のハート)」「🪽 (羽)」などの新しい絵文字が追加されました。本体アプリを開き、データを更新しますか？",
-                button: .two(primary: .openContainerURL(text: "更新", url: "azooKey://", autoDone: false), secondary: .later),
+                button: .two(primary: .openContainerURL(text: "更新", url: "Pismo://", autoDone: false), secondary: .later),
                 precondition: {
                     if #available(iOS 16.4, *) {
                         return true
@@ -122,7 +122,7 @@ public enum AzooKeyMessageProvider: ApplicationSpecificKeyboardViewMessageProvid
                 },
                 silentDoneCondition: {
                     // ダウンロードがv2.0.2以降の場合はDone
-                    if (SharedStore.initialAppVersion ?? .azooKey_v1_7_1) >= .azooKey_v2_0_2 {
+                    if (SharedStore.initialAppVersion ?? .Pismo_v1_7_1) >= .Pismo_v2_0_2 {
                         return true
                     }
                     return false
@@ -133,7 +133,7 @@ public enum AzooKeyMessageProvider: ApplicationSpecificKeyboardViewMessageProvid
                 id: .ver1_9_user_dictionary_update,
                 title: "お願い",
                 description: "内部データの更新のため本体アプリを開いてください。\n更新は数秒で終わります。",
-                button: .one(.openContainerURL(text: "更新", url: "azooKey://", autoDone: false)),
+                button: .one(.openContainerURL(text: "更新", url: "Pismo://", autoDone: false)),
                 precondition: {
                     // ユーザ辞書に登録があるのが条件。
                     let directoryPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: SharedStore.appGroupKey)!
@@ -142,7 +142,7 @@ public enum AzooKeyMessageProvider: ApplicationSpecificKeyboardViewMessageProvid
                 },
                 silentDoneCondition: {
                     // ダウンロードがv1.9以降の場合はDone
-                    if (SharedStore.initialAppVersion ?? .azooKey_v1_7_1) >= .azooKey_v1_9 {
+                    if (SharedStore.initialAppVersion ?? .Pismo_v1_7_1) >= .Pismo_v1_9 {
                         return true
                     }
                     return false
@@ -157,8 +157,8 @@ public enum AzooKeyMessageProvider: ApplicationSpecificKeyboardViewMessageProvid
             MessageData(
                 id: .ver2_1_emoji_tab,
                 title: "お知らせ",
-                description: "azooKeyで絵文字タブが使えるようになりました。本体アプリを開き、タブバーに絵文字タブを追加しますか？",
-                button: .two(primary: .openContainerURL(text: "追加", url: "azooKey://", autoDone: false), secondary: .later),
+                description: "Pismoで絵文字タブが使えるようになりました。本体アプリを開き、タブバーに絵文字タブを追加しますか？",
+                button: .two(primary: .openContainerURL(text: "追加", url: "Pismo://", autoDone: false), secondary: .later),
                 precondition: {
                     true
                 },

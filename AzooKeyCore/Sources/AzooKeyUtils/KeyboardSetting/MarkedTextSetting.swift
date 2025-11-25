@@ -1,6 +1,6 @@
 //
 //  MarkedTextSetting.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2022/09/26.
 //  Copyright © 2022 ensan. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  AppVersion.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2022/07/02.
 //  Copyright © 2022 ensan. All rights reserved.
@@ -68,14 +68,14 @@ public struct AppVersion: Codable, Equatable, Comparable, Hashable, LosslessStri
     }
 }
 public extension AppVersion {
-    static let azooKey_v3_0_1 = AppVersion("3.0.1")!
-    static let azooKey_v2_4_0 = AppVersion("2.4.0")!
-    static let azooKey_v2_2_3 = AppVersion("2.2.3")!
-    static let azooKey_v2_2_2 = AppVersion("2.2.2")!
-    static let azooKey_v2_0_2 = AppVersion("2.0.2")!
-    static let azooKey_v1_9 = AppVersion("1.9")!
-    static let azooKey_v1_8_1 = AppVersion("1.8.1")!
-    static let azooKey_v1_8 = AppVersion("1.8")!
-    static let azooKey_v1_7_2 = AppVersion("1.7.2")!
-    static let azooKey_v1_7_1 = AppVersion("1.7.1")!
+    static let Pismo_v3_0_1 = AppVersion("3.0.1")!
+    static let Pismo_v2_4_0 = AppVersion("2.4.0")!
+    static let Pismo_v2_2_3 = AppVersion("2.2.3")!
+    static let Pismo_v2_2_2 = AppVersion("2.2.2")!
+    static let Pismo_v2_0_2 = AppVersion("2.0.2")!
+    static let Pismo_v1_9 = AppVersion("1.9")!
+    static let Pismo_v1_8_1 = AppVersion("1.8.1")!
+    static let Pismo_v1_8 = AppVersion("1.8")!
+    static let Pismo_v1_7_2 = AppVersion("1.7.2")!
+    static let Pismo_v1_7_1 = AppVersion("1.7.1")!
 }

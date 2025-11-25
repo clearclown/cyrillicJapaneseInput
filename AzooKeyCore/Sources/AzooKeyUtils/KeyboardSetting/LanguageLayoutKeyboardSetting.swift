@@ -60,9 +60,9 @@ public extension LanguageLayoutKeyboardSetting {
 }
 
 public struct JapaneseKeyboardLayout: LanguageLayoutKeyboardSetting {
-    public static let title: LocalizedStringKey = "日本語キーボードの種類"
-    public static let explanation: LocalizedStringKey = "日本語の入力方法をフリック入力とローマ字入力から選択できます。"
-    public static let defaultValue: LanguageLayout = .flick
+    public static let title: LocalizedStringKey = "キーボードの種類"
+    public static let explanation: LocalizedStringKey = "キリル文字配列を選択できます。ロシア語(JCUKEN)、ウクライナ語、ブルガリア語(BDS)、セルビア語から選択できます。"
+    public static let defaultValue: LanguageLayout = .cyrillicStandard
     public static let key: String = "keyboard_type"
 }
 
@@ -71,9 +71,9 @@ public extension KeyboardSettingKey where Self == JapaneseKeyboardLayout {
 }
 
 public struct EnglishKeyboardLayout: LanguageLayoutKeyboardSetting {
-    public static let title: LocalizedStringKey = "英語キーボードの種類"
-    public static let explanation: LocalizedStringKey = "英語の入力方法をフリック入力とローマ字入力から選択できます。"
-    public static let defaultValue: LanguageLayout = .flick
+    public static let title: LocalizedStringKey = "キーボードの種類"
+    public static let explanation: LocalizedStringKey = "英語キーボードの種類を選択できます。"
+    public static let defaultValue: LanguageLayout = .qwerty
     public static let key: String = "keyboard_type_en"
 }
 
