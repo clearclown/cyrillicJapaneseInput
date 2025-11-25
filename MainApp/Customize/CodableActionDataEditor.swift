@@ -71,7 +71,7 @@ extension CodableActionData {
         case let .launchApplication(value):
             switch value.scheme {
             case .azooKey:
-                return "azooKey本体アプリを開く"
+                return "Pismo本体アプリを開く"
             case .shortcuts:
                 return "ショートカットを実行する"
             }
