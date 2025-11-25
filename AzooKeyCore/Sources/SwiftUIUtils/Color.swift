@@ -1,6 +1,6 @@
 //
 //  Color.swift
-//  azooKey
+//  Pismo
 //
 //  Created by ensan on 2020/11/28.
 //  Copyright © 2020 ensan. All rights reserved.
