@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Simple key background selector without inset.
+  Key spacing is handled via keyHorizontalGap in keyboard XML.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Pressed state -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/key_background_pressed" />
+            <corners android:radius="6dp" />
+        </shape>
+    </item>
+    <!-- Checked state (for shift key) -->
+    <item android:state_checkable="true" android:state_checked="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/key_background_pressed" />
+            <corners android:radius="6dp" />
+        </shape>
+    </item>
+    <!-- Normal state -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/key_background" />
+            <corners android:radius="6dp" />
+        </shape>
+    </item>
+</selector>

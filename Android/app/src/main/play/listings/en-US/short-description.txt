@@ -1,0 +1,1 @@
+Type Japanese using Cyrillic keyboard. Converts Cyrillic to Hiragana & Katakana.
