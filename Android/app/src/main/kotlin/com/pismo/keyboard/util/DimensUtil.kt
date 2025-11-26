@@ -41,7 +41,7 @@ object DimensUtil {
                 getDimensionPixelOffset(index, defaultValue)
             }
             TypedValue.TYPE_FRACTION -> {
-                (getFraction(index, base.toFloat(), base.toFloat()) + 0.5f).toInt()
+                (getFraction(index, base, base, defaultValue.toFloat()) + 0.5f).toInt()
             }
             else -> {
                 defaultValue
