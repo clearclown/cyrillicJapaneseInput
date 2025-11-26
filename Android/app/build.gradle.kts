@@ -45,9 +45,21 @@ android {
         viewBinding = true
     }
 
+    androidResources {
+        // Prevent Android from decompressing .gz files during build
+        // This keeps the dictionary files compressed in the APK
+        noCompress += listOf("gz")
+    }
+
     sourceSets {
         getByName("main") {
             kotlin.srcDirs("src/main/kotlin")
+        }
+        getByName("test") {
+            kotlin.srcDirs("src/test/kotlin")
+        }
+        getByName("androidTest") {
+            kotlin.srcDirs("src/androidTest/kotlin")
         }
     }
 }

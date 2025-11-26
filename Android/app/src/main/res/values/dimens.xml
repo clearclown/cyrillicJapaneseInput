@@ -14,4 +14,10 @@
     <!-- Key preview -->
     <dimen name="key_preview_text_size">28sp</dimen>
     <dimen name="key_preview_offset">-12dp</dimen>
+
+    <!-- Candidate bar -->
+    <dimen name="candidate_bar_height">40dp</dimen>
+    <dimen name="candidate_text_size">16sp</dimen>
+    <dimen name="candidate_padding_horizontal">12dp</dimen>
+    <dimen name="candidate_padding_vertical">8dp</dimen>
 </resources>

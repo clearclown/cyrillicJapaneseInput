@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Simple key background selector without inset.
+  Key spacing is handled via keyHorizontalGap in keyboard XML.
+-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Pressed state -->
     <item android:state_pressed="true">

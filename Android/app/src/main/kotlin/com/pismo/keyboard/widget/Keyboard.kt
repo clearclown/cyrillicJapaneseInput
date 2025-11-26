@@ -328,7 +328,7 @@ class Keyboard(context: Context, layoutRes: Int) {
                 displayWidth,
                 defaultKeyHorizontalGap
             )
-            this.x = x + horizontalGap
+            this.x = x  // Set x position without extra gap (gap is handled in loadKeyboard)
             this.y = y
             ta.recycle()
 
@@ -415,5 +415,10 @@ class Keyboard(context: Context, layoutRes: Int) {
             }
             return states
         }
+
+        /**
+         * Returns true if this key has the EDGE_RIGHT flag set.
+         */
+        fun hasEdgeRight(): Boolean = edgeFlags and EDGE_RIGHT > 0
     }
 }

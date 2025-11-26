@@ -213,6 +213,8 @@ class KeyboardView @JvmOverloads constructor(
         val canvas = this.canvas ?: return
 
         canvas.setBitmap(buffer)
+        // Use save/restore to prevent clipRect from accumulating
+        canvas.save()
         canvas.clipRect(dirtyRect)
         canvas.drawColor(0x00000000, PorterDuff.Mode.CLEAR)
         canvas.translate(0F, 0F)
@@ -225,6 +227,7 @@ class KeyboardView @JvmOverloads constructor(
                 onKeyDraw(key)
             }
         }
+        canvas.restore()
 
         drawPending = false
         dirtyRect.setEmpty()
@@ -236,9 +239,18 @@ class KeyboardView @JvmOverloads constructor(
         keyBackground?.state = drawableState
         key.icon?.state = drawableState
 
+        // Calculate actual draw width - extend to actual view edge if key has EDGE_RIGHT flag
+        // Use actual view width (width - padding) instead of keyboard.keyboardWidth to avoid rounding errors
+        val actualKeyboardWidth = width - paddingLeft - paddingRight
+        val drawWidth = if (key.hasEdgeRight()) {
+            actualKeyboardWidth - key.x
+        } else {
+            key.width
+        }
+
         val bounds = keyBackground?.bounds
-        if (key.width != bounds?.right || key.height != bounds.bottom) {
-            keyBackground?.setBounds(0, 0, key.width, key.height)
+        if (drawWidth != bounds?.right || key.height != bounds.bottom) {
+            keyBackground?.setBounds(0, 0, drawWidth, key.height)
         }
 
         canvas.save()
