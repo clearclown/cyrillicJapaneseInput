@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Политика конфиденциальности - Pismo</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --border-color: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .logo {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h3 {
+            color: var(--primary-color);
+            font-size: 1.2em;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        ul {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e8f4f8 0%, #d4edda 100%);
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .highlight-box h3 {
+            margin-top: 0;
+            color: #155724;
+        }
+
+        .no-data-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .no-data-list li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .no-data-list li::before {
+            content: "❌";
+            position: absolute;
+            left: 0;
+        }
+
+        .lang-switcher {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .lang-switcher a {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 5px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .lang-switcher a:hover {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .lang-switcher a.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        footer {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid var(--border-color);
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .update-date {
+            background: #f0f0f0;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            margin-top: 15px;
+            font-size: 0.85em;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .logo {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">📝</div>
+            <h1>Политика конфиденциальности</h1>
+            <p class="subtitle">Pismo - Кириллическая японская клавиатура</p>
+        </header>
+
+        <div class="lang-switcher">
+            <a href="privacy.html">English</a>
+            <a href="privacy_ja.html">日本語</a>
+            <a href="#" class="active">Русский</a>
+        </div>
+
+        <div class="highlight-box">
+            <h3>🔒 Ваша конфиденциальность защищена</h3>
+            <p><strong>Pismo НЕ собирает никаких данных.</strong> Ваши нажатия клавиш, текст и личная информация никогда не покидают ваше устройство. Мы считаем конфиденциальность фундаментальным правом.</p>
+        </div>
+
+        <h2>Сбор данных</h2>
+        <p>Pismo разработан с конфиденциальностью как основным принципом. Мы <strong>НЕ</strong> собираем:</p>
+        <ul class="no-data-list">
+            <li>Данные о нажатиях клавиш или введённый текст</li>
+            <li>Личную информацию</li>
+            <li>Идентификаторы устройства</li>
+            <li>Аналитику использования</li>
+            <li>Данные о местоположении</li>
+            <li>Контакты или данные календаря</li>
+            <li>Любые другие пользовательские данные</li>
+        </ul>
+
+        <h2>Хранение данных</h2>
+        <p>Все настройки приложения хранятся <strong>локально на вашем устройстве</strong> с использованием стандартных механизмов iOS. Эти данные:</p>
+        <ul>
+            <li>Никогда не покидают ваше устройство</li>
+            <li>Недоступны для нас</li>
+            <li>Не синхронизируются с серверами</li>
+            <li>Удаляются при удалении приложения</li>
+        </ul>
+
+        <h2>Передача данных</h2>
+        <p>Мы не передаём никакие данные, потому что мы их не собираем:</p>
+        <ul>
+            <li>Никаких сторонних аналитических сервисов</li>
+            <li>Никаких рекламных сетей</li>
+            <li>Никаких брокеров данных</li>
+            <li>Никакой облачной синхронизации</li>
+        </ul>
+
+        <h2>Разрешения клавиатуры</h2>
+        <p>Pismo работает как расширение клавиатуры на iOS. При настройке вас могут спросить о «Полном доступе»:</p>
+        <ul>
+            <li><strong>Полный доступ НЕ требуется</strong> для базовой функциональности</li>
+            <li>Клавиатура работает полностью офлайн</li>
+            <li>Клавиатура не устанавливает сетевых соединений</li>
+            <li>Весь ввод обрабатывается на устройстве</li>
+        </ul>
+
+        <h2>Конфиденциальность детей</h2>
+        <p>Pismo безопасен для пользователей любого возраста. Поскольку мы не собираем данные ни от кого, это включает детей младше 13 лет:</p>
+        <ul>
+            <li>Нет контента с возрастными ограничениями</li>
+            <li>Нет социальных функций</li>
+            <li>Не собираем информацию ни от детей, ни от взрослых</li>
+        </ul>
+
+        <h2>Открытый исходный код</h2>
+        <p>Pismo — программное обеспечение с открытым исходным кодом. Вы можете просмотреть наш код на <a href="https://github.com/clearclown/cyrillicJapaneseInput" target="_blank">GitHub</a>, чтобы проверить нашу политику конфиденциальности.</p>
+
+        <h2>Изменения в политике</h2>
+        <p>Если мы внесём изменения в эту политику конфиденциальности:</p>
+        <ul>
+            <li>Мы обновим эту страницу</li>
+            <li>Обновим дату «Последнее обновление» ниже</li>
+            <li>Включим изменения в примечания к обновлению приложения</li>
+        </ul>
+
+        <h2>Контакты</h2>
+        <p>Если у вас есть вопросы по этой политике конфиденциальности:</p>
+        <ul>
+            <li>GitHub: <a href="https://github.com/clearclown/cyrillicJapaneseInput/discussions" target="_blank">Обсуждения</a></li>
+            <li>Проблемы: <a href="https://github.com/clearclown/cyrillicJapaneseInput/issues" target="_blank">GitHub Issues</a></li>
+        </ul>
+
+        <footer>
+            <p><strong>Pismo - Кириллическая японская клавиатура</strong></p>
+            <p>© 2024-2025 clearclown</p>
+            <p>На основе <a href="https://github.com/ensan-hcl/azooKey" target="_blank">azooKey</a> от Keita Miwa (ensan)</p>
+            <p class="update-date">Последнее обновление: ноябрь 2025</p>
+        </footer>
+    </div>
+</body>
+</html>

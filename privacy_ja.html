@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プライバシーポリシー - Pismo</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --border-color: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .logo {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h3 {
+            color: var(--primary-color);
+            font-size: 1.2em;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        ul {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e8f4f8 0%, #d4edda 100%);
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .highlight-box h3 {
+            margin-top: 0;
+            color: #155724;
+        }
+
+        .no-data-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .no-data-list li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .no-data-list li::before {
+            content: "❌";
+            position: absolute;
+            left: 0;
+        }
+
+        .lang-switcher {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .lang-switcher a {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 5px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .lang-switcher a:hover {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .lang-switcher a.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        footer {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid var(--border-color);
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .update-date {
+            background: #f0f0f0;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            margin-top: 15px;
+            font-size: 0.85em;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .logo {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">📝</div>
+            <h1>プライバシーポリシー</h1>
+            <p class="subtitle">Pismo - キリル文字日本語キーボード</p>
+        </header>
+
+        <div class="lang-switcher">
+            <a href="privacy.html">English</a>
+            <a href="#" class="active">日本語</a>
+            <a href="privacy_ru.html">Русский</a>
+        </div>
+
+        <div class="highlight-box">
+            <h3>🔒 あなたのプライバシーは保護されています</h3>
+            <p><strong>Pismoはいかなるデータも収集しません。</strong>キーストローク、テキスト、個人情報がデバイスの外に送信されることはありません。私たちはプライバシーが基本的権利であると信じています。</p>
+        </div>
+
+        <h2>データの収集</h2>
+        <p>Pismoはプライバシーを核心的な原則として設計されています。以下のデータは<strong>一切収集しません</strong>：</p>
+        <ul class="no-data-list">
+            <li>キーストロークデータや入力されたテキスト</li>
+            <li>個人情報</li>
+            <li>デバイス識別子</li>
+            <li>利用状況の分析データ</li>
+            <li>位置情報</li>
+            <li>連絡先やカレンダーデータ</li>
+            <li>その他のユーザーデータ</li>
+        </ul>
+
+        <h2>データの保存</h2>
+        <p>すべてのアプリ設定は、iOSの標準的な仕組みを使用して<strong>お使いのデバイス内にのみ保存</strong>されます。このデータは：</p>
+        <ul>
+            <li>デバイスの外に送信されることはありません</li>
+            <li>私たちがアクセスすることはできません</li>
+            <li>サーバーに同期されることはありません</li>
+            <li>アプリをアンインストールすると削除されます</li>
+        </ul>
+
+        <h2>データの共有</h2>
+        <p>データを収集していないため、データを共有することもありません：</p>
+        <ul>
+            <li>サードパーティの分析サービスなし</li>
+            <li>広告ネットワークなし</li>
+            <li>データブローカーなし</li>
+            <li>クラウド同期なし</li>
+        </ul>
+
+        <h2>キーボードの権限</h2>
+        <p>PismoはiOSのキーボード拡張機能として動作します。セットアップ時に「フルアクセス」について確認されることがあります：</p>
+        <ul>
+            <li><strong>フルアクセスは基本機能には不要</strong>です</li>
+            <li>キーボードは完全にオフラインで動作します</li>
+            <li>キーボードからネットワーク接続は行われません</li>
+            <li>入力処理はすべてデバイス上で完結します</li>
+        </ul>
+
+        <h2>お子様のプライバシー</h2>
+        <p>Pismoはあらゆる年齢のユーザーに安全です。誰からもデータを収集しないため、13歳未満のお子様も安心してご利用いただけます：</p>
+        <ul>
+            <li>年齢制限のあるコンテンツは含まれていません</li>
+            <li>ソーシャル機能はありません</li>
+            <li>お子様からも大人からも情報を収集しません</li>
+        </ul>
+
+        <h2>オープンソース</h2>
+        <p>Pismoはオープンソースソフトウェアです。<a href="https://github.com/clearclown/cyrillicJapaneseInput" target="_blank">GitHub</a>でコードを確認し、プライバシー対策を検証することができます。</p>
+
+        <h2>ポリシーの変更</h2>
+        <p>このプライバシーポリシーに変更を加える場合は：</p>
+        <ul>
+            <li>このページを新しいポリシーで更新します</li>
+            <li>下記の「最終更新日」を更新します</li>
+            <li>アプリのアップデートノートに変更内容を記載します</li>
+        </ul>
+
+        <h2>お問い合わせ</h2>
+        <p>このプライバシーポリシーについてご質問がある場合：</p>
+        <ul>
+            <li>GitHub: <a href="https://github.com/clearclown/cyrillicJapaneseInput/discussions" target="_blank">ディスカッション</a></li>
+            <li>問題報告: <a href="https://github.com/clearclown/cyrillicJapaneseInput/issues" target="_blank">GitHub Issues</a></li>
+        </ul>
+
+        <footer>
+            <p><strong>Pismo - キリル文字日本語キーボード</strong></p>
+            <p>© 2024-2025 clearclown</p>
+            <p><a href="https://github.com/ensan-hcl/azooKey" target="_blank">azooKey</a>（Keita Miwa (ensan) 作）をベースに開発</p>
+            <p class="update-date">最終更新日: 2025年11月</p>
+        </footer>
+    </div>
+</body>
+</html>
