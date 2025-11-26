@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Pismo - Russian Cyrillic Keyboard Layout
+  Based on iOS/profiles/profiles.json (rus_standard)
+
+  Row 1: Й Ц У К Е Н Г Ш Щ З
+  Row 2: Ф Ы В А П Р О Л Д Ж
+  Row 3: [Shift] Я Ч С М И Т Ь [Delete]
+  Row 4: [Symbol] [Space] [Enter]
+-->
+<Keyboard xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:keyWidth="10%p"
+    app:keyHeight="52dp"
+    app:keyHorizontalGap="4dp"
+    app:keyVerticalGap="8dp">
+
+    <!-- Row 1: Й Ц У К Е Н Г Ш Щ З -->
+    <Row app:rowEdgeFlags="top">
+        <Key app:keyLabel="й" app:keyEdgeFlags="left" />
+        <Key app:keyLabel="ц" />
+        <Key app:keyLabel="у" />
+        <Key app:keyLabel="к" />
+        <Key app:keyLabel="е" />
+        <Key app:keyLabel="н" />
+        <Key app:keyLabel="г" />
+        <Key app:keyLabel="ш" />
+        <Key app:keyLabel="щ" />
+        <Key app:keyLabel="з" app:keyEdgeFlags="right" />
+    </Row>
+
+    <!-- Row 2: Ф Ы В А П Р О Л Д Ж -->
+    <Row>
+        <Key app:keyLabel="ф" app:keyEdgeFlags="left" />
+        <Key app:keyLabel="ы" />
+        <Key app:keyLabel="в" />
+        <Key app:keyLabel="а" />
+        <Key app:keyLabel="п" />
+        <Key app:keyLabel="р" />
+        <Key app:keyLabel="о" />
+        <Key app:keyLabel="л" />
+        <Key app:keyLabel="д" />
+        <Key app:keyLabel="ж" app:keyEdgeFlags="right" />
+    </Row>
+
+    <!-- Row 3: Shift Я Ч С М И Т Ь Delete -->
+    <Row>
+        <Key
+            app:codes="-1"
+            app:keyIcon="@drawable/ic_shift"
+            app:keyWidth="15%p"
+            app:keyEdgeFlags="left"
+            app:isSticky="true"
+            app:isModifier="true" />
+        <Key app:keyLabel="я" />
+        <Key app:keyLabel="ч" />
+        <Key app:keyLabel="с" />
+        <Key app:keyLabel="м" />
+        <Key app:keyLabel="и" />
+        <Key app:keyLabel="т" />
+        <Key app:keyLabel="ь" />
+        <Key
+            app:codes="-5"
+            app:keyIcon="@drawable/ic_backspace"
+            app:keyWidth="15%p"
+            app:keyEdgeFlags="right"
+            app:isRepeatable="true" />
+    </Row>
+
+    <!-- Row 4: Symbol Space Enter -->
+    <Row app:rowEdgeFlags="bottom">
+        <Key
+            app:codes="-2"
+            app:keyLabel="123"
+            app:keyWidth="20%p"
+            app:keyEdgeFlags="left" />
+        <Key
+            app:codes="32"
+            app:keyLabel="@string/label_space"
+            app:keyWidth="50%p"
+            app:isRepeatable="true" />
+        <Key
+            app:codes="-4"
+            app:keyIcon="@drawable/ic_enter"
+            app:keyWidth="20%p"
+            app:keyEdgeFlags="right" />
+    </Row>
+
+</Keyboard>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Pismo - Keyboard View Layout
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/keyboard_background">
+
+    <com.pismo.keyboard.widget.KeyboardView
+        android:id="@+id/vKeyboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/keyboard_padding"
+        app:keyBackground="@drawable/key_background"
+        app:keyTextColorPrimary="@color/key_text_primary"
+        app:keyTextColorSecondary="@color/key_text_secondary"
+        app:labelTextSize="@dimen/key_label_text_size"
+        app:useKeyTextColorSecondary="true" />
+
+</FrameLayout>

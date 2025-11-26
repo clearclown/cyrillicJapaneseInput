@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Pismo - Input Method Editor definition
+-->
+<input-method xmlns:android="http://schemas.android.com/apk/res/android"
+    android:settingsActivity="com.pismo.keyboard.SettingsActivity"
+    android:icon="@mipmap/ic_launcher">
+
+    <subtype
+        android:label="@string/subtype_russian"
+        android:imeSubtypeLocale="ru"
+        android:imeSubtypeMode="keyboard" />
+
+    <subtype
+        android:label="@string/subtype_ukrainian"
+        android:imeSubtypeLocale="uk"
+        android:imeSubtypeMode="keyboard" />
+
+    <subtype
+        android:label="@string/subtype_bulgarian"
+        android:imeSubtypeLocale="bg"
+        android:imeSubtypeMode="keyboard" />
+
+    <subtype
+        android:label="@string/subtype_serbian"
+        android:imeSubtypeLocale="sr"
+        android:imeSubtypeMode="keyboard" />
+
+</input-method>
