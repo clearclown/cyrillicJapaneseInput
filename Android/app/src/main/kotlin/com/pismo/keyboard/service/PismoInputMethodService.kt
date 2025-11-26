@@ -74,27 +74,54 @@ class PismoInputMethodService : InputMethodService() {
     }
 
     override fun onCreateInputView(): View {
-        PismoApp.printLog(TAG, "onCreateInputView:")
-        _binding = LayoutKeyboardViewBinding.inflate(LayoutInflater.from(this))
-        return binding.root
+        PismoApp.printLog(TAG, "onCreateInputView: starting")
+        try {
+            _binding = LayoutKeyboardViewBinding.inflate(LayoutInflater.from(this))
+            PismoApp.printLog(TAG, "onCreateInputView: binding inflated successfully")
+            return binding.root
+        } catch (e: Exception) {
+            PismoApp.printLog(TAG, "onCreateInputView: ERROR - ${e.message}")
+            throw e
+        }
+    }
+
+    override fun onShowInputRequested(flags: Int, configChange: Boolean): Boolean {
+        val result = super.onShowInputRequested(flags, configChange)
+        PismoApp.printLog(TAG, "onShowInputRequested: flags=$flags configChange=$configChange result=$result")
+        // Always return true to ensure keyboard shows
+        return true
     }
 
     override fun onStartInputView(info: EditorInfo, restarting: Boolean) {
         super.onStartInputView(info, restarting)
-        PismoApp.printLog(TAG, "onStartInputView:")
+        PismoApp.printLog(TAG, "onStartInputView: restarting=$restarting binding=${_binding != null}")
         _editorInfo = info
-        binding.vKeyboard.setKeyboard(cyrillicKeyboard)
-        binding.vKeyboard.addCallback(keyboardActionListener)
-        binding.vKeyboard.setShifted(info.initialCapsMode != 0)
+
+        // Ensure binding is available - onCreateInputView may not have been called yet
+        val keyboardBinding = _binding
+        if (keyboardBinding == null) {
+            PismoApp.printLog(TAG, "onStartInputView: binding is null, skipping setup")
+            return
+        }
+
+        keyboardBinding.vKeyboard.setKeyboard(cyrillicKeyboard)
+        keyboardBinding.vKeyboard.addCallback(keyboardActionListener)
+        keyboardBinding.vKeyboard.setShifted(info.initialCapsMode != 0)
     }
 
     override fun onFinishInputView(finishingInput: Boolean) {
         super.onFinishInputView(finishingInput)
         PismoApp.printLog(TAG, "onFinishInputView:")
-        binding.vKeyboard.removeCallback(keyboardActionListener)
+        _binding?.vKeyboard?.removeCallback(keyboardActionListener)
     }
 
     override fun onEvaluateFullscreenMode(): Boolean = false
+
+    override fun onEvaluateInputViewShown(): Boolean {
+        // Always show input view - this is critical for the keyboard to be displayed
+        PismoApp.printLog(TAG, "onEvaluateInputViewShown: returning true")
+        return true
+    }
 
     override fun onDestroy() {
         PismoApp.printLog(TAG, "onDestroy:")
@@ -106,28 +133,30 @@ class PismoInputMethodService : InputMethodService() {
 
         override fun onKey(primaryCode: Int) {
             PismoApp.printLog(TAG, "onKey: $primaryCode")
+            val keyboardView = _binding?.vKeyboard ?: return
+
             when (primaryCode) {
                 Keyboard.KEYCODE_SHIFT -> {
                     // Toggle Capitalization
-                    binding.vKeyboard.setShifted(!binding.vKeyboard.isShifted())
+                    keyboardView.setShifted(!keyboardView.isShifted())
                 }
                 Keyboard.KEYCODE_MODE_CHANGE -> {
                     // Switch between Cyrillic and Symbol keyboard
-                    if (binding.vKeyboard.keyboard === cyrillicKeyboard) {
-                        binding.vKeyboard.setKeyboard(symbolKeyboard)
+                    if (keyboardView.keyboard === cyrillicKeyboard) {
+                        keyboardView.setKeyboard(symbolKeyboard)
                     } else {
-                        binding.vKeyboard.setKeyboard(cyrillicKeyboard)
+                        keyboardView.setKeyboard(cyrillicKeyboard)
                     }
                 }
                 Keyboard.KEYCODE_DONE -> {
-                    val action = editorInfo.imeOptions and EditorInfo.IME_MASK_ACTION
+                    val action = _editorInfo?.let { it.imeOptions and EditorInfo.IME_MASK_ACTION } ?: return
                     currentInputConnection?.performEditorAction(action)
                 }
                 Keyboard.KEYCODE_DELETE -> {
                     currentInputConnection?.deleteSurroundingText(1, 0)
                 }
                 Keyboard.KEYCODE_MAIN_KEYBOARD -> {
-                    binding.vKeyboard.setKeyboard(cyrillicKeyboard)
+                    keyboardView.setKeyboard(cyrillicKeyboard)
                 }
                 Keyboard.KEYCODE_CLOSE_KEYBOARD -> {
                     requestHideSelf(0)
@@ -150,10 +179,11 @@ class PismoInputMethodService : InputMethodService() {
     }
 
     private fun handleEnterKey() {
-        val imeOptionsActionId = getImeOptionsActionId(editorInfo)
+        val info = _editorInfo ?: return
+        val imeOptionsActionId = getImeOptionsActionId(info)
         when {
             IME_ACTION_CUSTOM_LABEL == imeOptionsActionId -> {
-                currentInputConnection?.performEditorAction(editorInfo.actionId)
+                currentInputConnection?.performEditorAction(info.actionId)
             }
             EditorInfo.IME_ACTION_NONE != imeOptionsActionId -> {
                 currentInputConnection?.performEditorAction(imeOptionsActionId)
@@ -182,8 +212,9 @@ class PismoInputMethodService : InputMethodService() {
     private fun commitText(code: Int) {
         var commitText = Char(code).toString()
         // Characters come through as lowercase, uppercase them if keyboard is shifted
-        if (binding.vKeyboard.isShifted()) {
-            commitText = commitText.uppercase(binding.vKeyboard.getLocale())
+        val keyboardView = _binding?.vKeyboard
+        if (keyboardView != null && keyboardView.isShifted()) {
+            commitText = commitText.uppercase(keyboardView.getLocale())
         }
         PismoApp.printLog(TAG, "commitText: $commitText")
         currentInputConnection?.commitText(commitText, 1)

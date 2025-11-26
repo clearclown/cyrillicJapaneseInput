@@ -19,6 +19,7 @@ package com.pismo.keyboard
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -54,12 +55,13 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun updateStatus() {
         val statusText = findViewById<TextView>(R.id.tvStatus)
-        val enabledInputMethods = Settings.Secure.getString(
-            contentResolver,
-            Settings.Secure.ENABLED_INPUT_METHODS
-        ) ?: ""
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
-        val isEnabled = enabledInputMethods.contains(packageName)
+        // Check if Pismo is in the list of enabled input methods
+        val isEnabled = imm.enabledInputMethodList.any {
+            it.packageName == packageName
+        }
+
         statusText.text = if (isEnabled) {
             getString(R.string.status_enabled)
         } else {
