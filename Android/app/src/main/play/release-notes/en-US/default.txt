@@ -1,0 +1,8 @@
+Initial release of Pismo for Android!
+
+Features:
+• Full 33-letter Russian Cyrillic keyboard
+• Real-time conversion to Japanese Hiragana/Katakana
+• Responsive design for all screen sizes
+• Complete privacy - all processing on device
+• No ads, no data collection

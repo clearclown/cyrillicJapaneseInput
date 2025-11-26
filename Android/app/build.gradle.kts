@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.github.triplet.play")
 }
 
 android {
@@ -86,4 +87,19 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+}
+
+// Google Play Publisher configuration
+play {
+    // Service account credentials JSON file path
+    serviceAccountCredentials.set(file("play-service-account.json"))
+
+    // Track to publish to: internal, alpha, beta, production
+    track.set("internal")
+
+    // Release status: completed, draft, halted, inProgress
+    releaseStatus.set(com.github.triplet.gradle.androidpublisher.ReleaseStatus.DRAFT)
+
+    // Default language for store listing
+    defaultToAppBundles.set(true)
 }
