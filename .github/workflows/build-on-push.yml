@@ -1,8 +1,16 @@
-name: Build on push
+name: Build iOS on push
 
-on: 
+on:
   push:
+    paths:
+      - 'iOS/**'
+      - 'AzooKeyCore/**'
+      - '*.xcodeproj/**'
   pull_request:
+    paths:
+      - 'iOS/**'
+      - 'AzooKeyCore/**'
+      - '*.xcodeproj/**'
 
 jobs:
   build:
