@@ -89,6 +89,9 @@ final class InputManager {
 
     private let cyrillicConverter = CyrillicKanaConverter()
 
+    /// 元のキリル文字入力を追跡（変換前の状態を保持）
+    private var originalCyrillicInput: String = ""
+
     private var liveConversionEnabled: Bool {
         liveConversionManager.enabled && !self.isSelected
     }
@@ -414,6 +417,7 @@ final class InputManager {
         self.kanaKanjiConverter.stopComposition()
 
         self.isSelected = false
+        self.originalCyrillicInput = ""  // キリル文字追跡をリセット
 
         if let updateResult {
             updateResult {
@@ -511,18 +515,33 @@ final class InputManager {
     @MainActor func input(text: String, requireSetResult: Bool = true, simpleInsert: Bool = false, inputStyle: InputStyle) {
         // キリル文字入力のインターセプト
         if !simpleInsert && text.range(of: "\\p{Cyrillic}", options: .regularExpression) != nil {
+            // 元のキリル文字入力を追跡
+            self.originalCyrillicInput += text
+
             // 現在のバッファ（カーソル前）を取得
             let currentBuffer = self.composingText.convertTargetBeforeCursor
             let operation = self.cyrillicConverter.process(input: text, composingText: String(currentBuffer))
 
-            // 処理結果が入力と同一で削除もない場合は、ループを防ぐために通常処理へ進む
+            // Wait状態（deleteLast=0, input=text）の場合：
+            // キリル文字をdirectスタイルで挿入して、roman2kana変換を回避する
+            // これにより、後続のマッチで正しくサフィックスが取得できる
             if operation.deleteLast == 0 && operation.input == text {
-                // Fall through
+                // キリル文字をdirectスタイルで挿入（roman2kana変換を回避）
+                if self.isSelected {
+                    self.deleteSelection()
+                }
+                self.composingText.insertAtCursorPosition(text, inputStyle: .direct)
+                if requireSetResult {
+                    self.setResult()
+                }
+                return
             } else {
                 if operation.deleteLast > 0 {
                     self.deleteBackward(convertTargetCount: operation.deleteLast, requireSetResult: false)
+                    // 注: originalCyrillicInputはトリムしない（完全な入力履歴を保持）
                 }
-                self.input(text: operation.input, requireSetResult: requireSetResult, simpleInsert: simpleInsert, inputStyle: inputStyle)
+                // 変換結果（ひらがな）は.directスタイルで挿入（roman2kana変換を回避）
+                self.input(text: operation.input, requireSetResult: requireSetResult, simpleInsert: simpleInsert, inputStyle: .direct)
                 return
             }
         }
@@ -583,6 +602,11 @@ final class InputManager {
     @MainActor func deleteBackward(convertTargetCount: Int, requireSetResult: Bool = true) {
         if convertTargetCount == 0 {
             return
+        }
+        // 削除時にキリル文字追跡をクリア（1:1対応でないため正確な追跡は困難）
+        // 内部のconverter処理からの呼び出しでない限り、ここでクリアする
+        if requireSetResult {
+            self.originalCyrillicInput = ""
         }
         // 選択状態ではオール削除になる
         if self.isSelected {
@@ -1050,7 +1074,16 @@ final class InputManager {
             // 以前は !self.isSelected の場合のみ候補を表示するロジックがView側にあるかもしれないが、
             // データ自体は常に更新して渡すことで、予測変換候補として表示されることを期待する
             updateResult { model in
-                model.setResults(results.mainResults)
+                var allResults = results.mainResults
+                // 元のキリル文字入力がある場合、候補リストに追加
+                if !self.originalCyrillicInput.isEmpty {
+                    let cyrillicCandidate = Self.makeCyrillicCandidate(
+                        from: self.originalCyrillicInput,
+                        composingCount: .surfaceCount(inputData.convertTargetCursorPosition)
+                    )
+                    allResults.append(cyrillicCandidate)
+                }
+                model.setResults(allResults)
                 model.resetSupplementaryCandidates()
             }
             if inputData.convertTarget == "えもじ", #available(iOS 26, *) {
@@ -1178,6 +1211,30 @@ private extension InputManager {
                     cid: CIDData.記号.cid,
                     mid: MIDData.一般.mid,
                     value: -1
+                ),
+            ],
+            actions: [],
+            inputable: true,
+            isLearningTarget: false
+        )
+    }
+}
+
+extension InputManager {
+    /// キリル文字テキストを候補として作成
+    static func makeCyrillicCandidate(from text: String, composingCount: ComposingCount) -> Candidate {
+        Candidate(
+            text: text,
+            value: -0.5,  // 低い優先度（リストの後ろに表示）
+            composingCount: composingCount,
+            lastMid: MIDData.一般.mid,
+            data: [
+                DicdataElement(
+                    word: text,
+                    ruby: "きりる",
+                    cid: CIDData.固有名詞.cid,
+                    mid: MIDData.一般.mid,
+                    value: -0.5
                 ),
             ],
             actions: [],

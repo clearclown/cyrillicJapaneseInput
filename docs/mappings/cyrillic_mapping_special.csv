@@ -1,6 +1,24 @@
 Type,Output,Standard,Analytical,Note
-n,ん,н,н,Allophone usually ignored in input
+n,ん,нн,нн,Double н for explicit ん
 sokuon,っ,(double consonant),ъ,Hard sign for analytical (e.g. ъt -> tt)
 long_vowel,ー,(double vowel),(double vowel),e.g. oo -> ー
-separator_a,んあ,н'а,нъа,Syllable separator n-a
-separator_ya,んや,н'я,нъя,Syllable separator n-ya
+# Syllable separators (n + vowel disambiguation)
+# Method 1: Using apostrophe (')
+separator_a_apos,んあ,н'а,нъа,Syllable separator n-a (apostrophe)
+separator_i_apos,んい,н'и,нъи,Syllable separator n-i (apostrophe)
+separator_u_apos,んう,н'у,нъу,Syllable separator n-u (apostrophe)
+separator_e_apos,んえ,н'э,нъэ,Syllable separator n-e (apostrophe)
+separator_o_apos,んお,н'о,нъо,Syllable separator n-o (apostrophe)
+separator_ya_apos,んや,н'я,нъя,Syllable separator n-ya (apostrophe)
+separator_yu_apos,んゆ,н'ю,нъю,Syllable separator n-yu (apostrophe)
+separator_yo_apos,んよ,н'ё,нъё,Syllable separator n-yo (apostrophe)
+# Method 2: Using hard sign (ъ) - for Russian keyboard
+# Example: Gin'iro = гинъиро (銀色)
+separator_a_hard,んあ,нъа,нъа,Syllable separator n-a (hard sign)
+separator_i_hard,んい,нъи,нъи,Syllable separator n-i (hard sign)
+separator_u_hard,んう,нъу,нъу,Syllable separator n-u (hard sign)
+separator_e_hard,んえ,нъэ,нъэ,Syllable separator n-e (hard sign)
+separator_o_hard,んお,нъо,нъо,Syllable separator n-o (hard sign)
+separator_ya_hard,んや,нъя,нъя,Syllable separator n-ya (hard sign)
+separator_yu_hard,んゆ,нъю,нъю,Syllable separator n-yu (hard sign)
+separator_yo_hard,んよ,нъё,нъё,Syllable separator n-yo (hard sign)
