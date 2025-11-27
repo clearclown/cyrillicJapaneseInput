@@ -181,15 +181,25 @@ final class CyrillicKanaConverterTests: XCTestCase {
         converter.setProfile(.standard)
         print("Testing Sokuon (Double Consonant)")
 
-        // KK -> っk
+        // KK -> っk (各行の促音)
         assertConversion("ККа", "っか")
         assertConversion("ССа", "っさ")
         assertConversion("ТТа", "った")
         assertConversion("ППа", "っぱ")
+        assertConversion("ББа", "っば")
+        assertConversion("ГГа", "っが")
+        assertConversion("ММа", "っま")
+        assertConversion("РРа", "っら")
 
         // Mixed Case Sokuon
         assertConversion("КкА", "っか")
         assertConversion("кКа", "っか")
+
+        // 促音 + つ (ЦЦу → っつ)
+        assertConversion("ЦЦу", "っつ")
+
+        // 促音 + ち (ЧЧи → っち)
+        assertConversion("ЧЧи", "っち")
     }
 
     func testNasalSoundBehavior() {
@@ -199,51 +209,118 @@ final class CyrillicKanaConverterTests: XCTestCase {
         // N + Consonant -> ん + Consonant
         assertConversion("НКа", "んか")
         assertConversion("НСа", "んさ")
+        assertConversion("НТа", "んた")
+        assertConversion("НПа", "んぱ")
+        assertConversion("НМа", "んま")
 
         // N + Vowel -> Na, Ni, Nu... (Not んa)
         assertConversion("НА", "な")
         assertConversion("НИ", "に")
+        assertConversion("НУ", "ぬ")
+        assertConversion("НЭ", "ね")
+        assertConversion("НО", "の")  // ← "но" → "の"
 
-        // N + N -> ん (and wait for next)
-        // "НН" -> "ん" + "Н" (Wait)
+        // N + N -> ん (Single ん, NOT っн)
+        // "НН" -> "ん"
+        let resNN = simulateInput("НН")
+        XCTAssertEqual(resNN.buffer, "ん", "НН should produce ん, not っн")
+
         // "ННа" -> "んな"
         assertConversion("ННа", "んな")
+
+        // "ННН" -> "んん" (three Ns)
+        let resNNN = simulateInput("ННН")
+        XCTAssertEqual(resNNN.buffer, "んН", "НННはんНになる（最後のНは待機）")
 
         // N at end (Explicit)
         // "Н" -> "Н" (Wait)
         let res = simulateInput("Н")
         XCTAssertEqual(res.buffer, "Н", "Single N should wait")
 
-        // Explicit Separator (Standard: Apostrophe)
+        // Explicit Separator Method 1: Apostrophe (')
         assertConversion("Н'А", "んあ")
+        assertConversion("Н'И", "んい")
+        assertConversion("Н'У", "んう")
+        assertConversion("Н'Э", "んえ")
+        assertConversion("Н'О", "んお")
         assertConversion("Н'Я", "んや")
+        assertConversion("Н'Ю", "んゆ")
+        assertConversion("Н'Ё", "んよ")
+
+        // Explicit Separator Method 2: Hard Sign (ъ) - for Russian keyboard
+        // Example: Gin'iro = гинъиро (銀色)
+        assertConversion("НъА", "んあ")
+        assertConversion("НъИ", "んい")
+        assertConversion("НъУ", "んう")
+        assertConversion("НъЭ", "んえ")
+        assertConversion("НъО", "んお")
+        assertConversion("НъЯ", "んや")
+        assertConversion("НъЮ", "んゆ")
+        assertConversion("НъЁ", "んよ")
+    }
+
+    func testSokuonVsNasalDistinction() {
+        converter.setProfile(.standard)
+        print("Testing Sokuon vs Nasal distinction")
+
+        // НН → ん (撥音)
+        let resNN = simulateInput("НН")
+        XCTAssertEqual(resNN.buffer, "ん", "НН produces ん (nasal)")
+
+        // КК → っК (促音 + 子音待機)
+        let resKK = simulateInput("КК")
+        XCTAssertEqual(resKK.buffer, "っК", "КК produces っК (sokuon + waiting K)")
+
+        // ККа → っか
+        assertConversion("ККа", "っか")
+
+        // НКа → んか (Н + К は ん + か)
+        assertConversion("НКа", "んか")
     }
 
     func testLongVowels() {
         converter.setProfile(.standard)
-        print("Testing Long Vowels (Vowel Repeat)")
-        // Logic for long vowels was not explicitly in `process` but relying on "ー" mapping in specialData?
-        // Wait, looking at the implementation of `updateMapping`:
-        // `long_vowel`, `ー`, `ー`, `ー`
-        // This implies user must type `ー`.
-        // But Requirement said "母音を2回連続入力".
-        // If "AA" is input:
-        // "A" -> "あ". "A" -> "あ". Result "ああ".
-        // Unless mapping has "АА" -> "あー" or similar?
-        // My `updateMapping` did NOT include vowel combinations.
-        // Let's check if I should add logic or if "おお" is acceptable as "oo".
-        // Requirement 2.2.3: "トーキョー: Т + О + О ... -> とーきょー"
-        // This implies "О" + "О" -> "お" + "ー" ? Or just "お" + "お"?
-        // If the implementation is strictly CSV based, "OO" becomes "おお".
-        // I should probably add logic for Vowel + Same Vowel -> Long Vowel if that is the strict requirement.
-        // For now, let's test what currently happens (likely "おお").
+        print("Testing Long Vowels")
 
-        let res = simulateInput("ОО")
-        // Current implementation: "О" -> "お", "О" -> "お" => "おお"
-        // If we want "おー", we need to implement it.
-        // The prompt didn't ask to fix logic yet, but to test it.
-        // I will assert "おお" for now, and note it.
-        XCTAssertEqual(res.buffer, "おお", "Current implementation produces 'おお', check if 'おー' is required")
+        // Method 1: Double vowel (e.g., ОО → おお)
+        let res1 = simulateInput("ОО")
+        XCTAssertEqual(res1.buffer, "おお", "Double vowel produces おお")
+
+        // Method 2: Direct ー input (e.g., Коーхиー → こーひー)
+        // "ー" is not a Cyrillic character, so it should pass through unchanged
+        assertConversion("Коーхиー", "こーひー")
+        assertConversion("トーキョー", "トーキョー") // Non-Cyrillic pass-through
+
+        // Mixed: Cyrillic with direct ー
+        assertConversion("Оー", "おー")
+        assertConversion("Аー", "あー")
+    }
+
+    // MARK: - Special Character Tests
+
+    func testSpecialCharacters() {
+        converter.setProfile(.standard)
+        print("Testing Special Characters: Ё, ъ")
+
+        // Ё maps to よ (yo)
+        assertConversion("Ё", "よ")
+        assertConversion("Ёко", "よこ") // よこ (side/横)
+
+        // ъ (hard sign) as small kana prefix
+        assertConversion("ъа", "ぁ")
+        assertConversion("ъи", "ぃ")
+        assertConversion("ъу", "ぅ")
+        assertConversion("ъэ", "ぇ")
+        assertConversion("ъо", "ぉ")
+        assertConversion("ъя", "ゃ")
+        assertConversion("ъю", "ゅ")
+        assertConversion("ъё", "ょ")
+
+        // ъ for small っ (sokuon direct input)
+        assertConversion("ъц", "っ")
+
+        // ъ for separator (n + vowel)
+        assertConversion("Нъа", "んあ")
     }
 
     // MARK: - Profile Switching & Variants
@@ -317,6 +394,211 @@ final class CyrillicKanaConverterTests: XCTestCase {
         let res = simulateInput(inputSeq)
 
         XCTAssertEqual(res.buffer, "さようなら")
+    }
+
+    // MARK: - Gairaigo (Foreign Loanword) Tests
+
+    func testGairaigoMappings() {
+        converter.setProfile(.standard)
+        print("Testing Gairaigo (Foreign Loanword) Mappings")
+
+        // ファ行
+        assertConversion("Фа", "ふぁ")
+        assertConversion("Фи", "ふぃ")
+        assertConversion("Фэ", "ふぇ")
+        assertConversion("Фо", "ふぉ")
+        assertConversion("Фю", "ふゅ")
+
+        // ティ/ディ行
+        assertConversion("Ти", "てぃ")
+        assertConversion("Ди", "でぃ")
+        assertConversion("Ту", "とぅ")
+        assertConversion("Ду", "どぅ")
+        assertConversion("Тю", "てゅ")
+        assertConversion("Дю", "でゅ")
+
+        // ツァ行
+        assertConversion("Ца", "つぁ")
+        assertConversion("Ци", "つぃ")
+        assertConversion("Цо", "つぉ")
+
+        // スィ/ズィ
+        assertConversion("Сьи", "すぃ")
+        assertConversion("Дзьи", "ずぃ")
+
+        // イェ
+        assertConversion("Йэ", "いぇ")
+
+        // ウァ/ウィ/ウェ/ウォ
+        assertConversion("Уа", "うぁ")
+        assertConversion("Уи", "うぃ")
+        assertConversion("Уэ", "うぇ")
+        assertConversion("Уо", "うぉ")
+
+        // クァ行
+        assertConversion("Ква", "くゎ")
+        assertConversion("Куи", "くぃ")
+        assertConversion("Куэ", "くぇ")
+        assertConversion("Куо", "くぉ")
+
+        // グァ行
+        assertConversion("Гва", "ぐゎ")
+        assertConversion("Гуи", "ぐぃ")
+        assertConversion("Гуэ", "ぐぇ")
+        assertConversion("Гуо", "ぐぉ")
+
+        // シェ/ジェ/チェ/ツェ
+        assertConversion("Сье", "しぇ")
+        assertConversion("Дзье", "じぇ")
+        assertConversion("Чье", "ちぇ")
+        assertConversion("Цье", "つぇ")
+
+        // ニェ/ヒェ等
+        assertConversion("Нье", "にぇ")
+        assertConversion("Хье", "ひぇ")
+        assertConversion("Мье", "みぇ")
+        assertConversion("Рье", "りぇ")
+        assertConversion("Кье", "きぇ")
+        assertConversion("Гье", "ぎぇ")
+        assertConversion("Бье", "びぇ")
+        assertConversion("Пье", "ぴぇ")
+
+        // ヴ行
+        assertConversion("Вуа", "ゔぁ")
+        assertConversion("Вуи", "ゔぃ")
+        assertConversion("Ву", "ゔ")
+        assertConversion("Вуэ", "ゔぇ")
+        assertConversion("Вуо", "ゔぉ")
+        assertConversion("Вуя", "ゔゃ")
+        assertConversion("Вую", "ゔゅ")
+        assertConversion("Вуё", "ゔょ")
+    }
+
+    func testSmallKana() {
+        converter.setProfile(.standard)
+        print("Testing Small Kana (小書き仮名)")
+
+        // 小母音
+        assertConversion("ъа", "ぁ")
+        assertConversion("ъи", "ぃ")
+        assertConversion("ъу", "ぅ")
+        assertConversion("ъэ", "ぇ")
+        assertConversion("ъо", "ぉ")
+
+        // 小拗音
+        assertConversion("ъя", "ゃ")
+        assertConversion("ъю", "ゅ")
+        assertConversion("ъё", "ょ")
+
+        // 小わ
+        assertConversion("ъва", "ゎ")
+
+        // 促音（直接入力）
+        assertConversion("ъц", "っ")
+
+        // 小かけ
+        assertConversion("ъка", "ゕ")
+        assertConversion("ъкэ", "ゖ")
+    }
+
+    // MARK: - Youon (Palatalized) Tests
+
+    func testYouonMappings() {
+        converter.setProfile(.standard)
+        print("Testing Youon (Palatalized Sound) Mappings")
+
+        // きゃ行
+        assertConversion("Кя", "きゃ")
+        assertConversion("Кю", "きゅ")
+        assertConversion("Кё", "きょ")
+
+        // しゃ行
+        assertConversion("Ся", "しゃ")
+        assertConversion("Сю", "しゅ")
+        assertConversion("Сё", "しょ")
+
+        // ちゃ行
+        assertConversion("Ча", "ちゃ")
+        assertConversion("Чу", "ちゅ")
+        assertConversion("Чо", "ちょ")
+
+        // にゃ行
+        assertConversion("Ня", "にゃ")
+        assertConversion("Ню", "にゅ")
+        assertConversion("Нё", "にょ")
+
+        // ひゃ行
+        assertConversion("Хя", "ひゃ")
+        assertConversion("Хю", "ひゅ")
+        assertConversion("Хё", "ひょ")
+
+        // みゃ行
+        assertConversion("Мя", "みゃ")
+        assertConversion("Мю", "みゅ")
+        assertConversion("Мё", "みょ")
+
+        // りゃ行
+        assertConversion("Ря", "りゃ")
+        assertConversion("Рю", "りゅ")
+        assertConversion("Рё", "りょ")
+
+        // ぎゃ行
+        assertConversion("Гя", "ぎゃ")
+        assertConversion("Гю", "ぎゅ")
+        assertConversion("Гё", "ぎょ")
+
+        // じゃ行
+        assertConversion("Дзя", "じゃ")
+        assertConversion("Дзю", "じゅ")
+        assertConversion("Дзё", "じょ")
+
+        // びゃ行
+        assertConversion("Бя", "びゃ")
+        assertConversion("Бю", "びゅ")
+        assertConversion("Бё", "びょ")
+
+        // ぴゃ行
+        assertConversion("Пя", "ぴゃ")
+        assertConversion("Пю", "ぴゅ")
+        assertConversion("Пё", "ぴょ")
+    }
+
+    // MARK: - Real Word Tests
+
+    func testRealWords() {
+        converter.setProfile(.standard)
+        print("Testing Real Japanese Words")
+
+        // 東京 (トウキョウ)
+        assertConversion("Токё", "とうきょう")
+
+        // 寿司 (スシ)
+        assertConversion("Суси", "すし")
+
+        // 天ぷら (テンプラ)
+        assertConversion("Тэнпура", "てんぷら")
+
+        // 抹茶 (マッチャ)
+        assertConversion("Маччя", "まっちゃ")
+
+        // 日本 (ニホン/ニッポン)
+        assertConversion("Нихон", "にほん")
+        assertConversion("Ниппон", "にっぽん")
+
+        // 新幹線 (シンカンセン)
+        assertConversion("Синкансэн", "しんかんせん")
+
+        // カラオケ
+        assertConversion("Караокэ", "からおけ")
+
+        // ラーメン (with long vowel as double vowel)
+        assertConversion("Раамэн", "らあめん")
+
+        // コーヒー (with long vowels)
+        assertConversion("Коохии", "こおひい")
+
+        // 銀色 (gin'iro) - n + vowel with hard sign separator
+        assertConversion("Гинъиро", "ぎんいろ")
     }
 
     // MARK: - Edge Cases & Debugging

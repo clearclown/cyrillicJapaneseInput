@@ -47,60 +47,78 @@ public final class CyrillicKanaConverter {
     ///   - composingText: 現在の入力バッファ
     /// - Returns: 実行すべき操作 (削除数と挿入テキスト)
     public func process(input: String, composingText: String) -> InputOperation {
-        // 入力文字を大文字に正規化（マッピングはCase-Sensitiveで大文字定義と仮定）
-        // ただし、マッピングデータがMixedの場合はそれに合わせる。今回は定義書通りUpperで統一する。
         let inputUpper = input.uppercased()
-
-        // 1. 現在のバッファの未確定部分(Suffix)を取得
-        // 単純化のため、バッファの最後尾から最大3文字程度を見る
-        // (例: "Дз" + "а" -> "Дза")
-
-        let maxSuffixLength = 4 // 3文字 + 1文字程度
+        let maxSuffixLength = 4
         let buffer = composingText
+        let lastChar = buffer.last.map { String($0) }
 
-        // 長い順にマッチを試みる
-        // suffixCandidate = bufferSuffix + input
+        // Debug: バッファの内容を確認
+        #if DEBUG
+        print("[CyrillicConverter] input='\(input)' inputUpper='\(inputUpper)' buffer='\(buffer)' buffer.count=\(buffer.count)")
+        print("[CyrillicConverter] buffer hex: \(buffer.unicodeScalars.map { String(format: "%04X", $0.value) }.joined(separator: " "))")
+        #endif
 
-        // バッファのsuffix + 新規入力で候補を生成
-        // i=0 の場合は suffix が空なので inputUpper 単体でチェックすることになる
-        for i in (0...min(buffer.count, maxSuffixLength)).reversed() {
+        // Step 1: 長い順にマッチを試みる（バッファ + 入力の組み合わせ）
+        // i > 0 の場合のみ: バッファの末尾と新規入力を組み合わせてマッピングを検索
+        // Note: stride を使用して空バッファ (buffer.count == 0) の場合のクラッシュを防ぐ
+        for i in stride(from: min(buffer.count, maxSuffixLength), through: 1, by: -1) {
             let suffix = String(buffer.suffix(i))
             let candidate = suffix.uppercased() + inputUpper
 
-            // プレフィックス一致チェック (Wait状態) - 完全一致より優先
-            // より長いマッピングの可能性がある場合は待機する
+            #if DEBUG
+            print("[CyrillicConverter] i=\(i) suffix='\(suffix)' candidate='\(candidate)' inMapping=\(mapping[candidate] != nil) inPrefix=\(mappingPrefixes.contains(candidate))")
+            #endif
+
+            // プレフィックス一致チェック (Wait状態)
             if mappingPrefixes.contains(candidate) {
-                // 待機するなら、そのまま入力文字を追加するだけ
+                #if DEBUG
+                print("[CyrillicConverter] -> Wait (prefix match)")
+                #endif
                 return InputOperation(deleteLast: 0, input: input)
             }
 
             // 完全一致チェック
             if let kana = mapping[candidate] {
+                #if DEBUG
+                print("[CyrillicConverter] -> Match! deleteLast=\(i) output='\(kana)'")
+                #endif
                 return InputOperation(deleteLast: i, input: kana)
             }
         }
 
-        // マッチしない場合
+        // Step 2: 特殊規則チェック（単一文字のプレフィックスチェックより先に行う）
+        // これにより、НН → ん や КК → っК が正しく処理される
 
-        // 直前の文字を取得
-        let lastChar = buffer.last.map { String($0) }
-
-        // 特殊規則: 促音 (Sokuon)
-        // 同じ子音が連続した場合 (例: "К" + "К")
-        if let last = lastChar, last.uppercased() == inputUpper, isConsonant(inputUpper) {
-            // "っ" + input に置き換える
-            // delete 1 ("K"), insert "っ", insert "K"
-            // InputOperationは単一操作しか定義していないので、"っ" + input を返す
-            return InputOperation(deleteLast: 1, input: "っ" + input)
-        }
-
-        // 特殊規則: 撥音 (N)
+        // 撥音 (Nasal sound - ん)
+        // "нн" -> "ん" (double н becomes ん)
         // "н" + 子音 -> "ん" + 子音
         if let last = lastChar, (last == "н" || last == "Н") {
-            // 次が母音または記号でないなら "ん" に確定
+            if inputUpper == "Н" {
+                return InputOperation(deleteLast: 1, input: "ん")
+            }
             if !isVowelOrSign(inputUpper) {
                 return InputOperation(deleteLast: 1, input: "ん" + input)
             }
+        }
+
+        // 促音 (Sokuon - っ)
+        // 同じ子音が連続した場合 (例: "К" + "К") → っ + 子音
+        // Н は撥音として上で処理済みなので除外
+        if let last = lastChar, last.uppercased() == inputUpper, isConsonantForSokuon(inputUpper) {
+            return InputOperation(deleteLast: 1, input: "っ" + input)
+        }
+
+        // Step 3: 単一文字のマッピングチェック (i=0 case)
+        let singleCandidate = inputUpper
+
+        // プレフィックス一致チェック (Wait状態)
+        if mappingPrefixes.contains(singleCandidate) {
+            return InputOperation(deleteLast: 0, input: input)
+        }
+
+        // 完全一致チェック
+        if let kana = mapping[singleCandidate] {
+            return InputOperation(deleteLast: 0, input: kana)
         }
 
         // 何もマッチしない場合はそのまま入力
@@ -108,13 +126,20 @@ public final class CyrillicKanaConverter {
     }
 
     private func isConsonant(_ char: String) -> Bool {
-        let vowelsAndSigns = "АИУЭОЯЮЁЕІЇЄЪЬ'’"
+        let vowelsAndSigns = "АИУЭОЯЮЁЕІЇЄЪЬ''"
         return !vowelsAndSigns.contains(char)
     }
 
     private func isVowelOrSign(_ char: String) -> Bool {
-        let vowelsAndSigns = "АИУЭОЯЮЁЕІЇЄЪЬ'’"
+        let vowelsAndSigns = "АИУЭОЯЮЁЕІЇЄЪЬ''"
         return vowelsAndSigns.contains(char)
+    }
+
+    /// 促音（っ）を生成する子音かどうか
+    /// Н は撥音（ん）用なので除外
+    private func isConsonantForSokuon(_ char: String) -> Bool {
+        let vowelsAndSigns = "АИУЭОЯЮЁЕІЇЄЪЬ''Н"
+        return !vowelsAndSigns.contains(char)
     }
 
     private func updateMapping() {
@@ -254,31 +279,66 @@ public final class CyrillicKanaConverter {
         // 外来語音 (Gairaigo) - Foreign loan word sounds
         // Format: (key, hiragana, Standard, UKR, BEL, BUL, SRB)
         let gairaigoData = [
-            // ファ行 (f + vowel) - Фу already maps to ふ, so Фа/Фи/Фэ/Фо are available
+            // ファ行 (f + vowel)
             ("fa", "ふぁ", "Фа", "Фа", "Фа", "Фа", "Фа"),
             ("fi", "ふぃ", "Фи", "Фі", "Фі", "Фи", "Фи"),
             ("fe", "ふぇ", "Фэ", "Фэ", "Фэ", "Фе", "Фэ"),
             ("fo", "ふぉ", "Фо", "Фо", "Фо", "Фо", "Фо"),
-            // ティ/ディ行 - Ти/Ди don't conflict (Чи=ち, not Ти)
+            ("fyu", "ふゅ", "Фю", "Фю", "Фю", "Фю", "Фју"),
+            // ティ/ディ行
             ("ti", "てぃ", "Ти", "Ті", "Ті", "Ти", "Ти"),
             ("di", "でぃ", "Ди", "Ді", "Ді", "Ди", "Ди"),
             ("tu", "とぅ", "Ту", "Ту", "Ту", "Ту", "Ту"),
             ("du", "どぅ", "Ду", "Ду", "Ду", "Ду", "Ду"),
-            // ウィ/ウェ/ウォ (modern) - Use У to distinguish from В (わ行/古語ゐゑ)
+            ("tyu", "てゅ", "Тю", "Тю", "Тю", "Тю", "Тју"),
+            ("dyu", "でゅ", "Дю", "Дю", "Дю", "Дю", "Дју"),
+            // ツァ行 (ts + vowel)
+            ("tsa", "つぁ", "Ца", "Ца", "Ца", "Ца", "Ца"),
+            ("tsi", "つぃ", "Ци", "Ці", "Ці", "Ци", "Ци"),
+            ("tso", "つぉ", "Цо", "Цо", "Цо", "Цо", "Цо"),
+            // スィ/ズィ
+            ("si", "すぃ", "Сьи", "Сьі", "Сьі", "Сьи", "Сји"),
+            ("zi", "ずぃ", "Дзьи", "Дзьі", "Дзьі", "Дзьи", "Дзји"),
+            // イェ
+            ("ye", "いぇ", "Йэ", "Йе", "Йэ", "Йе", "Је"),
+            // ウァ/ウィ/ウェ/ウォ (modern) - Use У to distinguish from В (わ行/古語ゐゑ)
+            ("wa_m", "うぁ", "Уа", "Уа", "Уа", "Уа", "Уа"),
             ("wi_m", "うぃ", "Уи", "Уі", "Уі", "Уи", "Уи"),
             ("we_m", "うぇ", "Уэ", "Уэ", "Уэ", "Уе", "Уэ"),
             ("wo_m", "うぉ", "Уо", "Уо", "Уо", "Уо", "Уо"),
+            // クァ行
+            ("kwa", "くゎ", "Ква", "Ква", "Ква", "Ква", "Ква"),
+            ("kwi", "くぃ", "Куи", "Куі", "Куі", "Куи", "Куи"),
+            ("kwe", "くぇ", "Куэ", "Куэ", "Куэ", "Куе", "Куэ"),
+            ("kwo", "くぉ", "Куо", "Куо", "Куо", "Куо", "Куо"),
+            // グァ行
+            ("gwa", "ぐゎ", "Гва", "Гва", "Гва", "Гва", "Гва"),
+            ("gwi", "ぐぃ", "Гуи", "Гуі", "Гуі", "Гуи", "Гуи"),
+            ("gwe", "ぐぇ", "Гуэ", "Гуэ", "Гуэ", "Гуе", "Гуэ"),
+            ("gwo", "ぐぉ", "Гуо", "Гуо", "Гуо", "Гуо", "Гуо"),
             // シェ/ジェ/チェ/ツェ - Use ь (soft sign) to distinguish from regular え row
             ("she", "しぇ", "Сье", "Сье", "Сье", "Сье", "Сје"),
             ("je", "じぇ", "Дзье", "Дзье", "Дзье", "Дзье", "Џе"),
             ("che", "ちぇ", "Чье", "Чье", "Чье", "Чье", "Ће"),
             ("tse", "つぇ", "Цье", "Цье", "Цье", "Цье", "Цје"),
+            // ニェ/ヒェ/ミェ/リェ等
+            ("nye", "にぇ", "Нье", "Нье", "Нье", "Нье", "Ње"),
+            ("hye", "ひぇ", "Хье", "Хье", "Хье", "Хье", "Хје"),
+            ("mye", "みぇ", "Мье", "Мье", "Мье", "Мье", "Мје"),
+            ("rye", "りぇ", "Рье", "Рье", "Рье", "Рье", "Рје"),
+            ("kye", "きぇ", "Кье", "Кье", "Кье", "Кье", "Кје"),
+            ("gye", "ぎぇ", "Гье", "Гье", "Гье", "Гье", "Гје"),
+            ("bye", "びぇ", "Бье", "Бье", "Бье", "Бье", "Бје"),
+            ("pye", "ぴぇ", "Пье", "Пье", "Пье", "Пье", "Пје"),
             // ヴ行 (v sound) - Use Ву prefix to distinguish from В=わ行
             ("va", "ゔぁ", "Вуа", "Вуа", "Вуа", "Въа", "Вуа"),
             ("vi", "ゔぃ", "Вуи", "Вуі", "Вуі", "Въи", "Вуи"),
             ("vu", "ゔ", "Ву", "Ву", "Ву", "Въ", "Ву"),
             ("ve", "ゔぇ", "Вуэ", "Вуэ", "Вуэ", "Въе", "Вуэ"),
             ("vo", "ゔぉ", "Вуо", "Вуо", "Вуо", "Въо", "Вуо"),
+            ("vya", "ゔゃ", "Вуя", "Вуя", "Вуя", "Въя", "Вуја"),
+            ("vyu", "ゔゅ", "Вую", "Вую", "Вую", "Въю", "Вују"),
+            ("vyo", "ゔょ", "Вуё", "Вуё", "Вуё", "Въё", "Вујо"),
             // 小書き仮名 (small kana) - Use ъ (hard sign) prefix
             ("xa", "ぁ", "ъа", "ъа", "ъа", "ъа", "ъа"),
             ("xi", "ぃ", "ъи", "ъі", "ъі", "ъи", "ъи"),
@@ -289,15 +349,39 @@ public final class CyrillicKanaConverter {
             ("xyu", "ゅ", "ъю", "ъю", "ъю", "ъю", "ъју"),
             ("xyo", "ょ", "ъё", "ъё", "ъё", "ъё", "ъјо"),
             ("xwa", "ゎ", "ъва", "ъва", "ъўа", "ъва", "ъва"),
-            ("xtu", "っ", "ъц", "ъц", "ъц", "ъц", "ъц")
+            ("xtu", "っ", "ъц", "ъц", "ъц", "ъц", "ъц"),
+            ("xka", "ゕ", "ъка", "ъка", "ъка", "ъка", "ъка"),
+            ("xke", "ゖ", "ъкэ", "ъкэ", "ъкэ", "ъке", "ъкэ")
         ]
 
         let specialData = [
             ("n", "ん", "н", "н"),
             ("sokuon", "っ", "ъ", "ъ"), // Analytical mode only? No, standard sokuon is double char
-            ("long_vowel", "ー", "ー", "ー"), // Placeholder, logic handles vowel repeat
-            ("separator_a", "んあ", "н'а", "н'а"),
-            ("separator_ya", "んや", "н'я", "н'я")
+            ("long_vowel", "ー", "ー", "ー") // Placeholder, logic handles vowel repeat
+        ]
+
+        // Syllable separators (n + vowel disambiguation)
+        // Support both ' (apostrophe) and ъ (hard sign) as separators
+        // Example: Gin'iro = гинъиро (銀色)
+        let separatorData = [
+            // Using apostrophe (')
+            ("separator_a_apos", "んあ", "н'а"),
+            ("separator_i_apos", "んい", "н'и"),
+            ("separator_u_apos", "んう", "н'у"),
+            ("separator_e_apos", "んえ", "н'э"),
+            ("separator_o_apos", "んお", "н'о"),
+            ("separator_ya_apos", "んや", "н'я"),
+            ("separator_yu_apos", "んゆ", "н'ю"),
+            ("separator_yo_apos", "んよ", "н'ё"),
+            // Using hard sign (ъ) - for Russian keyboard users
+            ("separator_a_hard", "んあ", "нъа"),
+            ("separator_i_hard", "んい", "нъи"),
+            ("separator_u_hard", "んう", "нъу"),
+            ("separator_e_hard", "んえ", "нъэ"),
+            ("separator_o_hard", "んお", "нъо"),
+            ("separator_ya_hard", "んや", "нъя"),
+            ("separator_yu_hard", "んゆ", "нъю"),
+            ("separator_yo_hard", "んよ", "нъё")
         ]
 
         // Helper to pick column
@@ -341,15 +425,14 @@ public final class CyrillicKanaConverter {
             newMapping[key] = value
         }
 
-        // Register Special
-        for row in specialData {
-            // Special data tuple is different size in CSV logic but here we map manually
-            // The CSV had 5 columns: Type,Output,Standard,Analytical,Note
-            // We will just map the Standard/Analytical keys directly
-            // For now, map the explicit separators
-            if row.0.starts(with: "separator") {
-                newMapping[row.2.uppercased()] = row.1
-            }
+        // Register Special (currently unused separators - they are in separatorData now)
+        // Note: specialData no longer contains separators
+
+        // Register Separators (both apostrophe and soft sign variants)
+        for row in separatorData {
+            let key = row.2.uppercased()
+            let value = row.1
+            newMapping[key] = value
         }
 
         self.mapping = newMapping
