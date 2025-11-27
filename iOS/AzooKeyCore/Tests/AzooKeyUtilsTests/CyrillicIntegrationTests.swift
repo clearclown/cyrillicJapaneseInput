@@ -182,4 +182,134 @@ final class CyrillicIntegrationTests: XCTestCase {
         }
         XCTAssertEqual(composingText, "から")
     }
+
+    // MARK: - New Language Profile Tests
+
+    func testScenario_BelarusianProfile() {
+        print("\n=== Scenario: Belarusian Profile ===")
+        converter.setProfile(.belarusian)
+
+        // Test basic input - Belarusian uses Ў for わ行
+        input("К")
+        XCTAssertEqual(composingText, "К")
+
+        input("а")
+        XCTAssertEqual(composingText, "か")
+
+        // Reset for next test
+        composingText = ""
+
+        // Test vowels
+        input("А")
+        XCTAssertEqual(composingText, "あ")
+    }
+
+    func testScenario_MacedonianProfile() {
+        print("\n=== Scenario: Macedonian Profile ===")
+        converter.setProfile(.macedonian)
+
+        // Macedonian falls back to Serbian profile
+        input("К")
+        XCTAssertEqual(composingText, "К")
+
+        input("а")
+        XCTAssertEqual(composingText, "か")
+
+        // Reset
+        composingText = ""
+
+        // Test basic syllable
+        input("С")
+        input("а")
+        XCTAssertEqual(composingText, "さ")
+    }
+
+    func testScenario_KazakhProfile() {
+        print("\n=== Scenario: Kazakh Profile ===")
+        converter.setProfile(.kazakh)
+
+        // Kazakh falls back to Standard Russian for converter
+        input("К")
+        XCTAssertEqual(composingText, "К")
+
+        input("а")
+        XCTAssertEqual(composingText, "か")
+
+        // Reset
+        composingText = ""
+
+        // Test vowel
+        input("У")
+        XCTAssertEqual(composingText, "う")
+    }
+
+    func testScenario_KyrgyzProfile() {
+        print("\n=== Scenario: Kyrgyz Profile ===")
+        converter.setProfile(.kyrgyz)
+
+        // Kyrgyz falls back to Standard Russian for converter
+        input("Н")
+        input("А")
+        XCTAssertEqual(composingText, "な") // Should be な, NOT んあ
+
+        // Reset
+        composingText = ""
+
+        input("Т")
+        input("э")
+        XCTAssertEqual(composingText, "て")
+    }
+
+    func testScenario_MongolianProfile() {
+        print("\n=== Scenario: Mongolian Profile ===")
+        converter.setProfile(.mongolian)
+
+        // Mongolian falls back to Standard Russian for converter
+        input("М")
+        input("а")
+        XCTAssertEqual(composingText, "ま")
+
+        // Reset
+        composingText = ""
+
+        // Test double consonant (sokuon)
+        input("К")
+        input("и")
+        XCTAssertEqual(composingText, "き")
+
+        input("т")
+        input("т")
+        input("э")
+        XCTAssertEqual(composingText, "きって")
+    }
+
+    func testScenario_BulgarianProfile() {
+        print("\n=== Scenario: Bulgarian Profile ===")
+        converter.setProfile(.bulgarian)
+
+        // Bulgarian uses different vowel mappings
+        input("К")
+        XCTAssertEqual(composingText, "К")
+
+        input("а")
+        XCTAssertEqual(composingText, "か")
+    }
+
+    func testScenario_SerbianProfile() {
+        print("\n=== Scenario: Serbian Profile ===")
+        converter.setProfile(.serbian)
+
+        // Serbian uses Ј for Y-sounds
+        input("К")
+        input("а")
+        XCTAssertEqual(composingText, "か")
+
+        // Reset
+        composingText = ""
+
+        // Test basic syllable
+        input("С")
+        input("а")
+        XCTAssertEqual(composingText, "さ")
+    }
 }
