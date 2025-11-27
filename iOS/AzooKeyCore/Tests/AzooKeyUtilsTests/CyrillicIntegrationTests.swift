@@ -312,4 +312,95 @@ final class CyrillicIntegrationTests: XCTestCase {
         input("а")
         XCTAssertEqual(composingText, "さ")
     }
+
+    func testScenario_TajikProfile() {
+        print("\n=== Scenario: Tajik Profile ===")
+        converter.setProfile(.tajik)
+
+        // Tajik falls back to Standard Russian for converter
+        input("К")
+        XCTAssertEqual(composingText, "К")
+
+        input("а")
+        XCTAssertEqual(composingText, "か")
+
+        // Reset
+        composingText = ""
+
+        // Test NA combination (should be な, not んあ)
+        input("Н")
+        input("А")
+        XCTAssertEqual(composingText, "な")
+
+        // Reset
+        composingText = ""
+
+        // Test vowel
+        input("У")
+        XCTAssertEqual(composingText, "う")
+
+        // Reset
+        composingText = ""
+
+        // Test double consonant (sokuon)
+        input("К")
+        input("и")
+        XCTAssertEqual(composingText, "き")
+
+        input("т")
+        input("т")
+        input("э")
+        XCTAssertEqual(composingText, "きって")
+    }
+
+    func testScenario_UzbekProfile() {
+        print("\n=== Scenario: Uzbek Profile ===")
+        converter.setProfile(.uzbek)
+
+        // Uzbek falls back to Standard Russian for converter
+        input("К")
+        XCTAssertEqual(composingText, "К")
+
+        input("а")
+        XCTAssertEqual(composingText, "か")
+
+        // Reset
+        composingText = ""
+
+        // Test NA combination (should be な, not んあ)
+        input("Н")
+        input("А")
+        XCTAssertEqual(composingText, "な")
+
+        // Reset
+        composingText = ""
+
+        // Test basic syllable
+        input("С")
+        input("а")
+        XCTAssertEqual(composingText, "さ")
+
+        // Reset
+        composingText = ""
+
+        // Test ん + vowel sequence
+        input("К")
+        input("о")
+        XCTAssertEqual(composingText, "こ")
+
+        input("н")
+        input("н")
+        XCTAssertEqual(composingText, "こんн")
+
+        input("и")
+        XCTAssertEqual(composingText, "こんに")
+
+        input("ч")
+        input("и")
+        XCTAssertEqual(composingText, "こんにち")
+
+        input("в")
+        input("а")
+        XCTAssertEqual(composingText, "こんにちは")
+    }
 }

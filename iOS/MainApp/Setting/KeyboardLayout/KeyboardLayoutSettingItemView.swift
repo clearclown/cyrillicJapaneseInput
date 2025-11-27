@@ -38,6 +38,10 @@ extension LanguageLayout {
             return "キルギス語"
         case .cyrillicMongolian:
             return "モンゴル語"
+        case .cyrillicTajik:
+            return "タジク語"
+        case .cyrillicUzbek:
+            return "ウズベク語"
         }
     }
 }
@@ -80,7 +84,9 @@ struct LanguageLayoutSettingView<SettingKey: LanguageLayoutKeyboardSetting>: Vie
                 .cyrillicMacedonian,
                 .cyrillicKazakh,
                 .cyrillicKyrgyz,
-                .cyrillicMongolian
+                .cyrillicMongolian,
+                .cyrillicTajik,
+                .cyrillicUzbek
             ]
             // Add any user-made custards for Japanese
             layouts += CustardManager.load().availableCustard(for: .ja_JP).map {.custard($0)}
@@ -129,6 +135,10 @@ struct LanguageLayoutSettingView<SettingKey: LanguageLayoutKeyboardSetting>: Vie
             return .custard((try? custardManager.custard(identifier: "cyrillic_kyrgyz")) ?? .errorMessage)
         case (.cyrillicMongolian, _):
             return .custard((try? custardManager.custard(identifier: "cyrillic_mongolian")) ?? .errorMessage)
+        case (.cyrillicTajik, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_tajik")) ?? .errorMessage)
+        case (.cyrillicUzbek, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_uzbek")) ?? .errorMessage)
         }
     }
 

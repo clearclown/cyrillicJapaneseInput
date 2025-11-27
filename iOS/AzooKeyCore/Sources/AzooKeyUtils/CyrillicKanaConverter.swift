@@ -20,6 +20,8 @@ public final class CyrillicKanaConverter {
         case kazakh = "KAZ"
         case kyrgyz = "KGZ"
         case mongolian = "MNG"
+        case tajik = "TJK"
+        case uzbek = "UZB"
     }
 
     private var currentProfile: Profile = .standard
@@ -401,6 +403,8 @@ public final class CyrillicKanaConverter {
             case .kazakh: return row.2      // Fallback to Standard Russian
             case .kyrgyz: return row.2      // Fallback to Standard Russian
             case .mongolian: return row.2   // Fallback to Standard Russian
+            case .tajik: return row.2       // Fallback to Standard Russian
+            case .uzbek: return row.2       // Fallback to Standard Russian
             }
         }
 
@@ -562,6 +566,70 @@ public final class CyrillicKanaConverter {
         if currentProfile == .mongolian {
             newMapping["Ө"] = "お"
             newMapping["Ү"] = "ゆ"
+        }
+
+        // Tajik specific characters (Ғ, Ӣ, Қ, Ӯ, Ҳ, Ҷ)
+        if currentProfile == .tajik {
+            // Ғ (voiced h/g) - use for が行
+            newMapping["Ғ"] = "が"
+            newMapping["ҒА"] = "が"
+            newMapping["ҒИ"] = "ぎ"
+            newMapping["ҒУ"] = "ぐ"
+            newMapping["ҒЕ"] = "げ"
+            newMapping["ҒО"] = "ご"
+            // Ӣ (long i) - use for い
+            newMapping["Ӣ"] = "い"
+            // Қ (voiceless uvular) - use for か行
+            newMapping["Қ"] = "か"
+            newMapping["ҚА"] = "か"
+            newMapping["ҚИ"] = "き"
+            newMapping["ҚУ"] = "く"
+            newMapping["ҚЕ"] = "け"
+            newMapping["ҚО"] = "こ"
+            // Ӯ (long u) - use for う
+            newMapping["Ӯ"] = "う"
+            // Ҳ (voiceless h) - use for は行
+            newMapping["Ҳ"] = "は"
+            newMapping["ҲА"] = "は"
+            newMapping["ҲИ"] = "ひ"
+            newMapping["ҲУ"] = "ふ"
+            newMapping["ҲЕ"] = "へ"
+            newMapping["ҲО"] = "ほ"
+            // Ҷ (voiced j) - use for じゃ行
+            newMapping["Ҷ"] = "じ"
+            newMapping["ҶА"] = "じゃ"
+            newMapping["ҶУ"] = "じゅ"
+            newMapping["ҶО"] = "じょ"
+        }
+
+        // Uzbek specific characters (Ғ, Қ, Ҳ, Ў)
+        if currentProfile == .uzbek {
+            // Ғ (voiced h/g) - use for が行
+            newMapping["Ғ"] = "が"
+            newMapping["ҒА"] = "が"
+            newMapping["ҒИ"] = "ぎ"
+            newMapping["ҒУ"] = "ぐ"
+            newMapping["ҒЕ"] = "げ"
+            newMapping["ҒО"] = "ご"
+            // Қ (voiceless uvular) - use for か行
+            newMapping["Қ"] = "か"
+            newMapping["ҚА"] = "か"
+            newMapping["ҚИ"] = "き"
+            newMapping["ҚУ"] = "く"
+            newMapping["ҚЕ"] = "け"
+            newMapping["ҚО"] = "こ"
+            // Ҳ (voiceless h) - use for は行
+            newMapping["Ҳ"] = "は"
+            newMapping["ҲА"] = "は"
+            newMapping["ҲИ"] = "ひ"
+            newMapping["ҲУ"] = "ふ"
+            newMapping["ҲЕ"] = "へ"
+            newMapping["ҲО"] = "ほ"
+            // Ў (w sound) - use for わ行 (similar to Belarusian)
+            newMapping["Ў"] = "わ"
+            newMapping["ЎА"] = "わ"
+            newMapping["ЎИ"] = "ゐ"
+            newMapping["ЎЭ"] = "ゑ"
         }
 
         self.mapping = newMapping
