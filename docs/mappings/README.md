@@ -36,11 +36,25 @@ See individual files:
 ## Keyboard Profiles
 
 The system supports multiple Cyrillic keyboard layouts:
+
+### Slavic Languages
 - **Standard (Russian)** - JCUKEN layout
 - **Ukrainian** - Modified with і, ї, є, ґ
-- **Belarusian** - Modified with ў
+- **Belarusian** - Modified with ў (unique to Belarusian)
 - **Bulgarian** - BDS layout (different arrangement)
 - **Serbian** - With љ, њ, џ, ћ, ђ
+- **Macedonian** - Similar to Serbian with ѓ, ќ, ѕ
+
+### Turkic Languages (Central Asia)
+- **Kazakh** - Extended Cyrillic with ә, ғ, қ, ң, ө, ұ, ү, һ, і
+- **Kyrgyz** - Russian base + ң, ө, ү
+
+### Mongolian
+- **Mongolian** - Russian base + ө, ү
+
+### Profile Fallback Logic
+- Macedonian → Serbian (similar character set)
+- Kazakh/Kyrgyz/Mongolian → Standard Russian (shared base alphabet)
 
 Each profile maps the same Japanese sounds but uses characters appropriate for that language.
 
