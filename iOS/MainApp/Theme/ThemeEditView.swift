@@ -215,6 +215,10 @@ struct ThemeEditView: CancelableEditor {
                         return .custard((try? CustardManager.load().custard(identifier: "cyrillic_tajik")) ?? .errorMessage)
                     case .cyrillicUzbek:
                         return .custard((try? CustardManager.load().custard(identifier: "cyrillic_uzbek")) ?? .errorMessage)
+                    case .cyrillicTatar:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_tatar")) ?? .errorMessage)
+                    case .cyrillicBashkir:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_bashkir")) ?? .errorMessage)
                     }
                 }()
                 KeyboardPreview(theme: self.theme, defaultTab: tab)

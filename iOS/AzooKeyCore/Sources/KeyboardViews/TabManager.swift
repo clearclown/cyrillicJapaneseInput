@@ -135,7 +135,7 @@ public struct TabManager {
                 return .custard((try? config.custardManager.custard(identifier: identifier)) ?? .errorMessage)
             case .cyrillicStandard, .cyrillicUkrainian, .cyrillicBulgarian, .cyrillicSerbian,
                  .cyrillicBelarusian, .cyrillicMacedonian, .cyrillicKazakh, .cyrillicKyrgyz, .cyrillicMongolian,
-                 .cyrillicTajik, .cyrillicUzbek:
+                 .cyrillicTajik, .cyrillicUzbek, .cyrillicTatar, .cyrillicBashkir:
                 return .flick_abc  // Cyrillic layouts are not applicable to English input
             }
         case .japanese:
@@ -168,6 +168,10 @@ public struct TabManager {
                 return .custard((try? config.custardManager.custard(identifier: "cyrillic_tajik")) ?? .errorMessage)
             case .cyrillicUzbek:
                 return .custard((try? config.custardManager.custard(identifier: "cyrillic_uzbek")) ?? .errorMessage)
+            case .cyrillicTatar:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_tatar")) ?? .errorMessage)
+            case .cyrillicBashkir:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_bashkir")) ?? .errorMessage)
             }
         }
     }

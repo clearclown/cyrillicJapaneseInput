@@ -42,6 +42,10 @@ extension LanguageLayout {
             return "タジク語"
         case .cyrillicUzbek:
             return "ウズベク語"
+        case .cyrillicTatar:
+            return "タタール語"
+        case .cyrillicBashkir:
+            return "バシキール語"
         }
     }
 }
@@ -86,7 +90,9 @@ struct LanguageLayoutSettingView<SettingKey: LanguageLayoutKeyboardSetting>: Vie
                 .cyrillicKyrgyz,
                 .cyrillicMongolian,
                 .cyrillicTajik,
-                .cyrillicUzbek
+                .cyrillicUzbek,
+                .cyrillicTatar,
+                .cyrillicBashkir
             ]
             // Add any user-made custards for Japanese
             layouts += CustardManager.load().availableCustard(for: .ja_JP).map {.custard($0)}
@@ -139,6 +145,10 @@ struct LanguageLayoutSettingView<SettingKey: LanguageLayoutKeyboardSetting>: Vie
             return .custard((try? custardManager.custard(identifier: "cyrillic_tajik")) ?? .errorMessage)
         case (.cyrillicUzbek, _):
             return .custard((try? custardManager.custard(identifier: "cyrillic_uzbek")) ?? .errorMessage)
+        case (.cyrillicTatar, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_tatar")) ?? .errorMessage)
+        case (.cyrillicBashkir, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_bashkir")) ?? .errorMessage)
         }
     }
 

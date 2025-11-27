@@ -22,6 +22,8 @@ public final class CyrillicKanaConverter {
         case mongolian = "MNG"
         case tajik = "TJK"
         case uzbek = "UZB"
+        case tatar = "TAT"
+        case bashkir = "BAS"
     }
 
     private var currentProfile: Profile = .standard
@@ -405,6 +407,8 @@ public final class CyrillicKanaConverter {
             case .mongolian: return row.2   // Fallback to Standard Russian
             case .tajik: return row.2       // Fallback to Standard Russian
             case .uzbek: return row.2       // Fallback to Standard Russian
+            case .tatar: return row.2       // Fallback to Standard Russian
+            case .bashkir: return row.2     // Fallback to Standard Russian
             }
         }
 
@@ -630,6 +634,79 @@ public final class CyrillicKanaConverter {
             newMapping["ЎА"] = "わ"
             newMapping["ЎИ"] = "ゐ"
             newMapping["ЎЭ"] = "ゑ"
+        }
+
+        // Tatar specific characters (Ә, Ө, Ү, Җ, Ң, Һ)
+        if currentProfile == .tatar {
+            // Ә (front a/schwa) - use for え sound
+            newMapping["Ә"] = "え"
+            // Ө (front o) - use for お
+            newMapping["Ө"] = "お"
+            // Ү (front u) - use for ゆ
+            newMapping["Ү"] = "ゆ"
+            // Җ (voiced j/dzh) - use for じゃ行
+            newMapping["Җ"] = "じ"
+            newMapping["ҖА"] = "じゃ"
+            newMapping["ҖИ"] = "じ"
+            newMapping["ҖУ"] = "じゅ"
+            newMapping["ҖЕ"] = "じぇ"
+            newMapping["ҖО"] = "じょ"
+            // Ң (ng) - use for ん
+            newMapping["Ң"] = "ん"
+            // Һ (h) - use for は行
+            newMapping["Һ"] = "は"
+            newMapping["ҺА"] = "は"
+            newMapping["ҺИ"] = "ひ"
+            newMapping["ҺУ"] = "ふ"
+            newMapping["ҺЕ"] = "へ"
+            newMapping["ҺО"] = "ほ"
+        }
+
+        // Bashkir specific characters (Ә, Ө, Ү, Ғ, Ҡ, Ң, Ҙ, Ҫ, Һ)
+        if currentProfile == .bashkir {
+            // Ә (front a/schwa) - use for え sound
+            newMapping["Ә"] = "え"
+            // Ө (front o) - use for お
+            newMapping["Ө"] = "お"
+            // Ү (front u) - use for ゆ
+            newMapping["Ү"] = "ゆ"
+            // Ғ (voiced h/g) - use for が行
+            newMapping["Ғ"] = "が"
+            newMapping["ҒА"] = "が"
+            newMapping["ҒИ"] = "ぎ"
+            newMapping["ҒУ"] = "ぐ"
+            newMapping["ҒЕ"] = "げ"
+            newMapping["ҒО"] = "ご"
+            // Ҡ (voiceless uvular) - use for か行
+            newMapping["Ҡ"] = "か"
+            newMapping["ҠА"] = "か"
+            newMapping["ҠИ"] = "き"
+            newMapping["ҠУ"] = "く"
+            newMapping["ҠЕ"] = "け"
+            newMapping["ҠО"] = "こ"
+            // Ң (ng) - use for ん
+            newMapping["Ң"] = "ん"
+            // Ҙ (voiced th/dh) - use for ざ行
+            newMapping["Ҙ"] = "ざ"
+            newMapping["ҘА"] = "ざ"
+            newMapping["ҘИ"] = "じ"
+            newMapping["ҘУ"] = "ず"
+            newMapping["ҘЕ"] = "ぜ"
+            newMapping["ҘО"] = "ぞ"
+            // Ҫ (voiceless th) - use for さ行
+            newMapping["Ҫ"] = "さ"
+            newMapping["ҪА"] = "さ"
+            newMapping["ҪИ"] = "し"
+            newMapping["ҪУ"] = "す"
+            newMapping["ҪЕ"] = "せ"
+            newMapping["ҪО"] = "そ"
+            // Һ (h) - use for は行
+            newMapping["Һ"] = "は"
+            newMapping["ҺА"] = "は"
+            newMapping["ҺИ"] = "ひ"
+            newMapping["ҺУ"] = "ふ"
+            newMapping["ҺЕ"] = "へ"
+            newMapping["ҺО"] = "ほ"
         }
 
         self.mapping = newMapping

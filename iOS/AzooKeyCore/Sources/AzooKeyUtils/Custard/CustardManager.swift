@@ -157,6 +157,10 @@ public struct CustardManager: CustardManagerProtocol {
             return .cyrillicTajik
         case "cyrillic_uzbek":
             return .cyrillicUzbek
+        case "cyrillic_tatar":
+            return .cyrillicTatar
+        case "cyrillic_bashkir":
+            return .cyrillicBashkir
         case "standard_numpad":
             return .standardNumpad
         default:
