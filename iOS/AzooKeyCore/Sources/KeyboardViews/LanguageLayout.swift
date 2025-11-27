@@ -24,6 +24,10 @@ public enum LanguageLayout: Codable, Hashable, Sendable {
     case cyrillicUzbek
     case cyrillicTatar
     case cyrillicBashkir
+    case cyrillicChuvash
+    case cyrillicSakha
+    case cyrillicBuryat
+    case cyrillicKalmyk
 }
 
 public extension LanguageLayout {
@@ -44,6 +48,10 @@ public extension LanguageLayout {
         case cyrillicUzbek
         case cyrillicTatar
         case cyrillicBashkir
+        case cyrillicChuvash
+        case cyrillicSakha
+        case cyrillicBuryat
+        case cyrillicKalmyk
     }
 
     func encode(to encoder: any Encoder) throws {
@@ -81,6 +89,14 @@ public extension LanguageLayout {
             try container.encode(true, forKey: .cyrillicTatar)
         case .cyrillicBashkir:
             try container.encode(true, forKey: .cyrillicBashkir)
+        case .cyrillicChuvash:
+            try container.encode(true, forKey: .cyrillicChuvash)
+        case .cyrillicSakha:
+            try container.encode(true, forKey: .cyrillicSakha)
+        case .cyrillicBuryat:
+            try container.encode(true, forKey: .cyrillicBuryat)
+        case .cyrillicKalmyk:
+            try container.encode(true, forKey: .cyrillicKalmyk)
         }
     }
 
@@ -131,6 +147,14 @@ public extension LanguageLayout {
             self = .cyrillicTatar
         case .cyrillicBashkir:
             self = .cyrillicBashkir
+        case .cyrillicChuvash:
+            self = .cyrillicChuvash
+        case .cyrillicSakha:
+            self = .cyrillicSakha
+        case .cyrillicBuryat:
+            self = .cyrillicBuryat
+        case .cyrillicKalmyk:
+            self = .cyrillicKalmyk
         }
     }
 }

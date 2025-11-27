@@ -76,6 +76,14 @@ final class InputManager {
             self.cyrillicConverter.setProfile(.tatar)
         case "cyrillic_bashkir":
             self.cyrillicConverter.setProfile(.bashkir)
+        case "cyrillic_chuvash":
+            self.cyrillicConverter.setProfile(.chuvash)
+        case "cyrillic_sakha":
+            self.cyrillicConverter.setProfile(.sakha)
+        case "cyrillic_buryat":
+            self.cyrillicConverter.setProfile(.buryat)
+        case "cyrillic_kalmyk":
+            self.cyrillicConverter.setProfile(.kalmyk)
         default:
             // Default to standard if unknown cyrillic identifier, or ignore if not cyrillic
             if identifier.starts(with: "cyrillic_") {

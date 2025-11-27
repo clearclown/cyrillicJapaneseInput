@@ -46,6 +46,14 @@ extension LanguageLayout {
             return "タタール語"
         case .cyrillicBashkir:
             return "バシキール語"
+        case .cyrillicChuvash:
+            return "チュヴァシ語"
+        case .cyrillicSakha:
+            return "サハ語"
+        case .cyrillicBuryat:
+            return "ブリヤート語"
+        case .cyrillicKalmyk:
+            return "カルムイク語"
         }
     }
 }
@@ -92,7 +100,11 @@ struct LanguageLayoutSettingView<SettingKey: LanguageLayoutKeyboardSetting>: Vie
                 .cyrillicTajik,
                 .cyrillicUzbek,
                 .cyrillicTatar,
-                .cyrillicBashkir
+                .cyrillicBashkir,
+                .cyrillicChuvash,
+                .cyrillicSakha,
+                .cyrillicBuryat,
+                .cyrillicKalmyk
             ]
             // Add any user-made custards for Japanese
             layouts += CustardManager.load().availableCustard(for: .ja_JP).map {.custard($0)}
@@ -149,6 +161,14 @@ struct LanguageLayoutSettingView<SettingKey: LanguageLayoutKeyboardSetting>: Vie
             return .custard((try? custardManager.custard(identifier: "cyrillic_tatar")) ?? .errorMessage)
         case (.cyrillicBashkir, _):
             return .custard((try? custardManager.custard(identifier: "cyrillic_bashkir")) ?? .errorMessage)
+        case (.cyrillicChuvash, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_chuvash")) ?? .errorMessage)
+        case (.cyrillicSakha, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_sakha")) ?? .errorMessage)
+        case (.cyrillicBuryat, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_buryat")) ?? .errorMessage)
+        case (.cyrillicKalmyk, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_kalmyk")) ?? .errorMessage)
         }
     }
 

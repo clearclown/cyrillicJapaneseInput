@@ -24,6 +24,10 @@ public final class CyrillicKanaConverter {
         case uzbek = "UZB"
         case tatar = "TAT"
         case bashkir = "BAS"
+        case chuvash = "CHU"
+        case sakha = "SAH"
+        case buryat = "BUA"
+        case kalmyk = "KAL"
     }
 
     private var currentProfile: Profile = .standard
@@ -409,6 +413,10 @@ public final class CyrillicKanaConverter {
             case .uzbek: return row.2       // Fallback to Standard Russian
             case .tatar: return row.2       // Fallback to Standard Russian
             case .bashkir: return row.2     // Fallback to Standard Russian
+            case .chuvash: return row.2     // Fallback to Standard Russian
+            case .sakha: return row.2       // Fallback to Standard Russian
+            case .buryat: return row.2      // Fallback to Standard Russian
+            case .kalmyk: return row.2      // Fallback to Standard Russian
             }
         }
 
@@ -707,6 +715,88 @@ public final class CyrillicKanaConverter {
             newMapping["ҺУ"] = "ふ"
             newMapping["ҺЕ"] = "へ"
             newMapping["ҺО"] = "ほ"
+        }
+
+        // Chuvash specific characters (Ӑ, Ӗ, Ҫ, Ӳ)
+        if currentProfile == .chuvash {
+            // Ӑ (reduced a) - use for あ
+            newMapping["Ӑ"] = "あ"
+            // Ӗ (reduced e) - use for え
+            newMapping["Ӗ"] = "え"
+            // Ҫ (voiceless sh/s) - use for さ行
+            newMapping["Ҫ"] = "さ"
+            newMapping["ҪА"] = "さ"
+            newMapping["ҪИ"] = "し"
+            newMapping["ҪУ"] = "す"
+            newMapping["ҪЕ"] = "せ"
+            newMapping["ҪО"] = "そ"
+            // Ӳ (front u) - use for ゆ
+            newMapping["Ӳ"] = "ゆ"
+        }
+
+        // Sakha/Yakut specific characters (Ҕ, Һ, Ө, Ү, Ҥ)
+        if currentProfile == .sakha {
+            // Ҕ (voiced h/gh) - use for が行
+            newMapping["Ҕ"] = "が"
+            newMapping["ҔА"] = "が"
+            newMapping["ҔИ"] = "ぎ"
+            newMapping["ҔУ"] = "ぐ"
+            newMapping["ҔЕ"] = "げ"
+            newMapping["ҔО"] = "ご"
+            // Һ (h) - use for は行
+            newMapping["Һ"] = "は"
+            newMapping["ҺА"] = "は"
+            newMapping["ҺИ"] = "ひ"
+            newMapping["ҺУ"] = "ふ"
+            newMapping["ҺЕ"] = "へ"
+            newMapping["ҺО"] = "ほ"
+            // Ө (front o) - use for お
+            newMapping["Ө"] = "お"
+            // Ү (front u) - use for ゆ
+            newMapping["Ү"] = "ゆ"
+            // Ҥ (ng) - use for ん
+            newMapping["Ҥ"] = "ん"
+        }
+
+        // Buryat specific characters (Ө, Ү, Һ)
+        if currentProfile == .buryat {
+            // Ө (front o) - use for お
+            newMapping["Ө"] = "お"
+            // Ү (front u) - use for ゆ
+            newMapping["Ү"] = "ゆ"
+            // Һ (h) - use for は行
+            newMapping["Һ"] = "は"
+            newMapping["ҺА"] = "は"
+            newMapping["ҺИ"] = "ひ"
+            newMapping["ҺУ"] = "ふ"
+            newMapping["ҺЕ"] = "へ"
+            newMapping["ҺО"] = "ほ"
+        }
+
+        // Kalmyk specific characters (Ә, Һ, Җ, Ң, Ө, Ү)
+        if currentProfile == .kalmyk {
+            // Ә (front a/schwa) - use for え
+            newMapping["Ә"] = "え"
+            // Һ (h) - use for は行
+            newMapping["Һ"] = "は"
+            newMapping["ҺА"] = "は"
+            newMapping["ҺИ"] = "ひ"
+            newMapping["ҺУ"] = "ふ"
+            newMapping["ҺЕ"] = "へ"
+            newMapping["ҺО"] = "ほ"
+            // Җ (voiced j/dzh) - use for じゃ行
+            newMapping["Җ"] = "じ"
+            newMapping["ҖА"] = "じゃ"
+            newMapping["ҖИ"] = "じ"
+            newMapping["ҖУ"] = "じゅ"
+            newMapping["ҖЕ"] = "じぇ"
+            newMapping["ҖО"] = "じょ"
+            // Ң (ng) - use for ん
+            newMapping["Ң"] = "ん"
+            // Ө (front o) - use for お
+            newMapping["Ө"] = "お"
+            // Ү (front u) - use for ゆ
+            newMapping["Ү"] = "ゆ"
         }
 
         self.mapping = newMapping

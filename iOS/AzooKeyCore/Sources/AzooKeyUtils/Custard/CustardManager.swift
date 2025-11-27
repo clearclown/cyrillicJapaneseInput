@@ -161,6 +161,14 @@ public struct CustardManager: CustardManagerProtocol {
             return .cyrillicTatar
         case "cyrillic_bashkir":
             return .cyrillicBashkir
+        case "cyrillic_chuvash":
+            return .cyrillicChuvash
+        case "cyrillic_sakha":
+            return .cyrillicSakha
+        case "cyrillic_buryat":
+            return .cyrillicBuryat
+        case "cyrillic_kalmyk":
+            return .cyrillicKalmyk
         case "standard_numpad":
             return .standardNumpad
         default:
