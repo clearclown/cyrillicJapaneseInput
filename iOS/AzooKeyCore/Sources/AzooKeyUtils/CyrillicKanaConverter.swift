@@ -16,6 +16,10 @@ public final class CyrillicKanaConverter {
         case belarusian = "BEL"
         case bulgarian = "BUL"
         case serbian = "SRB"
+        case macedonian = "MKD"
+        case kazakh = "KAZ"
+        case kyrgyz = "KGZ"
+        case mongolian = "MNG"
     }
 
     private var currentProfile: Profile = .standard
@@ -385,6 +389,7 @@ public final class CyrillicKanaConverter {
         ]
 
         // Helper to pick column
+        // New languages use fallbacks: Macedonian→Serbian, Kazakh/Kyrgyz/Mongolian→Standard
         func pick(_ row: (String, String, String, String, String, String, String)) -> String {
             switch currentProfile {
             case .standard: return row.2
@@ -392,6 +397,10 @@ public final class CyrillicKanaConverter {
             case .belarusian: return row.4
             case .bulgarian: return row.5
             case .serbian: return row.6
+            case .macedonian: return row.6  // Fallback to Serbian (similar alphabet)
+            case .kazakh: return row.2      // Fallback to Standard Russian
+            case .kyrgyz: return row.2      // Fallback to Standard Russian
+            case .mongolian: return row.2   // Fallback to Standard Russian
             }
         }
 
@@ -479,6 +488,81 @@ public final class CyrillicKanaConverter {
         // ============================================================
         // Ху as alternative for Фу (ふ) - more intuitive on Russian keyboard
         newMapping["ХУ"] = "ふ"
+
+        // ============================================================
+        // Language-specific character mappings
+        // ============================================================
+
+        // Macedonian specific characters
+        if currentProfile == .macedonian {
+            // Ѓ (Gje) - palatal g, use for ぎゃ行 sounds
+            newMapping["Ѓ"] = "ぎ"
+            newMapping["ЃА"] = "ぎゃ"
+            newMapping["ЃУ"] = "ぎゅ"
+            newMapping["ЃО"] = "ぎょ"
+            // Ќ (Kje) - palatal k, use for きゃ行 sounds
+            newMapping["Ќ"] = "き"
+            newMapping["ЌА"] = "きゃ"
+            newMapping["ЌУ"] = "きゅ"
+            newMapping["ЌО"] = "きょ"
+            // Ѕ (Dze) - dz sound
+            newMapping["Ѕ"] = "づ"
+            newMapping["ЅА"] = "ざ"
+            newMapping["ЅИ"] = "じ"
+            newMapping["ЅУ"] = "ず"
+            newMapping["ЅЕ"] = "ぜ"
+            newMapping["ЅО"] = "ぞ"
+        }
+
+        // Kazakh specific characters
+        if currentProfile == .kazakh {
+            // Ә (schwa) - use for え sound
+            newMapping["Ә"] = "え"
+            // Ғ (voiced h/g) - use for が行
+            newMapping["Ғ"] = "が"
+            newMapping["ҒА"] = "が"
+            newMapping["ҒИ"] = "ぎ"
+            newMapping["ҒУ"] = "ぐ"
+            newMapping["ҒЕ"] = "げ"
+            newMapping["ҒО"] = "ご"
+            // Қ (voiceless uvular) - use for か行
+            newMapping["Қ"] = "か"
+            newMapping["ҚА"] = "か"
+            newMapping["ҚИ"] = "き"
+            newMapping["ҚУ"] = "く"
+            newMapping["ҚЕ"] = "け"
+            newMapping["ҚО"] = "こ"
+            // Ң (ng) - use for ん before が行
+            newMapping["Ң"] = "ん"
+            // Ө (front o) - use for お
+            newMapping["Ө"] = "お"
+            // Ұ (back u) - use for う
+            newMapping["Ұ"] = "う"
+            // Ү (front u) - use for ゆ
+            newMapping["Ү"] = "ゆ"
+            // Һ (h) - use for は行
+            newMapping["Һ"] = "は"
+            newMapping["ҺА"] = "は"
+            newMapping["ҺИ"] = "ひ"
+            newMapping["ҺУ"] = "ふ"
+            newMapping["ҺЕ"] = "へ"
+            newMapping["ҺО"] = "ほ"
+            // І (short i) - use for い
+            newMapping["І"] = "い"
+        }
+
+        // Kyrgyz specific characters (subset of Kazakh)
+        if currentProfile == .kyrgyz {
+            newMapping["Ң"] = "ん"
+            newMapping["Ү"] = "ゆ"
+            newMapping["Ө"] = "お"
+        }
+
+        // Mongolian specific characters
+        if currentProfile == .mongolian {
+            newMapping["Ө"] = "お"
+            newMapping["Ү"] = "ゆ"
+        }
 
         self.mapping = newMapping
 
