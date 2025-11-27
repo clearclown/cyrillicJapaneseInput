@@ -69,20 +69,20 @@ public final class CyrillicKanaConverter {
             print("[CyrillicConverter] i=\(i) suffix='\(suffix)' candidate='\(candidate)' inMapping=\(mapping[candidate] != nil) inPrefix=\(mappingPrefixes.contains(candidate))")
             #endif
 
+            // 完全一致チェック (プレフィックスより優先)
+            if let kana = mapping[candidate] {
+                #if DEBUG
+                print("[CyrillicConverter] -> Match! deleteLast=\(i) output='\(kana)'")
+                #endif
+                return InputOperation(deleteLast: i, input: kana)
+            }
+
             // プレフィックス一致チェック (Wait状態)
             if mappingPrefixes.contains(candidate) {
                 #if DEBUG
                 print("[CyrillicConverter] -> Wait (prefix match)")
                 #endif
                 return InputOperation(deleteLast: 0, input: input)
-            }
-
-            // 完全一致チェック
-            if let kana = mapping[candidate] {
-                #if DEBUG
-                print("[CyrillicConverter] -> Match! deleteLast=\(i) output='\(kana)'")
-                #endif
-                return InputOperation(deleteLast: i, input: kana)
             }
         }
 
@@ -111,14 +111,14 @@ public final class CyrillicKanaConverter {
         // Step 3: 単一文字のマッピングチェック (i=0 case)
         let singleCandidate = inputUpper
 
+        // 完全一致チェック (プレフィックスより優先)
+        if let kana = mapping[singleCandidate] {
+            return InputOperation(deleteLast: 0, input: kana)
+        }
+
         // プレフィックス一致チェック (Wait状態)
         if mappingPrefixes.contains(singleCandidate) {
             return InputOperation(deleteLast: 0, input: input)
-        }
-
-        // 完全一致チェック
-        if let kana = mapping[singleCandidate] {
-            return InputOperation(deleteLast: 0, input: kana)
         }
 
         // 何もマッチしない場合はそのまま入力
@@ -195,9 +195,9 @@ public final class CyrillicKanaConverter {
             ("ro", "ろ", "Ро", "Ро", "Ро", "Ро", "Ро"),
             ("wa", "わ", "Ва", "Ва", "Ўа", "Ва", "Ва"),
             ("wi", "ゐ", "Ви", "Ві", "Ўі", "Ви", "Ви"),
-            ("we", "ゑ", "Вэ", "Вэ", "Ўэ", "Ве", "Вэ"),
+            ("we", "ゑ", "Вэ", "Вэ", "Ўэ", "Ве", "Вэ")
             // "wo" (を) is intentionally omitted - О maps to お (o)
-            ("n", "ん", "Н", "Н", "Н", "Н", "Н")
+            // "n" (ん) is handled by special rules: НН → ん, Н + consonant → ん + consonant
         ]
 
         let dakutenData = [
@@ -434,6 +434,51 @@ public final class CyrillicKanaConverter {
             let value = row.1
             newMapping[key] = value
         }
+
+        // ============================================================
+        // Alternative mappings for keyboards without Ё and Ъ keys
+        // ============================================================
+        // йо as alternative for ё (useful when keyboard lacks ё key)
+        // These are added AFTER the main mappings so they don't override
+        // the primary ё-based mappings (which take precedence in greedy matching)
+
+        // Basic йо → よ (alternative for ё)
+        newMapping["ЙО"] = "よ"
+
+        // Compound sounds with йо as alternative for ё
+        // きょ行 (kyo-group)
+        newMapping["КЙО"] = "きょ"
+        // しょ行 (sho-group)
+        newMapping["СЙО"] = "しょ"
+        // にょ行 (nyo-group)
+        newMapping["НЙО"] = "にょ"
+        // ひょ行 (hyo-group)
+        newMapping["ХЙО"] = "ひょ"
+        // みょ行 (myo-group)
+        newMapping["МЙО"] = "みょ"
+        // りょ行 (ryo-group)
+        newMapping["РЙО"] = "りょ"
+        // ぎょ行 (gyo-group)
+        newMapping["ГЙО"] = "ぎょ"
+        // じょ行 (jo-group)
+        newMapping["ДЗЙО"] = "じょ"
+        // びょ行 (byo-group)
+        newMapping["БЙО"] = "びょ"
+        // ぴょ行 (pyo-group)
+        newMapping["ПЙО"] = "ぴょ"
+
+        // Small ょ using ъ alternative (')
+        newMapping["'Ё"] = "ょ"
+        newMapping["'ЙО"] = "ょ"
+
+        // Separator alternatives using ' for ъ with йо for ё
+        newMapping["Н'ЙО"] = "んよ"
+
+        // ============================================================
+        // Alternative mappings for は行「ふ」
+        // ============================================================
+        // Ху as alternative for Фу (ふ) - more intuitive on Russian keyboard
+        newMapping["ХУ"] = "ふ"
 
         self.mapping = newMapping
 
