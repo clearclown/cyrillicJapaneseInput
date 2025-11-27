@@ -83,7 +83,9 @@ private struct KeyView: View {
         case .custard, .cyrillicStandard, .cyrillicUkrainian, .cyrillicBulgarian, .cyrillicSerbian,
              .cyrillicBelarusian, .cyrillicMacedonian, .cyrillicKazakh, .cyrillicKyrgyz, .cyrillicMongolian,
              .cyrillicTajik, .cyrillicUzbek, .cyrillicTatar, .cyrillicBashkir,
-             .cyrillicChuvash, .cyrillicSakha, .cyrillicBuryat, .cyrillicKalmyk:
+             .cyrillicChuvash, .cyrillicSakha, .cyrillicBuryat, .cyrillicKalmyk,
+             .cyrillicAzerbaijani, .cyrillicChurchSlavonic, .cyrillicKomi, .cyrillicKhanty,
+             .cyrillicChukchi, .cyrillicAbkhaz:
             return CGSize(width: screenWidth / 5.6, height: screenWidth / 8)
         }
     }

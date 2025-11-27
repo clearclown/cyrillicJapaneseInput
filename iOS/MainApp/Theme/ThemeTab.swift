@@ -88,6 +88,18 @@ struct ThemeTabView: View {
             return .custard((try? CustardManager.load().custard(identifier: "cyrillic_buryat")) ?? .errorMessage)
         case .cyrillicKalmyk:
             return .custard((try? CustardManager.load().custard(identifier: "cyrillic_kalmyk")) ?? .errorMessage)
+        case .cyrillicAzerbaijani:
+            return .custard((try? CustardManager.load().custard(identifier: "cyrillic_azerbaijani")) ?? .errorMessage)
+        case .cyrillicChurchSlavonic:
+            return .custard((try? CustardManager.load().custard(identifier: "cyrillic_church_slavonic")) ?? .errorMessage)
+        case .cyrillicKomi:
+            return .custard((try? CustardManager.load().custard(identifier: "cyrillic_komi")) ?? .errorMessage)
+        case .cyrillicKhanty:
+            return .custard((try? CustardManager.load().custard(identifier: "cyrillic_khanty")) ?? .errorMessage)
+        case .cyrillicChukchi:
+            return .custard((try? CustardManager.load().custard(identifier: "cyrillic_chukchi")) ?? .errorMessage)
+        case .cyrillicAbkhaz:
+            return .custard((try? CustardManager.load().custard(identifier: "cyrillic_abkhaz")) ?? .errorMessage)
         }
     }
 

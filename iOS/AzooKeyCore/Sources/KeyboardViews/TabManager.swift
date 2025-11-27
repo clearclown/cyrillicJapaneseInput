@@ -136,7 +136,9 @@ public struct TabManager {
             case .cyrillicStandard, .cyrillicUkrainian, .cyrillicBulgarian, .cyrillicSerbian,
                  .cyrillicBelarusian, .cyrillicMacedonian, .cyrillicKazakh, .cyrillicKyrgyz, .cyrillicMongolian,
                  .cyrillicTajik, .cyrillicUzbek, .cyrillicTatar, .cyrillicBashkir,
-                 .cyrillicChuvash, .cyrillicSakha, .cyrillicBuryat, .cyrillicKalmyk:
+                 .cyrillicChuvash, .cyrillicSakha, .cyrillicBuryat, .cyrillicKalmyk,
+                 .cyrillicAzerbaijani, .cyrillicChurchSlavonic, .cyrillicKomi, .cyrillicKhanty,
+                 .cyrillicChukchi, .cyrillicAbkhaz:
                 return .flick_abc  // Cyrillic layouts are not applicable to English input
             }
         case .japanese:
@@ -181,6 +183,18 @@ public struct TabManager {
                 return .custard((try? config.custardManager.custard(identifier: "cyrillic_buryat")) ?? .errorMessage)
             case .cyrillicKalmyk:
                 return .custard((try? config.custardManager.custard(identifier: "cyrillic_kalmyk")) ?? .errorMessage)
+            case .cyrillicAzerbaijani:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_azerbaijani")) ?? .errorMessage)
+            case .cyrillicChurchSlavonic:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_church_slavonic")) ?? .errorMessage)
+            case .cyrillicKomi:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_komi")) ?? .errorMessage)
+            case .cyrillicKhanty:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_khanty")) ?? .errorMessage)
+            case .cyrillicChukchi:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_chukchi")) ?? .errorMessage)
+            case .cyrillicAbkhaz:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_abkhaz")) ?? .errorMessage)
             }
         }
     }

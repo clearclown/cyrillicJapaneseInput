@@ -28,6 +28,12 @@ public enum LanguageLayout: Codable, Hashable, Sendable {
     case cyrillicSakha
     case cyrillicBuryat
     case cyrillicKalmyk
+    case cyrillicAzerbaijani
+    case cyrillicChurchSlavonic
+    case cyrillicKomi
+    case cyrillicKhanty
+    case cyrillicChukchi
+    case cyrillicAbkhaz
 }
 
 public extension LanguageLayout {
@@ -52,6 +58,12 @@ public extension LanguageLayout {
         case cyrillicSakha
         case cyrillicBuryat
         case cyrillicKalmyk
+        case cyrillicAzerbaijani
+        case cyrillicChurchSlavonic
+        case cyrillicKomi
+        case cyrillicKhanty
+        case cyrillicChukchi
+        case cyrillicAbkhaz
     }
 
     func encode(to encoder: any Encoder) throws {
@@ -97,6 +109,18 @@ public extension LanguageLayout {
             try container.encode(true, forKey: .cyrillicBuryat)
         case .cyrillicKalmyk:
             try container.encode(true, forKey: .cyrillicKalmyk)
+        case .cyrillicAzerbaijani:
+            try container.encode(true, forKey: .cyrillicAzerbaijani)
+        case .cyrillicChurchSlavonic:
+            try container.encode(true, forKey: .cyrillicChurchSlavonic)
+        case .cyrillicKomi:
+            try container.encode(true, forKey: .cyrillicKomi)
+        case .cyrillicKhanty:
+            try container.encode(true, forKey: .cyrillicKhanty)
+        case .cyrillicChukchi:
+            try container.encode(true, forKey: .cyrillicChukchi)
+        case .cyrillicAbkhaz:
+            try container.encode(true, forKey: .cyrillicAbkhaz)
         }
     }
 
@@ -155,6 +179,18 @@ public extension LanguageLayout {
             self = .cyrillicBuryat
         case .cyrillicKalmyk:
             self = .cyrillicKalmyk
+        case .cyrillicAzerbaijani:
+            self = .cyrillicAzerbaijani
+        case .cyrillicChurchSlavonic:
+            self = .cyrillicChurchSlavonic
+        case .cyrillicKomi:
+            self = .cyrillicKomi
+        case .cyrillicKhanty:
+            self = .cyrillicKhanty
+        case .cyrillicChukchi:
+            self = .cyrillicChukchi
+        case .cyrillicAbkhaz:
+            self = .cyrillicAbkhaz
         }
     }
 }

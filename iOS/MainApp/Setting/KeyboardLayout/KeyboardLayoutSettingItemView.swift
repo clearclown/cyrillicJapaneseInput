@@ -54,6 +54,18 @@ extension LanguageLayout {
             return "ブリヤート語"
         case .cyrillicKalmyk:
             return "カルムイク語"
+        case .cyrillicAzerbaijani:
+            return "アゼルバイジャン語"
+        case .cyrillicChurchSlavonic:
+            return "教会スラヴ語"
+        case .cyrillicKomi:
+            return "コミ語"
+        case .cyrillicKhanty:
+            return "ハンティー語"
+        case .cyrillicChukchi:
+            return "チュクチ語"
+        case .cyrillicAbkhaz:
+            return "アブハズ語"
         }
     }
 }
@@ -104,7 +116,13 @@ struct LanguageLayoutSettingView<SettingKey: LanguageLayoutKeyboardSetting>: Vie
                 .cyrillicChuvash,
                 .cyrillicSakha,
                 .cyrillicBuryat,
-                .cyrillicKalmyk
+                .cyrillicKalmyk,
+                .cyrillicAzerbaijani,
+                .cyrillicChurchSlavonic,
+                .cyrillicKomi,
+                .cyrillicKhanty,
+                .cyrillicChukchi,
+                .cyrillicAbkhaz
             ]
             // Add any user-made custards for Japanese
             layouts += CustardManager.load().availableCustard(for: .ja_JP).map {.custard($0)}
@@ -169,6 +187,18 @@ struct LanguageLayoutSettingView<SettingKey: LanguageLayoutKeyboardSetting>: Vie
             return .custard((try? custardManager.custard(identifier: "cyrillic_buryat")) ?? .errorMessage)
         case (.cyrillicKalmyk, _):
             return .custard((try? custardManager.custard(identifier: "cyrillic_kalmyk")) ?? .errorMessage)
+        case (.cyrillicAzerbaijani, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_azerbaijani")) ?? .errorMessage)
+        case (.cyrillicChurchSlavonic, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_church_slavonic")) ?? .errorMessage)
+        case (.cyrillicKomi, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_komi")) ?? .errorMessage)
+        case (.cyrillicKhanty, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_khanty")) ?? .errorMessage)
+        case (.cyrillicChukchi, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_chukchi")) ?? .errorMessage)
+        case (.cyrillicAbkhaz, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_abkhaz")) ?? .errorMessage)
         }
     }
 
