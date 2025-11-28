@@ -45,10 +45,15 @@ public extension Custard {
                 .gridFit(.init(x: 8, y: 1)): .custom(.numpadInput("@")),
                 .gridFit(.init(x: 9, y: 1)): .custom(.numpadInput("\"")),
 
-                // Row 3: 、 。 ⌫
-                .gridFit(.init(x: 0, y: 2, width: 5, height: 1)): .custom(.numpadInput("、")),
-                .gridFit(.init(x: 5, y: 2, width: 4, height: 1)): .custom(.numpadInput("。")),
-                .gridFit(.init(x: 9, y: 2)): .custom(.flickDelete()),
+                // Row 3: #+= . ? ! ' 、 。 ⌫
+                .gridFit(.init(x: 0, y: 2, width: 2, height: 1)): .custom(.numpadSymbolsKey()),
+                .gridFit(.init(x: 2, y: 2)): .custom(.numpadInput(".")),
+                .gridFit(.init(x: 3, y: 2)): .custom(.numpadInput("?")),
+                .gridFit(.init(x: 4, y: 2)): .custom(.numpadInput("!")),
+                .gridFit(.init(x: 5, y: 2)): .custom(.numpadInput("'")),
+                .gridFit(.init(x: 6, y: 2)): .custom(.numpadInput("、")),
+                .gridFit(.init(x: 7, y: 2)): .custom(.numpadInput("。")),
+                .gridFit(.init(x: 8, y: 2, width: 2, height: 1)): .custom(.flickDelete()),
 
                 // Row 4: АБВ Globe Space Enter
                 .gridFit(.init(x: 0, y: 3, width: 2, height: 1)): .custom(.numpadCyrillicKey()),

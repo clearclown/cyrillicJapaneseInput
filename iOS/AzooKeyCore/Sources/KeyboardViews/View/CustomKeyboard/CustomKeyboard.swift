@@ -113,7 +113,7 @@ public extension CustardInterface {
                 }
                 let needSuggest = switch self.keyStyle {
                 case .tenkeyStyle: false
-                case .pcStyle: val.longpress_actions.isEmpty
+                case .pcStyle: false  // Disable tap bubbles for cleaner UI
                 }
                 let model = UnifiedGeneralKeyModel<Extension>(
                     labelType: val.design.label.keyLabelType,
