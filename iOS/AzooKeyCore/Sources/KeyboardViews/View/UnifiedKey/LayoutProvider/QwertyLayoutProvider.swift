@@ -64,17 +64,17 @@ struct QwertyLayoutProvider<Extension: ApplicationSpecificKeyboardViewExtension>
         }
         func v(_ s: String) -> QwertyVariationsModel.VariationElement { .init(label: .text(s), actions: [.input(s)]) }
         var dict: [UnifiedPositionSpecifier: any UnifiedKeyModelProtocol<Extension>] = [:]
-        // Top row: 1..0 (no variations)
-        dict[.init(x: 0, y: 0)] = uniKey(label: .text("1"), press: [.input("1")], vars: [], dir: .right)
-        dict[.init(x: 1, y: 0)] = uniKey(label: .text("2"), press: [.input("2")], vars: [], dir: .right)
-        dict[.init(x: 2, y: 0)] = uniKey(label: .text("3"), press: [.input("3")], vars: [])
-        dict[.init(x: 3, y: 0)] = uniKey(label: .text("4"), press: [.input("4")], vars: [])
-        dict[.init(x: 4, y: 0)] = uniKey(label: .text("5"), press: [.input("5")], vars: [])
-        dict[.init(x: 5, y: 0)] = uniKey(label: .text("6"), press: [.input("6")], vars: [])
-        dict[.init(x: 6, y: 0)] = uniKey(label: .text("7"), press: [.input("7")], vars: [])
-        dict[.init(x: 7, y: 0)] = uniKey(label: .text("8"), press: [.input("8")], vars: [])
-        dict[.init(x: 8, y: 0)] = uniKey(label: .text("9"), press: [.input("9")], vars: [], dir: .left)
-        dict[.init(x: 9, y: 0)] = uniKey(label: .text("0"), press: [.input("0")], vars: [], dir: .left)
+        // Top row: 1..0 with common variations
+        dict[.init(x: 0, y: 0)] = uniKey(label: .text("1"), press: [.input("1")], vars: [v("1"), v("１"), v("一"), v("①")], dir: .right)
+        dict[.init(x: 1, y: 0)] = uniKey(label: .text("2"), press: [.input("2")], vars: [v("2"), v("２"), v("二"), v("②")], dir: .right)
+        dict[.init(x: 2, y: 0)] = uniKey(label: .text("3"), press: [.input("3")], vars: [v("3"), v("３"), v("三"), v("③")])
+        dict[.init(x: 3, y: 0)] = uniKey(label: .text("4"), press: [.input("4")], vars: [v("4"), v("４"), v("四"), v("④")])
+        dict[.init(x: 4, y: 0)] = uniKey(label: .text("5"), press: [.input("5")], vars: [v("5"), v("５"), v("五"), v("⑤")])
+        dict[.init(x: 5, y: 0)] = uniKey(label: .text("6"), press: [.input("6")], vars: [v("6"), v("６"), v("六"), v("⑥")])
+        dict[.init(x: 6, y: 0)] = uniKey(label: .text("7"), press: [.input("7")], vars: [v("7"), v("７"), v("七"), v("⑦")])
+        dict[.init(x: 7, y: 0)] = uniKey(label: .text("8"), press: [.input("8")], vars: [v("8"), v("８"), v("八"), v("⑧")])
+        dict[.init(x: 8, y: 0)] = uniKey(label: .text("9"), press: [.input("9")], vars: [v("9"), v("９"), v("九"), v("⑨")], dir: .left)
+        dict[.init(x: 9, y: 0)] = uniKey(label: .text("0"), press: [.input("0")], vars: [v("0"), v("０"), v("〇"), v("⓪")], dir: .left)
 
         // 2nd row (legacy parity)
         dict[.init(x: 0, y: 1)] = uniKey(label: .text("-"), press: [.input("-")], vars: [])
