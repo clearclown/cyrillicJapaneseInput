@@ -88,55 +88,14 @@ struct QwertyLayoutProvider<Extension: ApplicationSpecificKeyboardViewExtension>
         dict[.init(x: 8, y: 1)] = uniKey(label: .text("¥"), press: [.input("¥")], vars: [v("¥"), v("￥"), v("$"), v("＄"), v("€"), v("₿"), v("£"), v("¤")], dir: .left)
         dict[.init(x: 9, y: 1)] = uniKey(label: .text("&"), press: [.input("&")], vars: [v("&"), v("＆")], dir: .left)
 
-        // 3rd row: symbols key + punctuation cluster + delete
-        dict[.init(x: 0, y: 2, width: 1.4)] = tabKeys().symbolsKey
-        // Middle cluster: custom keys if provided (variable count), otherwise fixed 5-slot defaults
-        do {
-            let defaults = [
-                (name: ".", actions: [ActionType.input(".")], vars: [".", ",", "!", "?", "'", "\""] as [String]),
-                (name: ",", actions: [ActionType.input(",")], vars: [] as [String]),
-                (name: "?", actions: [ActionType.input("?")], vars: [] as [String]),
-                (name: "!", actions: [ActionType.input("!")], vars: [] as [String]),
-                (name: "…", actions: [ActionType.input("…")], vars: [] as [String]),
-            ]
-            let custom = Extension.SettingProvider.numberTabCustomKeysSetting.keys
-            if !custom.isEmpty {
-                let count = custom.count
-                let w = 7.0 / Double(count)
-                for (i, k) in custom.enumerated() {
-                    let x = 1.5 + Double(i) * w
-                    let vars = k.longpresses.map { QwertyVariationsModel.VariationElement(label: .text($0.name), actions: $0.actions.map { $0.actionType }) }
-                    dict[.init(x: x, y: 2, width: w)] = QwertyGeneralKeyModel(
-                        labelType: .text(k.name),
-                        pressActions: { _ in k.actions.map { $0.actionType } },
-                        longPressActions: { _ in .none },
-                        variations: vars,
-                        direction: .center,
-                        showsTapBubble: !vars.isEmpty,
-                        role: .normal
-                    )
-                }
-            } else {
-                for (i, d) in defaults.enumerated() {
-                    let x = 1.5 + Double(i) * (7.0 / 5.0)
-                    let vars = d.vars.map { QwertyVariationsModel.VariationElement(label: .text($0), actions: [.input($0)]) }
-                    dict[.init(x: x, y: 2, width: 7.0 / 5.0)] = QwertyGeneralKeyModel(
-                        labelType: .text(d.name),
-                        pressActions: { _ in d.actions },
-                        longPressActions: { _ in .none },
-                        variations: vars,
-                        direction: .center,
-                        showsTapBubble: !vars.isEmpty,
-                        role: .normal
-                    )
-                }
-            }
-        }
-        dict[.init(x: 8.6, y: 2, width: 1.4, height: 1)] = QwertyGeneralKeyModel<Extension>(
+        // 3rd row: 「、」「。」「⌫」
+        dict[.init(x: 0, y: 2, width: 4.5)] = uniKey(label: .text("、"), press: [.input("、")], vars: [v("、"), v(","), v("，")])
+        dict[.init(x: 4.5, y: 2, width: 4.5)] = uniKey(label: .text("。"), press: [.input("。")], vars: [v("。"), v("."), v("．")])
+        dict[.init(x: 9.0, y: 2, width: 1.0)] = QwertyGeneralKeyModel<Extension>(
             labelType: .image("delete.left"),
             pressActions: { _ in [.delete(1)] },
             longPressActions: { _ in .init(repeat: [.delete(1)]) },
-            variations: [], direction: .right, showsTapBubble: false, role: .special
+            variations: [], direction: .left, showsTapBubble: false, role: .special
         )
 
         // 4th row: bottom controls (language and dynamic change)
