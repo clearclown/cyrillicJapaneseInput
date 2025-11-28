@@ -61,7 +61,7 @@ public extension LanguageLayoutKeyboardSetting {
 
 public struct JapaneseKeyboardLayout: LanguageLayoutKeyboardSetting {
     public static let title: LocalizedStringKey = "キーボードの種類"
-    public static let explanation: LocalizedStringKey = "キリル文字配列を選択できます。ロシア語(JCUKEN)、ウクライナ語、ブルガリア語(BDS)、セルビア語から選択できます。"
+    public static let explanation: LocalizedStringKey = "キリル文字配列を選択できます。ロシア語、ウクライナ語、ベラルーシ語、ブルガリア語、セルビア語、マケドニア語、カザフ語、キルギス語、モンゴル語から選択できます。"
     public static let defaultValue: LanguageLayout = .cyrillicStandard
     public static let key: String = "keyboard_type"
 }

@@ -10,7 +10,7 @@
 
 **Fix**: Check complete matches BEFORE prefix matches in the algorithm.
 
-**Affected profiles**: ALL profiles (Standard, Ukrainian, Bulgarian, Serbian, Belarusian)
+**Affected profiles**: ALL profiles (Standard, Ukrainian, Belarusian, Bulgarian, Serbian, Macedonian, Kazakh, Kyrgyz, Mongolian)
 
 ```
 // WRONG ORDER (causes bug)
@@ -56,6 +56,35 @@ if (isPrefix(candidate)) return Wait
 ### Belarusian
 
 - Uses Ў (U with breve) for わ行 sounds
+
+### Macedonian
+
+- Similar to Serbian, uses QWERTZ-based layout
+- Unique characters: Ѓ, Ќ, Ѕ
+- Uses Љ, Њ, Џ like Serbian
+- Falls back to Serbian profile for converter mappings
+
+### Kazakh
+
+- Extended Cyrillic alphabet with 9 additional characters
+- Unique characters: Ә, Ғ, Қ, Ң, Ө, Ұ, Ү, Һ, І
+- All special characters are accessible via long-press
+- Falls back to Standard Russian for converter mappings (base alphabet)
+- І (dotted I) used instead of Russian И in some positions
+
+### Kyrgyz
+
+- Russian base with 3 additional characters
+- Unique characters: Ң, Ө, Ү
+- Simpler than Kazakh (fewer special characters)
+- Falls back to Standard Russian for converter mappings
+
+### Mongolian
+
+- Russian base with 2 additional characters
+- Unique characters: Ө, Ү
+- Most similar to standard Russian of the Turkic keyboards
+- Falls back to Standard Russian for converter mappings
 
 ## Testing Requirements
 

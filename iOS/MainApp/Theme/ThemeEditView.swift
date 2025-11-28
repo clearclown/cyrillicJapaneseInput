@@ -201,6 +201,44 @@ struct ThemeEditView: CancelableEditor {
                         return .custard((try? CustardManager.load().custard(identifier: "cyrillic_bulgarian")) ?? .errorMessage)
                     case .cyrillicSerbian:
                         return .custard((try? CustardManager.load().custard(identifier: "cyrillic_serbian")) ?? .errorMessage)
+                    case .cyrillicBelarusian:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_belarusian")) ?? .errorMessage)
+                    case .cyrillicMacedonian:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_macedonian")) ?? .errorMessage)
+                    case .cyrillicKazakh:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_kazakh")) ?? .errorMessage)
+                    case .cyrillicKyrgyz:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_kyrgyz")) ?? .errorMessage)
+                    case .cyrillicMongolian:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_mongolian")) ?? .errorMessage)
+                    case .cyrillicTajik:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_tajik")) ?? .errorMessage)
+                    case .cyrillicUzbek:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_uzbek")) ?? .errorMessage)
+                    case .cyrillicTatar:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_tatar")) ?? .errorMessage)
+                    case .cyrillicBashkir:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_bashkir")) ?? .errorMessage)
+                    case .cyrillicChuvash:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_chuvash")) ?? .errorMessage)
+                    case .cyrillicSakha:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_sakha")) ?? .errorMessage)
+                    case .cyrillicBuryat:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_buryat")) ?? .errorMessage)
+                    case .cyrillicKalmyk:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_kalmyk")) ?? .errorMessage)
+                    case .cyrillicAzerbaijani:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_azerbaijani")) ?? .errorMessage)
+                    case .cyrillicChurchSlavonic:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_church_slavonic")) ?? .errorMessage)
+                    case .cyrillicKomi:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_komi")) ?? .errorMessage)
+                    case .cyrillicKhanty:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_khanty")) ?? .errorMessage)
+                    case .cyrillicChukchi:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_chukchi")) ?? .errorMessage)
+                    case .cyrillicAbkhaz:
+                        return .custard((try? CustardManager.load().custard(identifier: "cyrillic_abkhaz")) ?? .errorMessage)
                     }
                 }()
                 KeyboardPreview(theme: self.theme, defaultTab: tab)
