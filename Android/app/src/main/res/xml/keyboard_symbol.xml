@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Pismo - Symbol/Number Keyboard Layout
+
+  No gaps between keys - visual separation comes from rounded key backgrounds.
+  All rows use percentage widths for proper scaling on any screen.
+-->
+<Keyboard xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:keyWidth="10%p"
+    app:keyHeight="52dp"
+    app:keyHorizontalGap="0dp"
+    app:keyVerticalGap="4dp">
+
+    <!-- Row 1: 1 2 3 4 5 6 7 8 9 0 (10 keys × 10% = 100%) -->
+    <Row app:rowEdgeFlags="top">
+        <Key app:keyLabel="1" app:keyEdgeFlags="left" />
+        <Key app:keyLabel="2" />
+        <Key app:keyLabel="3" />
+        <Key app:keyLabel="4" />
+        <Key app:keyLabel="5" />
+        <Key app:keyLabel="6" />
+        <Key app:keyLabel="7" />
+        <Key app:keyLabel="8" />
+        <Key app:keyLabel="9" />
+        <Key app:keyLabel="0" app:keyEdgeFlags="right" />
+    </Row>
+
+    <!-- Row 2: @ # $ % ^ & * ( ) - (10 keys × 10% = 100%) -->
+    <Row>
+        <Key app:keyLabel="@" app:keyEdgeFlags="left" />
+        <Key app:keyLabel="#" />
+        <Key app:keyLabel="$" />
+        <Key app:keyLabel="%" />
+        <Key app:keyLabel="^" />
+        <Key app:keyLabel="&amp;" />
+        <Key app:keyLabel="*" />
+        <Key app:keyLabel="(" />
+        <Key app:keyLabel=")" />
+        <Key app:keyLabel="-" app:keyEdgeFlags="right" />
+    </Row>
+
+    <!-- Row 3: Punctuation + backspace (10 keys × 10% = 100%) -->
+    <Row>
+        <Key app:keyLabel="+" app:keyEdgeFlags="left" />
+        <Key app:keyLabel="=" />
+        <Key app:keyLabel="/" />
+        <Key app:keyLabel=":" />
+        <Key app:keyLabel=";" />
+        <Key app:keyLabel="&apos;" />
+        <Key app:keyLabel="&quot;" />
+        <Key app:keyLabel="!" />
+        <Key app:keyLabel="?" />
+        <Key
+            app:codes="-5"
+            app:keyIcon="@drawable/ic_backspace"
+            app:keyEdgeFlags="right"
+            app:isRepeatable="true" />
+    </Row>
+
+    <!-- Row 4: ABC , Space . Enter -->
+    <!-- 15% + 10% + 50% + 10% + 15% = 100% -->
+    <Row app:rowEdgeFlags="bottom">
+        <Key
+            app:codes="-8"
+            app:keyLabel="АБВ"
+            app:keyWidth="15%p"
+            app:keyEdgeFlags="left" />
+        <Key
+            app:keyLabel=","
+            app:keyWidth="10%p" />
+        <Key
+            app:codes="32"
+            app:keyLabel="@string/label_space"
+            app:keyWidth="50%p"
+            app:isRepeatable="true" />
+        <Key
+            app:keyLabel="."
+            app:keyWidth="10%p" />
+        <Key
+            app:codes="-4"
+            app:keyIcon="@drawable/ic_enter"
+            app:keyWidth="15%p"
+            app:keyEdgeFlags="right" />
+    </Row>
+
+</Keyboard>

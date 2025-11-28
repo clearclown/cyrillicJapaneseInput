@@ -9,12 +9,12 @@
 </p>
 
 <p align="center">
-  🇯🇵 <a href="#readme-日本語">日本語</a> |
-  🇷🇺 <a href="docs/readmeLangs/README_RU.md">Русский</a> |
-  🇺🇦 <a href="docs/readmeLangs/README_UK.md">Українська</a> |
-  🇧🇾 <a href="docs/readmeLangs/README_BE.md">Беларуская</a> |
-  🇧🇬 <a href="docs/readmeLangs/README_BG.md">Български</a> |
-  🇷🇸 <a href="docs/readmeLangs/README_SR.md">Српски</a>
+  :jp: <a href="#readme-日本語">日本語</a> |
+  :ru: <a href="docs/readmeLangs/README_RU.md">Русский</a> |
+  :ukraine: <a href="docs/readmeLangs/README_UK.md">Українська</a> |
+  :belarus~: <a href="docs/readmeLangs/README_BE.md">Беларуская</a> |
+  :bulgaria: <a href="docs/readmeLangs/README_BG.md">Български</a> |
+  :serbia: <a href="docs/readmeLangs/README_SR.md">Српски</a>
 </p>
 
 <p align="center">
@@ -97,11 +97,155 @@ App Storeで「Pismo」を検索するか、以下のリンクからダウンロ
 <!-- App Store公開後にリンクを追加 -->
 *App Store リンク: 公開準備中*
 
-### 開発について
+---
 
-PismoはオープンソースプロジェクトですPismoは[azooKey](https://github.com/azooKey/azooKey)をベースに開発されています。
+## 技術アーキテクチャ
 
-#### ビルド方法
+### システム概要
+
+Pismoは複数のオープンソースプロジェクトの技術を組み合わせて構築されています。
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        Pismo Keyboard                          │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────┐    ┌─────────────────────────────────┐    │
+│  │ Cyrillic Input  │───▶│   CyrillicKanaConverter        │    │
+│  │ (キリル文字入力)  │    │   (キリル文字→かな変換エンジン)    │    │
+│  └─────────────────┘    └───────────────┬─────────────────┘    │
+│                                         │                      │
+│                                         ▼                      │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │              azooKey Conversion Engine                   │   │
+│  │  ┌───────────────────┐  ┌───────────────────────────┐   │   │
+│  │  │ Zenzai (Neural)   │  │ Dictionary (Mozc-based)   │   │   │
+│  │  │ ニューラル変換      │  │ 辞書データ                 │   │   │
+│  │  └───────────────────┘  └───────────────────────────┘   │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                         │                      │
+│                                         ▼                      │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │                    Japanese Output                       │   │
+│  │                   (日本語出力: 漢字変換)                    │   │
+│  └─────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 入力処理フロー
+
+1. **キリル文字入力**: ユーザーがキリル文字キーボードで文字を入力
+2. **CyrillicKanaConverter**: キリル文字をひらがなに変換
+   - ポリグラフ対応（例: `ся` → `しゃ`、`цу` → `つ`）
+   - 言語別マッピング（ロシア語、ウクライナ語、ブルガリア語など）
+   - 外来語表記対応（例: `ヴ`、`ティ`、`ファ`など）
+3. **azooKey変換エンジン**: ひらがなを漢字かな混じり文に変換
+   - Zenzai: ニューラルネットワークベースの予測変換
+   - 辞書検索: Google Mozc由来の辞書データを使用
+4. **出力**: 変換結果を入力フィールドに挿入
+
+### 主要コンポーネント
+
+#### iOS (Keyboard Extension)
+
+| コンポーネント | 説明 | 基盤技術 |
+|--------------|------|---------|
+| `CyrillicKanaConverter` | キリル文字→ひらがな変換 | 独自実装 |
+| `InputManager` | 入力状態管理・候補表示 | azooKey |
+| `KanaKanjiConverter` | ひらがな→漢字変換 | azooKey + Zenzai |
+| `Dictionary` | 単語辞書・学習辞書 | Google Mozc派生 |
+
+#### キリル文字→かな変換の仕組み
+
+`CyrillicKanaConverter`は以下のマッピングテーブルを使用します：
+
+```swift
+// 基本的な母音
+"а" → "あ", "и" → "い", "у" → "う", "э" → "え", "о" → "お"
+
+// 子音 + 母音の組み合わせ
+"ка" → "か", "ки" → "き", "ку" → "く", "кэ" → "け", "ко" → "こ"
+"са" → "さ", "си" → "し", "су" → "す", "сэ" → "せ", "со" → "そ"
+
+// 拗音（小さい「や・ゆ・よ」）
+"кя" → "きゃ", "ся" → "しゃ", "ня" → "にゃ"
+
+// 促音（っ）
+"っ" は子音の重複で表現: "иттэ" → "いって"
+
+// 撥音（ん）
+"н" + 母音以外 → "ん": "ниндзя" → "にんじゃ"
+```
+
+#### 言語別の特殊マッピング
+
+各スラヴ言語には固有の文字があり、それぞれ対応しています：
+
+| 言語 | 特殊文字 | 変換例 |
+|------|---------|--------|
+| ウクライナ語 | ї, і, є, ґ | `ї` → `йі` (yi) |
+| ベラルーシ語 | ў, і | `ў` → `う` |
+| ブルガリア語 | ъ, ь | `ъ` → 硬音記号 |
+| セルビア語 | ђ, љ, њ, ћ, џ | `ђ` → `ぢ`, `љ` → `りゅ` |
+
+---
+
+## 使用技術・謝辞
+
+Pismoは以下のオープンソースプロジェクトの技術を使用しています。これらのプロジェクトの開発者に深く感謝いたします。
+
+### azooKey
+
+<a href="https://github.com/azooKey/azooKey">
+  <img src="https://github.com/azooKey/azooKey/raw/develop/MainApp/Assets.xcassets/AppIcon.appiconset/icon.png" alt="azooKey" width="64"/>
+</a>
+
+**[azooKey](https://github.com/azooKey/azooKey)** - iOS向け日本語キーボードアプリ
+
+Pismoのベースとなったキーボードフレームワークです。以下の機能を提供しています：
+
+- **Keyboard Extension フレームワーク**: iOS向けカスタムキーボードの基盤
+- **Zenzai変換エンジン**: ニューラルネットワークベースのかな漢字変換
+- **ライブ変換**: リアルタイムでの漢字変換表示
+- **カスタマイズ可能なUI**: テーマ・レイアウトのカスタマイズ機能
+
+```
+azooKey Copyright (c) 2020-2025 Keita Miwa (ensan)
+Licensed under MIT License
+https://github.com/azooKey/azooKey
+```
+
+### Google Mozc
+
+<a href="https://github.com/google/mozc">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Google_Mozc_Logo.svg" alt="Mozc" width="64"/>
+</a>
+
+**[Google Mozc](https://github.com/google/mozc)** - オープンソース日本語入力システム
+
+azooKeyの辞書データはMozcの辞書データをベースにしています：
+
+- **単語辞書**: 一般語・固有名詞・慣用句
+- **品詞情報**: 形態素解析用の品詞タグ
+- **連接コスト**: 単語間の接続確率データ
+
+```
+Mozc Copyright 2010-2024, Google Inc.
+Licensed under BSD 3-Clause License
+https://github.com/google/mozc
+```
+
+### その他の技術
+
+| 技術 | 用途 | ライセンス |
+|------|------|-----------|
+| Swift/SwiftUI | iOSアプリ開発 | Apache 2.0 |
+| Swift Package Manager | 依存関係管理 | Apache 2.0 |
+
+---
+
+## 開発について
+
+### ビルド方法
 
 ```bash
 # リポジトリをクローン（サブモジュール含む）
@@ -111,17 +255,25 @@ git clone https://github.com/clearclown/cyrillicJapaneseInput --recursive
 open iOS/Pismo.xcodeproj
 ```
 
-#### プロジェクト構造
+### プロジェクト構造
 
 ```
 cyrillicJapaneseInput/
-├── iOS/                    # iOSアプリケーション
-│   ├── Pismo.xcodeproj/
-│   ├── MainApp/
-│   ├── Keyboard/
-│   └── AzooKeyCore/
-├── Android/                # Androidアプリケーション（開発予定）
-├── docs/                   # ドキュメント
+├── iOS/                          # iOSアプリケーション
+│   ├── Pismo.xcodeproj/          # Xcodeプロジェクト
+│   ├── MainApp/                  # メインアプリ (設定画面等)
+│   ├── Keyboard/                 # Keyboard Extension
+│   │   └── Display/
+│   │       └── InputManager.swift   # 入力管理
+│   └── AzooKeyCore/              # azooKeyコアライブラリ
+│       └── Sources/
+│           └── AzooKeyUtils/
+│               └── CyrillicKanaConverter.swift  # キリル→かな変換
+├── Android/                      # Androidアプリ (開発予定)
+├── docs/                         # ドキュメント
+│   ├── mappings/                 # キリル文字マッピングCSV
+│   ├── readmeLangs/              # 多言語README
+│   └── appstore/                 # App Store素材
 └── README.md
 ```
 
@@ -136,22 +288,27 @@ Pull Requestを歓迎します。特に以下の貢献を求めています：
 
 詳しくは [CONTRIBUTING.md](docs/development/CONTRIBUTING.md) をご覧ください。
 
-### ライセンス
+---
+
+## ライセンス
 
 MIT License
 
-Copyright (c) 2024-2025 clearclown
+Copyright (c) 2024-2025 clearclown / Pismo Project
 
-このプロジェクトは [azooKey](https://github.com/azooKey/azooKey) をベースにしています。
-azooKey Copyright (c) 2020-2025 Keita Miwa (ensan)
+このプロジェクトは以下のオープンソースプロジェクトをベースにしています：
 
-### 謝辞
+- **azooKey** - Copyright (c) 2020-2025 Keita Miwa (ensan) - MIT License
+- **Google Mozc** - Copyright 2010-2024, Google Inc. - BSD 3-Clause License
 
-- [azooKey](https://github.com/azooKey/azooKey) - ベースとなったキーボードアプリ
-- キリル文字を発明し、文化遺産として現代に伝えてくれた先人たち
+詳細は [LICENSE](LICENSE) ファイルをご覧ください。
 
 ---
 
 <p align="center">
   <strong>Pismo</strong> — キリル文字と日本語を繋ぐ架け橋
+</p>
+
+<p align="center">
+  Built with azooKey | Powered by Mozc Dictionary
 </p>

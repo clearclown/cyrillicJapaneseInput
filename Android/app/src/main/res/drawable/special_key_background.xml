@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Pressed state -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/key_background_pressed" />
+            <corners android:radius="6dp" />
+        </shape>
+    </item>
+    <!-- Checked state -->
+    <item android:state_checkable="true" android:state_checked="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/primary" />
+            <corners android:radius="6dp" />
+        </shape>
+    </item>
+    <!-- Normal state -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/special_key_background" />
+            <corners android:radius="6dp" />
+        </shape>
+    </item>
+</selector>

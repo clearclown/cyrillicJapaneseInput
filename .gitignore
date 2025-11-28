@@ -37,3 +37,6 @@ xcuserdata/
 # End of https://www.toptal.com/developers/gitignore/api/xcodebuild/
 AzooKeyCore/build/
 build/
+
+# Critical files - DO NOT COMMIT
+important/

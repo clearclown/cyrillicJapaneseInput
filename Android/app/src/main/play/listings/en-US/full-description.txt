@@ -1,0 +1,55 @@
+Pismo (Писмо) is a unique keyboard that allows you to type Japanese characters (Hiragana and Katakana) using a Cyrillic keyboard layout.
+
+🎯 WHAT IS PISMO?
+Pismo bridges the gap between Cyrillic and Japanese writing systems. Simply type in Cyrillic letters, and Pismo converts them to Japanese in real-time.
+
+Example: КА → ka → か/カ
+
+✨ KEY FEATURES
+
+• Real-time Conversion
+  Type in Cyrillic and see instant Japanese output. No waiting, no delays.
+
+• Multiple Cyrillic Layouts
+  Support for Russian, Ukrainian, Belarusian, Bulgarian, and Serbian keyboards.
+
+• Complete Privacy
+  All processing happens on your device. No data is sent to servers. No internet required.
+
+• Clean, Simple Interface
+  Minimalist design that focuses on what matters - your typing.
+
+• Full 33-Letter Russian Keyboard
+  Complete Cyrillic alphabet support including all Russian letters.
+
+• Predictive Conversion
+  Smart conversion engine helps you type faster and more accurately.
+
+🌍 SUPPORTED LANGUAGES
+- Russian (~150M speakers)
+- Ukrainian (~40M speakers)
+- Bulgarian (~8M speakers)
+- Serbian (~9M speakers)
+- Belarusian (~5M speakers)
+
+👥 WHO IS THIS FOR?
+- Japanese language learners who are familiar with Cyrillic
+- Researchers studying both Slavic and Japanese languages
+- Orthodox Christian communities connecting with Japanese culture
+- Anyone who prefers typing with Cyrillic letters
+
+🔒 PRIVACY FIRST
+- No data collection
+- No advertisements
+- No account required
+- Open source
+
+📱 HOW TO USE
+1. Install Pismo from Google Play
+2. Enable Pismo in Settings > System > Languages & Input > On-screen keyboard
+3. Switch to Pismo when typing in any app
+4. Start typing in Cyrillic - Japanese characters appear automatically!
+
+🌐 Website: https://pismo-web-page.vercel.app
+
+Free to download. No in-app purchases.
