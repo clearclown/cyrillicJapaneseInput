@@ -18,6 +18,12 @@ struct KeyboardLayoutTypeDetailsView: View {
             Section("キーボードの種類") {
                 LanguageLayoutSettingView(.japaneseKeyboardLayout, language: .japanese).padding(.vertical)
             }
+            Section("使い方ガイド") {
+                FallbackLink("チートシート", destination: URL(string: "https://pismo-web-page.vercel.app/guide")!)
+                Text("キリル文字から日本語への変換方法を確認できます。")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
             Section("数字入力の方法") {
                 Picker("数字入力の方法", selection: $useStandardNumpad) {
                     Text("標準式").tag(true)

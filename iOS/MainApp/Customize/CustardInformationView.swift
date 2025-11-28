@@ -363,7 +363,7 @@ private struct UploadConfirmationView: View {
                 Text("共有リンクを発行すると、不特定の第三者があなたのカスタムタブを使えるようになります。")
                 Text("共有リンクは、最後のダウンロードから30日程度で失効します。")
             }
-            Section(footer: Text("[\(systemImage: "arrow.up.forward.square")利用規約](https://azookey.com/TermsOfService)を確認してください")) {
+            Section(footer: Text("[\(systemImage: "arrow.up.forward.square")利用規約](https://azookey.com/TermsOfService)を確認してください\n※カスタード共有機能はazooKeyのサービスを利用しています。接続できない場合があります。")) {
                 Toggle("利用規約に同意します", isOn: $acceptTermsOfService)
                     .toggleStyle(CheckboxToggleStyle())
             }
