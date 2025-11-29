@@ -143,6 +143,44 @@ public struct CustardManager: CustardManagerProtocol {
             return .cyrillicBulgarian
         case "cyrillic_serbian":
             return .cyrillicSerbian
+        case "cyrillic_belarusian":
+            return .cyrillicBelarusian
+        case "cyrillic_macedonian":
+            return .cyrillicMacedonian
+        case "cyrillic_kazakh":
+            return .cyrillicKazakh
+        case "cyrillic_kyrgyz":
+            return .cyrillicKyrgyz
+        case "cyrillic_mongolian":
+            return .cyrillicMongolian
+        case "cyrillic_tajik":
+            return .cyrillicTajik
+        case "cyrillic_uzbek":
+            return .cyrillicUzbek
+        case "cyrillic_tatar":
+            return .cyrillicTatar
+        case "cyrillic_bashkir":
+            return .cyrillicBashkir
+        case "cyrillic_chuvash":
+            return .cyrillicChuvash
+        case "cyrillic_sakha":
+            return .cyrillicSakha
+        case "cyrillic_buryat":
+            return .cyrillicBuryat
+        case "cyrillic_kalmyk":
+            return .cyrillicKalmyk
+        case "cyrillic_azerbaijani":
+            return .cyrillicAzerbaijani
+        case "cyrillic_church_slavonic":
+            return .cyrillicChurchSlavonic
+        case "cyrillic_komi":
+            return .cyrillicKomi
+        case "cyrillic_khanty":
+            return .cyrillicKhanty
+        case "cyrillic_chukchi":
+            return .cyrillicChukchi
+        case "cyrillic_abkhaz":
+            return .cyrillicAbkhaz
         case "standard_numpad":
             return .standardNumpad
         default:

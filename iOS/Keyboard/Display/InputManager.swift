@@ -60,6 +60,42 @@ final class InputManager {
             self.cyrillicConverter.setProfile(.bulgarian)
         case "cyrillic_serbian":
             self.cyrillicConverter.setProfile(.serbian)
+        case "cyrillic_macedonian":
+            self.cyrillicConverter.setProfile(.macedonian)
+        case "cyrillic_kazakh":
+            self.cyrillicConverter.setProfile(.kazakh)
+        case "cyrillic_kyrgyz":
+            self.cyrillicConverter.setProfile(.kyrgyz)
+        case "cyrillic_mongolian":
+            self.cyrillicConverter.setProfile(.mongolian)
+        case "cyrillic_tajik":
+            self.cyrillicConverter.setProfile(.tajik)
+        case "cyrillic_uzbek":
+            self.cyrillicConverter.setProfile(.uzbek)
+        case "cyrillic_tatar":
+            self.cyrillicConverter.setProfile(.tatar)
+        case "cyrillic_bashkir":
+            self.cyrillicConverter.setProfile(.bashkir)
+        case "cyrillic_chuvash":
+            self.cyrillicConverter.setProfile(.chuvash)
+        case "cyrillic_sakha":
+            self.cyrillicConverter.setProfile(.sakha)
+        case "cyrillic_buryat":
+            self.cyrillicConverter.setProfile(.buryat)
+        case "cyrillic_kalmyk":
+            self.cyrillicConverter.setProfile(.kalmyk)
+        case "cyrillic_azerbaijani":
+            self.cyrillicConverter.setProfile(.azerbaijani)
+        case "cyrillic_church_slavonic":
+            self.cyrillicConverter.setProfile(.churchSlavonic)
+        case "cyrillic_komi":
+            self.cyrillicConverter.setProfile(.komi)
+        case "cyrillic_khanty":
+            self.cyrillicConverter.setProfile(.khanty)
+        case "cyrillic_chukchi":
+            self.cyrillicConverter.setProfile(.chukchi)
+        case "cyrillic_abkhaz":
+            self.cyrillicConverter.setProfile(.abkhaz)
         default:
             // Default to standard if unknown cyrillic identifier, or ignore if not cyrillic
             if identifier.starts(with: "cyrillic_") {
