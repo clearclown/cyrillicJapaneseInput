@@ -2,6 +2,22 @@
 
 This document describes the mapping rules for converting Cyrillic script input to Japanese Hiragana.
 
+## Version 1.2.0 New Features
+
+### 「を」の入力対応
+- **Во → を** (助詞の「を」が入力可能に)
+- わ行のパターンに一致: Ва=わ, Ви=ゐ, Вэ=ゑ, **Во=を**
+
+### 「ぢ」「づ」の明示的入力
+- **Дьи → ぢ** (soft sign で「じ」と区別)
+- **Дьу → づ** (soft sign で「ず」と区別)
+
+| 入力 | 出力 | 備考 |
+|-----|------|------|
+| Во | を | 助詞「を」 |
+| Дьи | ぢ | 「じ」(Дзи)と区別 |
+| Дьу | づ | 「ず」(Дзу)と区別 |
+
 ## Overview
 
 The system uses a **greedy matching algorithm** that processes input character by character, attempting to match the longest possible sequence first.

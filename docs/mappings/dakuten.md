@@ -29,10 +29,12 @@
 | Romaji | Hiragana | Standard | Ukrainian | Belarusian | Bulgarian | Serbian |
 |--------|----------|----------|-----------|------------|-----------|---------|
 | da | だ | Да | Да | Да | Да | Да |
+| di | ぢ | Дьи | Дьі | Дьі | Дьи | Дьи |
+| du | づ | Дьу | Дьу | Дьу | Дьъ | Дьу |
 | de | で | Дэ | Дэ | Дэ | Де | Дэ |
 | do | ど | До | До | До | До | До |
 
-**Note**: ぢ and づ are typically written as じ and ず in modern Japanese.
+**Note**: ぢ/づ は soft sign (Ь) を使って じ/ず (Дзи/Дзу) と区別する。
 
 ## B-row (ば行)
 
