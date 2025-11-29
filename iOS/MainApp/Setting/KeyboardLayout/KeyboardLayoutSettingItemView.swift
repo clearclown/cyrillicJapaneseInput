@@ -28,6 +28,44 @@ extension LanguageLayout {
             return "ブルガリア語(BDS)"
         case .cyrillicSerbian:
             return "セルビア語"
+        case .cyrillicBelarusian:
+            return "ベラルーシ語"
+        case .cyrillicMacedonian:
+            return "マケドニア語"
+        case .cyrillicKazakh:
+            return "カザフ語"
+        case .cyrillicKyrgyz:
+            return "キルギス語"
+        case .cyrillicMongolian:
+            return "モンゴル語"
+        case .cyrillicTajik:
+            return "タジク語"
+        case .cyrillicUzbek:
+            return "ウズベク語"
+        case .cyrillicTatar:
+            return "タタール語"
+        case .cyrillicBashkir:
+            return "バシキール語"
+        case .cyrillicChuvash:
+            return "チュヴァシ語"
+        case .cyrillicSakha:
+            return "サハ語"
+        case .cyrillicBuryat:
+            return "ブリヤート語"
+        case .cyrillicKalmyk:
+            return "カルムイク語"
+        case .cyrillicAzerbaijani:
+            return "アゼルバイジャン語"
+        case .cyrillicChurchSlavonic:
+            return "教会スラヴ語"
+        case .cyrillicKomi:
+            return "コミ語"
+        case .cyrillicKhanty:
+            return "ハンティー語"
+        case .cyrillicChukchi:
+            return "チュクチ語"
+        case .cyrillicAbkhaz:
+            return "アブハズ語"
         }
     }
 }
@@ -64,8 +102,27 @@ struct LanguageLayoutSettingView<SettingKey: LanguageLayoutKeyboardSetting>: Vie
             var layouts: [LanguageLayout] = [
                 .cyrillicStandard,
                 .cyrillicUkrainian,
+                .cyrillicBelarusian,
                 .cyrillicBulgarian,
-                .cyrillicSerbian
+                .cyrillicSerbian,
+                .cyrillicMacedonian,
+                .cyrillicKazakh,
+                .cyrillicKyrgyz,
+                .cyrillicMongolian,
+                .cyrillicTajik,
+                .cyrillicUzbek,
+                .cyrillicTatar,
+                .cyrillicBashkir,
+                .cyrillicChuvash,
+                .cyrillicSakha,
+                .cyrillicBuryat,
+                .cyrillicKalmyk,
+                .cyrillicAzerbaijani,
+                .cyrillicChurchSlavonic,
+                .cyrillicKomi,
+                .cyrillicKhanty,
+                .cyrillicChukchi,
+                .cyrillicAbkhaz
             ]
             // Add any user-made custards for Japanese
             layouts += CustardManager.load().availableCustard(for: .ja_JP).map {.custard($0)}
@@ -104,6 +161,44 @@ struct LanguageLayoutSettingView<SettingKey: LanguageLayoutKeyboardSetting>: Vie
             return .custard((try? custardManager.custard(identifier: "cyrillic_bulgarian")) ?? .errorMessage)
         case (.cyrillicSerbian, _):
             return .custard((try? custardManager.custard(identifier: "cyrillic_serbian")) ?? .errorMessage)
+        case (.cyrillicBelarusian, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_belarusian")) ?? .errorMessage)
+        case (.cyrillicMacedonian, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_macedonian")) ?? .errorMessage)
+        case (.cyrillicKazakh, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_kazakh")) ?? .errorMessage)
+        case (.cyrillicKyrgyz, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_kyrgyz")) ?? .errorMessage)
+        case (.cyrillicMongolian, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_mongolian")) ?? .errorMessage)
+        case (.cyrillicTajik, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_tajik")) ?? .errorMessage)
+        case (.cyrillicUzbek, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_uzbek")) ?? .errorMessage)
+        case (.cyrillicTatar, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_tatar")) ?? .errorMessage)
+        case (.cyrillicBashkir, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_bashkir")) ?? .errorMessage)
+        case (.cyrillicChuvash, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_chuvash")) ?? .errorMessage)
+        case (.cyrillicSakha, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_sakha")) ?? .errorMessage)
+        case (.cyrillicBuryat, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_buryat")) ?? .errorMessage)
+        case (.cyrillicKalmyk, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_kalmyk")) ?? .errorMessage)
+        case (.cyrillicAzerbaijani, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_azerbaijani")) ?? .errorMessage)
+        case (.cyrillicChurchSlavonic, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_church_slavonic")) ?? .errorMessage)
+        case (.cyrillicKomi, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_komi")) ?? .errorMessage)
+        case (.cyrillicKhanty, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_khanty")) ?? .errorMessage)
+        case (.cyrillicChukchi, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_chukchi")) ?? .errorMessage)
+        case (.cyrillicAbkhaz, _):
+            return .custard((try? custardManager.custard(identifier: "cyrillic_abkhaz")) ?? .errorMessage)
         }
     }
 

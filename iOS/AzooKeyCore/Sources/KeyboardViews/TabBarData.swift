@@ -99,9 +99,6 @@ public struct TabBarData: Codable, Sendable {
     public static let `default` = TabBarData(identifier: 0, items: [
         TabBarItem(label: .image("keyboard.chevron.compact.down"), pinned: true, actions: [.dismissKeyboard]),
         TabBarItem(label: .image("aspectratio"), pinned: true, actions: [.enableResizingMode, .toggleTabBar]),
-        TabBarItem(label: .image("face.smiling"), pinned: true, actions: [.moveTab(.system(.emoji_tab))]),
-        TabBarItem(label: .text("あいう"), pinned: false, actions: [.moveTab(.system(.user_japanese))]),
-        TabBarItem(label: .text("ABC"), pinned: false, actions: [.moveTab(.system(.user_english))]),
     ])
 }
 

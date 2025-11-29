@@ -133,7 +133,12 @@ public struct TabManager {
                 return .qwerty_abc
             case let .custard(identifier):
                 return .custard((try? config.custardManager.custard(identifier: identifier)) ?? .errorMessage)
-            case .cyrillicStandard, .cyrillicUkrainian, .cyrillicBulgarian, .cyrillicSerbian:
+            case .cyrillicStandard, .cyrillicUkrainian, .cyrillicBulgarian, .cyrillicSerbian,
+                 .cyrillicBelarusian, .cyrillicMacedonian, .cyrillicKazakh, .cyrillicKyrgyz, .cyrillicMongolian,
+                 .cyrillicTajik, .cyrillicUzbek, .cyrillicTatar, .cyrillicBashkir,
+                 .cyrillicChuvash, .cyrillicSakha, .cyrillicBuryat, .cyrillicKalmyk,
+                 .cyrillicAzerbaijani, .cyrillicChurchSlavonic, .cyrillicKomi, .cyrillicKhanty,
+                 .cyrillicChukchi, .cyrillicAbkhaz:
                 return .flick_abc  // Cyrillic layouts are not applicable to English input
             }
         case .japanese:
@@ -152,6 +157,44 @@ public struct TabManager {
                 return .custard((try? config.custardManager.custard(identifier: "cyrillic_bulgarian")) ?? .errorMessage)
             case .cyrillicSerbian:
                 return .custard((try? config.custardManager.custard(identifier: "cyrillic_serbian")) ?? .errorMessage)
+            case .cyrillicBelarusian:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_belarusian")) ?? .errorMessage)
+            case .cyrillicMacedonian:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_macedonian")) ?? .errorMessage)
+            case .cyrillicKazakh:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_kazakh")) ?? .errorMessage)
+            case .cyrillicKyrgyz:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_kyrgyz")) ?? .errorMessage)
+            case .cyrillicMongolian:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_mongolian")) ?? .errorMessage)
+            case .cyrillicTajik:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_tajik")) ?? .errorMessage)
+            case .cyrillicUzbek:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_uzbek")) ?? .errorMessage)
+            case .cyrillicTatar:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_tatar")) ?? .errorMessage)
+            case .cyrillicBashkir:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_bashkir")) ?? .errorMessage)
+            case .cyrillicChuvash:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_chuvash")) ?? .errorMessage)
+            case .cyrillicSakha:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_sakha")) ?? .errorMessage)
+            case .cyrillicBuryat:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_buryat")) ?? .errorMessage)
+            case .cyrillicKalmyk:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_kalmyk")) ?? .errorMessage)
+            case .cyrillicAzerbaijani:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_azerbaijani")) ?? .errorMessage)
+            case .cyrillicChurchSlavonic:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_church_slavonic")) ?? .errorMessage)
+            case .cyrillicKomi:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_komi")) ?? .errorMessage)
+            case .cyrillicKhanty:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_khanty")) ?? .errorMessage)
+            case .cyrillicChukchi:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_chukchi")) ?? .errorMessage)
+            case .cyrillicAbkhaz:
+                return .custard((try? config.custardManager.custard(identifier: "cyrillic_abkhaz")) ?? .errorMessage)
             }
         }
     }

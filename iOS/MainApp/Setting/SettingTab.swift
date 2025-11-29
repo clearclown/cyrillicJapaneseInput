@@ -157,36 +157,33 @@ struct SettingTabView: View {
                 }
                 .searchKeys("言語", "Language", "English", "日本語")
 
-                Section("Coming Soon") {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("他のキリル文字言語への対応を検討中です")
-                            .font(.subheadline)
-                        Text("カザフ語・ウズベク語・キルギス語・タジク語・モンゴル語・タタール語など")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding(.vertical, 4)
-                }
-                .searchKeys("Coming Soon", "キリル", "カザフ", "ウズベク", "モンゴル")
-
                 Section("オープンソースソフトウェア") {
                     Text("Pismoはオープンソースソフトウェアであり、GitHubでソースコードを公開しています。")
-                    FallbackLink("View Pismo on GitHub", destination: URL(string: "https://github.com/Pismo/Pismo")!)
+                    FallbackLink("View Pismo on GitHub", destination: URL(string: "https://github.com/clearclown/cyrillicJapaneseInput")!)
                     NavigationLink("Acknowledgements") {
                         OpenSourceSoftwaresLicenseView()
                     }
                 }
                 .searchKeys("オープンソース", "ライセンス", "謝辞", "OSS", "ソフトウェア")
 
+                Section("謝辞・クレジット") {
+                    Text("PismoはazooKey（MIT License）のフォークです。オリジナルプロジェクトに最大限の感謝を申し上げます。")
+                    FallbackLink("azooKey 公式サイト", destination: URL(string: "https://azookey.com")!)
+                    Text("このプロジェクトは生成AI（Anthropic Claude Opus 4.5）を使用して開発されました。")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .searchKeys("謝辞", "クレジット", "azooKey", "フォーク", "AI")
+
                 Section("このアプリについて") {
                     NavigationLink("お問い合わせ") {
                         ContactView()
                     }
                     .searchKeys("お問い合わせ", "質問", "連絡", "メール")
-                    FallbackLink("プライバシーポリシー", destination: URL(string: "https://azookey.netlify.app/PrivacyPolicy")!)
+                    FallbackLink("プライバシーポリシー", destination: URL(string: "https://pismo-web-page.vercel.app/privacy")!)
                         .foregroundStyle(.primary)
                         .searchKeys("プライバシーポリシー", "個人情報", "ライセンス")
-                    FallbackLink("利用規約", destination: URL(string: "https://azookey.netlify.app/TermsOfService")!)
+                    FallbackLink("利用規約", destination: URL(string: "https://pismo-web-page.vercel.app/privacy")!)
                         .foregroundStyle(.primary)
                         .searchKeys("利用規約", "規約", "ライセンス")
                     NavigationLink("更新履歴") {

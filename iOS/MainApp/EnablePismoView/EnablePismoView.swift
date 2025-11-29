@@ -67,7 +67,7 @@ struct EnablePismoView: View {
                             }
                             EnablePismoViewText("Pismoをオンにして", with: "square.and.line.vertical.and.square.fill")
                             CenterAlignedView {
-                                EnablePismoViewImage(.initSettingAzooKeySwitchImageHand)
+                                EnablePismoViewImage(.initSettingPismoSwitchImageHand)
                             }
                             EnablePismoViewText("このアプリを再び開いてください", with: "arrow.turn.down.left")
                             CenterAlignedView {
@@ -159,13 +159,13 @@ struct EnablePismoView: View {
                         }
                         .onReceive(NotificationCenter.default.publisher(for: UIApplication.keyboardDidShowNotification)) {_ in
                             // キーボードが開いた時
-                            if checkActiveKeyboardIsAzooKey() {
+                            if checkActiveKeyboardIsPismo() {
                                 showDoneMessage = true
                             }
                         }
                         .onReceive(NotificationCenter.default.publisher(for: UITextInputMode.currentInputModeDidChangeNotification)) {_ in
                             // アクティブなキーボードが変化したとき
-                            if checkActiveKeyboardIsAzooKey() {
+                            if checkActiveKeyboardIsPismo() {
                                 showDoneMessage = true
                             }
                         }
@@ -192,7 +192,7 @@ struct EnablePismoView: View {
         }
     }
 
-    private func checkActiveKeyboardIsAzooKey() -> Bool {
+    private func checkActiveKeyboardIsPismo() -> Bool {
         // キーボードが開いた時
         // 参考：https://stackoverflow.com/questions/26153336/how-do-i-find-out-the-current-keyboard-used-on-ios8
         let currentKeyboardIdentifier = NSArray(array: UITextInputMode.activeInputModes)

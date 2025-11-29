@@ -40,7 +40,7 @@ public extension Custard {
                 // Row 2 (Top letters): , у е и ш щ к с д з ц (小文字デフォルト)
                 .gridFit(.init(x: 0, y: 0)): .custom(.input(",")),
                 .gridFit(.init(x: 1, y: 0)): .custom(.input("у")),
-                .gridFit(.init(x: 2, y: 0)): .custom(.input("е")),
+                .gridFit(.init(x: 2, y: 0)): .custom(.inputWithVariation("е", variation: "ё")), // е with ё on flick up
                 .gridFit(.init(x: 3, y: 0)): .custom(.input("и")),
                 .gridFit(.init(x: 4, y: 0)): .custom(.input("ш")),
                 .gridFit(.init(x: 5, y: 0)): .custom(.input("щ")),
@@ -109,6 +109,25 @@ private extension CustardInterfaceCustomKey {
             press_actions: [.input(char)],
             longpress_actions: .init(start: [], repeat: []),
             variations: []
+        )
+    }
+
+    /// Input key with a flick-up variation (e.g., е with ё on flick up)
+    static func inputWithVariation(_ char: String, variation: String) -> CustardInterfaceCustomKey {
+        return CustardInterfaceCustomKey(
+            design: .init(label: .text(char), color: .normal),
+            press_actions: [.input(char)],
+            longpress_actions: .init(start: [], repeat: []),
+            variations: [
+                CustardInterfaceVariation(
+                    type: .flickVariation(.top),
+                    key: CustardInterfaceVariationKey(
+                        design: CustardVariationKeyDesign(label: .text(variation)),
+                        press_actions: [.input(variation)],
+                        longpress_actions: .none
+                    )
+                )
+            ]
         )
     }
 

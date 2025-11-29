@@ -16,6 +16,24 @@ public final class CyrillicKanaConverter {
         case belarusian = "BEL"
         case bulgarian = "BUL"
         case serbian = "SRB"
+        case macedonian = "MKD"
+        case kazakh = "KAZ"
+        case kyrgyz = "KGZ"
+        case mongolian = "MNG"
+        case tajik = "TJK"
+        case uzbek = "UZB"
+        case tatar = "TAT"
+        case bashkir = "BAS"
+        case chuvash = "CHU"
+        case sakha = "SAH"
+        case buryat = "BUA"
+        case kalmyk = "KAL"
+        case azerbaijani = "AZE"
+        case churchSlavonic = "CHU-SL"
+        case komi = "KOM"
+        case khanty = "KHT"
+        case chukchi = "CKT"
+        case abkhaz = "ABK"
     }
 
     private var currentProfile: Profile = .standard
@@ -69,20 +87,20 @@ public final class CyrillicKanaConverter {
             print("[CyrillicConverter] i=\(i) suffix='\(suffix)' candidate='\(candidate)' inMapping=\(mapping[candidate] != nil) inPrefix=\(mappingPrefixes.contains(candidate))")
             #endif
 
+            // 完全一致チェック (プレフィックスより優先)
+            if let kana = mapping[candidate] {
+                #if DEBUG
+                print("[CyrillicConverter] -> Match! deleteLast=\(i) output='\(kana)'")
+                #endif
+                return InputOperation(deleteLast: i, input: kana)
+            }
+
             // プレフィックス一致チェック (Wait状態)
             if mappingPrefixes.contains(candidate) {
                 #if DEBUG
                 print("[CyrillicConverter] -> Wait (prefix match)")
                 #endif
                 return InputOperation(deleteLast: 0, input: input)
-            }
-
-            // 完全一致チェック
-            if let kana = mapping[candidate] {
-                #if DEBUG
-                print("[CyrillicConverter] -> Match! deleteLast=\(i) output='\(kana)'")
-                #endif
-                return InputOperation(deleteLast: i, input: kana)
             }
         }
 
@@ -111,14 +129,14 @@ public final class CyrillicKanaConverter {
         // Step 3: 単一文字のマッピングチェック (i=0 case)
         let singleCandidate = inputUpper
 
+        // 完全一致チェック (プレフィックスより優先)
+        if let kana = mapping[singleCandidate] {
+            return InputOperation(deleteLast: 0, input: kana)
+        }
+
         // プレフィックス一致チェック (Wait状態)
         if mappingPrefixes.contains(singleCandidate) {
             return InputOperation(deleteLast: 0, input: input)
-        }
-
-        // 完全一致チェック
-        if let kana = mapping[singleCandidate] {
-            return InputOperation(deleteLast: 0, input: kana)
         }
 
         // 何もマッチしない場合はそのまま入力
@@ -196,8 +214,8 @@ public final class CyrillicKanaConverter {
             ("wa", "わ", "Ва", "Ва", "Ўа", "Ва", "Ва"),
             ("wi", "ゐ", "Ви", "Ві", "Ўі", "Ви", "Ви"),
             ("we", "ゑ", "Вэ", "Вэ", "Ўэ", "Ве", "Вэ"),
-            // "wo" (を) is intentionally omitted - О maps to お (o)
-            ("n", "ん", "Н", "Н", "Н", "Н", "Н")
+            ("wo", "を", "Во", "Во", "Ўо", "Во", "Во")
+            // "n" (ん) is handled by special rules: НН → ん, Н + consonant → ん + consonant
         ]
 
         let dakutenData = [
@@ -212,7 +230,8 @@ public final class CyrillicKanaConverter {
             ("ze", "ぜ", "Дзэ", "Дзэ", "Дзэ", "Дзе", "Дзэ"),
             ("zo", "ぞ", "Дзо", "Дзо", "Дзо", "Дзо", "Дзо"),
             ("da", "だ", "Да", "Да", "Да", "Да", "Да"),
-            // ぢ (ji_d) and づ (zu_d) are phonetically same as じ/ず, handled by same keys
+            ("di", "ぢ", "Дьи", "Дьі", "Дьі", "Дьи", "Дьи"),
+            ("du", "づ", "Дьу", "Дьу", "Дьу", "Дьъ", "Дьу"),
             ("de", "で", "Дэ", "Дэ", "Дэ", "Де", "Дэ"),
             ("do", "ど", "До", "До", "До", "До", "До"),
             ("ba", "ば", "Ба", "Ба", "Ба", "Ба", "Ба"),
@@ -385,6 +404,7 @@ public final class CyrillicKanaConverter {
         ]
 
         // Helper to pick column
+        // New languages use fallbacks: Macedonian→Serbian, Kazakh/Kyrgyz/Mongolian→Standard
         func pick(_ row: (String, String, String, String, String, String, String)) -> String {
             switch currentProfile {
             case .standard: return row.2
@@ -392,6 +412,24 @@ public final class CyrillicKanaConverter {
             case .belarusian: return row.4
             case .bulgarian: return row.5
             case .serbian: return row.6
+            case .macedonian: return row.6  // Fallback to Serbian (similar alphabet)
+            case .kazakh: return row.2      // Fallback to Standard Russian
+            case .kyrgyz: return row.2      // Fallback to Standard Russian
+            case .mongolian: return row.2   // Fallback to Standard Russian
+            case .tajik: return row.2       // Fallback to Standard Russian
+            case .uzbek: return row.2       // Fallback to Standard Russian
+            case .tatar: return row.2       // Fallback to Standard Russian
+            case .bashkir: return row.2     // Fallback to Standard Russian
+            case .chuvash: return row.2     // Fallback to Standard Russian
+            case .sakha: return row.2       // Fallback to Standard Russian
+            case .buryat: return row.2      // Fallback to Standard Russian
+            case .kalmyk: return row.2      // Fallback to Standard Russian
+            case .azerbaijani: return row.2  // Fallback to Standard Russian
+            case .churchSlavonic: return row.2  // Fallback to Standard Russian
+            case .komi: return row.2         // Fallback to Standard Russian
+            case .khanty: return row.2       // Fallback to Standard Russian
+            case .chukchi: return row.2      // Fallback to Standard Russian
+            case .abkhaz: return row.2       // Fallback to Standard Russian
             }
         }
 
@@ -433,6 +471,579 @@ public final class CyrillicKanaConverter {
             let key = row.2.uppercased()
             let value = row.1
             newMapping[key] = value
+        }
+
+        // ============================================================
+        // Alternative mappings for keyboards without Ё and Ъ keys
+        // ============================================================
+        // йо as alternative for ё (useful when keyboard lacks ё key)
+        // These are added AFTER the main mappings so they don't override
+        // the primary ё-based mappings (which take precedence in greedy matching)
+
+        // Basic йо → よ (alternative for ё)
+        newMapping["ЙО"] = "よ"
+
+        // Compound sounds with йо as alternative for ё
+        // きょ行 (kyo-group)
+        newMapping["КЙО"] = "きょ"
+        // しょ行 (sho-group)
+        newMapping["СЙО"] = "しょ"
+        // にょ行 (nyo-group)
+        newMapping["НЙО"] = "にょ"
+        // ひょ行 (hyo-group)
+        newMapping["ХЙО"] = "ひょ"
+        // みょ行 (myo-group)
+        newMapping["МЙО"] = "みょ"
+        // りょ行 (ryo-group)
+        newMapping["РЙО"] = "りょ"
+        // ぎょ行 (gyo-group)
+        newMapping["ГЙО"] = "ぎょ"
+        // じょ行 (jo-group)
+        newMapping["ДЗЙО"] = "じょ"
+        // びょ行 (byo-group)
+        newMapping["БЙО"] = "びょ"
+        // ぴょ行 (pyo-group)
+        newMapping["ПЙО"] = "ぴょ"
+
+        // Small ょ using ъ alternative (')
+        newMapping["'Ё"] = "ょ"
+        newMapping["'ЙО"] = "ょ"
+
+        // Separator alternatives using ' for ъ with йо for ё
+        newMapping["Н'ЙО"] = "んよ"
+
+        // ============================================================
+        // Alternative mappings for は行「ふ」
+        // ============================================================
+        // Ху as alternative for Фу (ふ) - more intuitive on Russian keyboard
+        newMapping["ХУ"] = "ふ"
+
+        // ============================================================
+        // Language-specific character mappings
+        // ============================================================
+
+        // Macedonian specific characters
+        if currentProfile == .macedonian {
+            // Ѓ (Gje) - palatal g, use for ぎゃ行 sounds
+            newMapping["Ѓ"] = "ぎ"
+            newMapping["ЃА"] = "ぎゃ"
+            newMapping["ЃУ"] = "ぎゅ"
+            newMapping["ЃО"] = "ぎょ"
+            // Ќ (Kje) - palatal k, use for きゃ行 sounds
+            newMapping["Ќ"] = "き"
+            newMapping["ЌА"] = "きゃ"
+            newMapping["ЌУ"] = "きゅ"
+            newMapping["ЌО"] = "きょ"
+            // Ѕ (Dze) - dz sound
+            newMapping["Ѕ"] = "づ"
+            newMapping["ЅА"] = "ざ"
+            newMapping["ЅИ"] = "じ"
+            newMapping["ЅУ"] = "ず"
+            newMapping["ЅЕ"] = "ぜ"
+            newMapping["ЅО"] = "ぞ"
+        }
+
+        // Kazakh specific characters
+        if currentProfile == .kazakh {
+            // Ә (schwa) - use for え sound
+            newMapping["Ә"] = "え"
+            // Ғ (voiced h/g) - use for が行
+            newMapping["Ғ"] = "が"
+            newMapping["ҒА"] = "が"
+            newMapping["ҒИ"] = "ぎ"
+            newMapping["ҒУ"] = "ぐ"
+            newMapping["ҒЕ"] = "げ"
+            newMapping["ҒО"] = "ご"
+            // Қ (voiceless uvular) - use for か行
+            newMapping["Қ"] = "か"
+            newMapping["ҚА"] = "か"
+            newMapping["ҚИ"] = "き"
+            newMapping["ҚУ"] = "く"
+            newMapping["ҚЕ"] = "け"
+            newMapping["ҚО"] = "こ"
+            // Ң (ng) - use for ん before が行
+            newMapping["Ң"] = "ん"
+            // Ө (front o) - use for お
+            newMapping["Ө"] = "お"
+            // Ұ (back u) - use for う
+            newMapping["Ұ"] = "う"
+            // Ү (front u) - use for ゆ
+            newMapping["Ү"] = "ゆ"
+            // Һ (h) - use for は行
+            newMapping["Һ"] = "は"
+            newMapping["ҺА"] = "は"
+            newMapping["ҺИ"] = "ひ"
+            newMapping["ҺУ"] = "ふ"
+            newMapping["ҺЕ"] = "へ"
+            newMapping["ҺО"] = "ほ"
+            // І (short i) - use for い
+            newMapping["І"] = "い"
+        }
+
+        // Kyrgyz specific characters (subset of Kazakh)
+        if currentProfile == .kyrgyz {
+            newMapping["Ң"] = "ん"
+            newMapping["Ү"] = "ゆ"
+            newMapping["Ө"] = "お"
+        }
+
+        // Mongolian specific characters
+        if currentProfile == .mongolian {
+            newMapping["Ө"] = "お"
+            newMapping["Ү"] = "ゆ"
+        }
+
+        // Tajik specific characters (Ғ, Ӣ, Қ, Ӯ, Ҳ, Ҷ)
+        if currentProfile == .tajik {
+            // Ғ (voiced h/g) - use for が行
+            newMapping["Ғ"] = "が"
+            newMapping["ҒА"] = "が"
+            newMapping["ҒИ"] = "ぎ"
+            newMapping["ҒУ"] = "ぐ"
+            newMapping["ҒЕ"] = "げ"
+            newMapping["ҒО"] = "ご"
+            // Ӣ (long i) - use for い
+            newMapping["Ӣ"] = "い"
+            // Қ (voiceless uvular) - use for か行
+            newMapping["Қ"] = "か"
+            newMapping["ҚА"] = "か"
+            newMapping["ҚИ"] = "き"
+            newMapping["ҚУ"] = "く"
+            newMapping["ҚЕ"] = "け"
+            newMapping["ҚО"] = "こ"
+            // Ӯ (long u) - use for う
+            newMapping["Ӯ"] = "う"
+            // Ҳ (voiceless h) - use for は行
+            newMapping["Ҳ"] = "は"
+            newMapping["ҲА"] = "は"
+            newMapping["ҲИ"] = "ひ"
+            newMapping["ҲУ"] = "ふ"
+            newMapping["ҲЕ"] = "へ"
+            newMapping["ҲО"] = "ほ"
+            // Ҷ (voiced j) - use for じゃ行
+            newMapping["Ҷ"] = "じ"
+            newMapping["ҶА"] = "じゃ"
+            newMapping["ҶУ"] = "じゅ"
+            newMapping["ҶО"] = "じょ"
+        }
+
+        // Uzbek specific characters (Ғ, Қ, Ҳ, Ў)
+        if currentProfile == .uzbek {
+            // Ғ (voiced h/g) - use for が行
+            newMapping["Ғ"] = "が"
+            newMapping["ҒА"] = "が"
+            newMapping["ҒИ"] = "ぎ"
+            newMapping["ҒУ"] = "ぐ"
+            newMapping["ҒЕ"] = "げ"
+            newMapping["ҒО"] = "ご"
+            // Қ (voiceless uvular) - use for か行
+            newMapping["Қ"] = "か"
+            newMapping["ҚА"] = "か"
+            newMapping["ҚИ"] = "き"
+            newMapping["ҚУ"] = "く"
+            newMapping["ҚЕ"] = "け"
+            newMapping["ҚО"] = "こ"
+            // Ҳ (voiceless h) - use for は行
+            newMapping["Ҳ"] = "は"
+            newMapping["ҲА"] = "は"
+            newMapping["ҲИ"] = "ひ"
+            newMapping["ҲУ"] = "ふ"
+            newMapping["ҲЕ"] = "へ"
+            newMapping["ҲО"] = "ほ"
+            // Ў (w sound) - use for わ行 (similar to Belarusian)
+            newMapping["Ў"] = "わ"
+            newMapping["ЎА"] = "わ"
+            newMapping["ЎИ"] = "ゐ"
+            newMapping["ЎЭ"] = "ゑ"
+        }
+
+        // Tatar specific characters (Ә, Ө, Ү, Җ, Ң, Һ)
+        if currentProfile == .tatar {
+            // Ә (front a/schwa) - use for え sound
+            newMapping["Ә"] = "え"
+            // Ө (front o) - use for お
+            newMapping["Ө"] = "お"
+            // Ү (front u) - use for ゆ
+            newMapping["Ү"] = "ゆ"
+            // Җ (voiced j/dzh) - use for じゃ行
+            newMapping["Җ"] = "じ"
+            newMapping["ҖА"] = "じゃ"
+            newMapping["ҖИ"] = "じ"
+            newMapping["ҖУ"] = "じゅ"
+            newMapping["ҖЕ"] = "じぇ"
+            newMapping["ҖО"] = "じょ"
+            // Ң (ng) - use for ん
+            newMapping["Ң"] = "ん"
+            // Һ (h) - use for は行
+            newMapping["Һ"] = "は"
+            newMapping["ҺА"] = "は"
+            newMapping["ҺИ"] = "ひ"
+            newMapping["ҺУ"] = "ふ"
+            newMapping["ҺЕ"] = "へ"
+            newMapping["ҺО"] = "ほ"
+        }
+
+        // Bashkir specific characters (Ә, Ө, Ү, Ғ, Ҡ, Ң, Ҙ, Ҫ, Һ)
+        if currentProfile == .bashkir {
+            // Ә (front a/schwa) - use for え sound
+            newMapping["Ә"] = "え"
+            // Ө (front o) - use for お
+            newMapping["Ө"] = "お"
+            // Ү (front u) - use for ゆ
+            newMapping["Ү"] = "ゆ"
+            // Ғ (voiced h/g) - use for が行
+            newMapping["Ғ"] = "が"
+            newMapping["ҒА"] = "が"
+            newMapping["ҒИ"] = "ぎ"
+            newMapping["ҒУ"] = "ぐ"
+            newMapping["ҒЕ"] = "げ"
+            newMapping["ҒО"] = "ご"
+            // Ҡ (voiceless uvular) - use for か行
+            newMapping["Ҡ"] = "か"
+            newMapping["ҠА"] = "か"
+            newMapping["ҠИ"] = "き"
+            newMapping["ҠУ"] = "く"
+            newMapping["ҠЕ"] = "け"
+            newMapping["ҠО"] = "こ"
+            // Ң (ng) - use for ん
+            newMapping["Ң"] = "ん"
+            // Ҙ (voiced th/dh) - use for ざ行
+            newMapping["Ҙ"] = "ざ"
+            newMapping["ҘА"] = "ざ"
+            newMapping["ҘИ"] = "じ"
+            newMapping["ҘУ"] = "ず"
+            newMapping["ҘЕ"] = "ぜ"
+            newMapping["ҘО"] = "ぞ"
+            // Ҫ (voiceless th) - use for さ行
+            newMapping["Ҫ"] = "さ"
+            newMapping["ҪА"] = "さ"
+            newMapping["ҪИ"] = "し"
+            newMapping["ҪУ"] = "す"
+            newMapping["ҪЕ"] = "せ"
+            newMapping["ҪО"] = "そ"
+            // Һ (h) - use for は行
+            newMapping["Һ"] = "は"
+            newMapping["ҺА"] = "は"
+            newMapping["ҺИ"] = "ひ"
+            newMapping["ҺУ"] = "ふ"
+            newMapping["ҺЕ"] = "へ"
+            newMapping["ҺО"] = "ほ"
+        }
+
+        // Chuvash specific characters (Ӑ, Ӗ, Ҫ, Ӳ)
+        if currentProfile == .chuvash {
+            // Ӑ (reduced a) - use for あ
+            newMapping["Ӑ"] = "あ"
+            // Ӗ (reduced e) - use for え
+            newMapping["Ӗ"] = "え"
+            // Ҫ (voiceless sh/s) - use for さ行
+            newMapping["Ҫ"] = "さ"
+            newMapping["ҪА"] = "さ"
+            newMapping["ҪИ"] = "し"
+            newMapping["ҪУ"] = "す"
+            newMapping["ҪЕ"] = "せ"
+            newMapping["ҪО"] = "そ"
+            // Ӳ (front u) - use for ゆ
+            newMapping["Ӳ"] = "ゆ"
+        }
+
+        // Sakha/Yakut specific characters (Ҕ, Һ, Ө, Ү, Ҥ)
+        if currentProfile == .sakha {
+            // Ҕ (voiced h/gh) - use for が行
+            newMapping["Ҕ"] = "が"
+            newMapping["ҔА"] = "が"
+            newMapping["ҔИ"] = "ぎ"
+            newMapping["ҔУ"] = "ぐ"
+            newMapping["ҔЕ"] = "げ"
+            newMapping["ҔО"] = "ご"
+            // Һ (h) - use for は行
+            newMapping["Һ"] = "は"
+            newMapping["ҺА"] = "は"
+            newMapping["ҺИ"] = "ひ"
+            newMapping["ҺУ"] = "ふ"
+            newMapping["ҺЕ"] = "へ"
+            newMapping["ҺО"] = "ほ"
+            // Ө (front o) - use for お
+            newMapping["Ө"] = "お"
+            // Ү (front u) - use for ゆ
+            newMapping["Ү"] = "ゆ"
+            // Ҥ (ng) - use for ん
+            newMapping["Ҥ"] = "ん"
+        }
+
+        // Buryat specific characters (Ө, Ү, Һ)
+        if currentProfile == .buryat {
+            // Ө (front o) - use for お
+            newMapping["Ө"] = "お"
+            // Ү (front u) - use for ゆ
+            newMapping["Ү"] = "ゆ"
+            // Һ (h) - use for は行
+            newMapping["Һ"] = "は"
+            newMapping["ҺА"] = "は"
+            newMapping["ҺИ"] = "ひ"
+            newMapping["ҺУ"] = "ふ"
+            newMapping["ҺЕ"] = "へ"
+            newMapping["ҺО"] = "ほ"
+        }
+
+        // Kalmyk specific characters (Ә, Һ, Җ, Ң, Ө, Ү)
+        if currentProfile == .kalmyk {
+            // Ә (front a/schwa) - use for え
+            newMapping["Ә"] = "え"
+            // Һ (h) - use for は行
+            newMapping["Һ"] = "は"
+            newMapping["ҺА"] = "は"
+            newMapping["ҺИ"] = "ひ"
+            newMapping["ҺУ"] = "ふ"
+            newMapping["ҺЕ"] = "へ"
+            newMapping["ҺО"] = "ほ"
+            // Җ (voiced j/dzh) - use for じゃ行
+            newMapping["Җ"] = "じ"
+            newMapping["ҖА"] = "じゃ"
+            newMapping["ҖИ"] = "じ"
+            newMapping["ҖУ"] = "じゅ"
+            newMapping["ҖЕ"] = "じぇ"
+            newMapping["ҖО"] = "じょ"
+            // Ң (ng) - use for ん
+            newMapping["Ң"] = "ん"
+            // Ө (front o) - use for お
+            newMapping["Ө"] = "お"
+            // Ү (front u) - use for ゆ
+            newMapping["Ү"] = "ゆ"
+        }
+
+        // Azerbaijani specific characters (Ҝ, Ғ, Ҹ, Ҷ, Ө, Ү, Ә)
+        // Note: Historical Cyrillic script (modern Azerbaijani uses Latin)
+        if currentProfile == .azerbaijani {
+            // Ә (schwa) - use for え
+            newMapping["Ә"] = "え"
+            // Ө (front o) - use for お
+            newMapping["Ө"] = "お"
+            // Ү (front u) - use for ゆ
+            newMapping["Ү"] = "ゆ"
+            // Ғ (voiced h/g) - use for が行
+            newMapping["Ғ"] = "が"
+            newMapping["ҒА"] = "が"
+            newMapping["ҒИ"] = "ぎ"
+            newMapping["ҒУ"] = "ぐ"
+            newMapping["ҒЕ"] = "げ"
+            newMapping["ҒО"] = "ご"
+            // Ҝ (soft g) - use for ぎ
+            newMapping["Ҝ"] = "ぎ"
+            newMapping["ҜА"] = "ぎゃ"
+            newMapping["ҜИ"] = "ぎ"
+            newMapping["ҜУ"] = "ぎゅ"
+            newMapping["ҜЕ"] = "ぎぇ"
+            newMapping["ҜО"] = "ぎょ"
+            // Ҹ (j/dzh sound) - use for じゃ行
+            newMapping["Ҹ"] = "じ"
+            newMapping["ҸА"] = "じゃ"
+            newMapping["ҸИ"] = "じ"
+            newMapping["ҸУ"] = "じゅ"
+            newMapping["ҸЕ"] = "じぇ"
+            newMapping["ҸО"] = "じょ"
+            // Ҷ (ch with descender) - use for ちゃ行
+            newMapping["Ҷ"] = "ち"
+            newMapping["ҶА"] = "ちゃ"
+            newMapping["ҶИ"] = "ち"
+            newMapping["ҶУ"] = "ちゅ"
+            newMapping["ҶЕ"] = "ちぇ"
+            newMapping["ҶО"] = "ちょ"
+        }
+
+        // Church Slavonic specific characters (Ѣ, Ѳ, Ѵ, Ѯ, Ѱ, yus letters)
+        // Historical/religious orthography
+        if currentProfile == .churchSlavonic {
+            // Ѣ (yat) - historical е, use for え
+            newMapping["Ѣ"] = "え"
+            // Ѳ (fita) - historical ф/th, use for ふ
+            newMapping["Ѳ"] = "ふ"
+            newMapping["ѲА"] = "ふぁ"
+            newMapping["ѲИ"] = "ふぃ"
+            newMapping["ѲУ"] = "ふ"
+            newMapping["ѲЕ"] = "ふぇ"
+            newMapping["ѲО"] = "ふぉ"
+            // Ѵ (izhitsa) - historical и/v, use for い
+            newMapping["Ѵ"] = "い"
+            // Ѯ (ksi) - ks combination, use for くす
+            newMapping["Ѯ"] = "くす"
+            // Ѱ (psi) - ps combination, use for ぷす
+            newMapping["Ѱ"] = "ぷす"
+            // Ѕ (dze) - dz sound, use for ず
+            newMapping["Ѕ"] = "ず"
+            // Ѧ (small yus/little yus) - nasal a, use for あん
+            newMapping["Ѧ"] = "あん"
+            // Ѫ (big yus) - nasal o, use for おん
+            newMapping["Ѫ"] = "おん"
+            // Ѩ (iotified small yus) - ja nasal, use for やん
+            newMapping["Ѩ"] = "やん"
+            // Ѭ (iotified big yus) - jo nasal, use for よん
+            newMapping["Ѭ"] = "よん"
+            // І (dotted i) - use for い
+            newMapping["І"] = "い"
+        }
+
+        // Komi specific characters (Ӧ, І, Ԁ, Ԃ, Ԅ, Ԇ, Ԉ, Ԍ, Ԏ)
+        if currentProfile == .komi {
+            // Ӧ (mid-central vowel) - use for お
+            newMapping["Ӧ"] = "お"
+            // І (dotted i) - use for い
+            newMapping["І"] = "い"
+            // Ԁ (d with tail) - soft d sound, use for で
+            newMapping["Ԁ"] = "で"
+            newMapping["ԀА"] = "でゃ"
+            newMapping["ԀИ"] = "でぃ"
+            newMapping["ԀУ"] = "でゅ"
+            newMapping["ԀЕ"] = "でぇ"
+            newMapping["ԀО"] = "でょ"
+            // Ԃ (dzh with tail) - soft dzh, use for じ
+            newMapping["Ԃ"] = "じ"
+            newMapping["ԂА"] = "じゃ"
+            newMapping["ԂИ"] = "じ"
+            newMapping["ԂУ"] = "じゅ"
+            newMapping["ԂЕ"] = "じぇ"
+            newMapping["ԂО"] = "じょ"
+            // Ԅ (dz with tail) - dz sound, use for ず
+            newMapping["Ԅ"] = "ず"
+            newMapping["ԄА"] = "ざ"
+            newMapping["ԄИ"] = "じ"
+            newMapping["ԄУ"] = "ず"
+            newMapping["ԄЕ"] = "ぜ"
+            newMapping["ԄО"] = "ぞ"
+            // Ԇ (l with tail) - voiceless l, use for る
+            newMapping["Ԇ"] = "る"
+            // Ԉ (n with tail) - voiceless n, use for ん
+            newMapping["Ԉ"] = "ん"
+            // Ԍ (s with tail) - soft s, use for し
+            newMapping["Ԍ"] = "し"
+            newMapping["ԌА"] = "しゃ"
+            newMapping["ԌИ"] = "し"
+            newMapping["ԌУ"] = "しゅ"
+            newMapping["ԌЕ"] = "しぇ"
+            newMapping["ԌО"] = "しょ"
+            // Ԏ (t with tail) - soft t, use for ち
+            newMapping["Ԏ"] = "ち"
+            newMapping["ԎА"] = "ちゃ"
+            newMapping["ԎИ"] = "ち"
+            newMapping["ԎУ"] = "ちゅ"
+            newMapping["ԎЕ"] = "ちぇ"
+            newMapping["ԎО"] = "ちょ"
+        }
+
+        // Khanty specific characters (Ә, Ӛ, Є, Ԑ, Ӆ, Ӈ)
+        if currentProfile == .khanty {
+            // Ә (schwa) - use for え
+            newMapping["Ә"] = "え"
+            // Ӛ (umlaut schwa) - use for え (variant)
+            newMapping["Ӛ"] = "え"
+            // Є (Ukrainian ye) - use for え
+            newMapping["Є"] = "え"
+            // Ԑ (reversed e/open e) - use for え
+            newMapping["Ԑ"] = "え"
+            // Ӆ (l with tail/palatal l) - use for り
+            newMapping["Ӆ"] = "り"
+            newMapping["ӅА"] = "りゃ"
+            newMapping["ӅИ"] = "り"
+            newMapping["ӅУ"] = "りゅ"
+            newMapping["ӅЕ"] = "りぇ"
+            newMapping["ӅО"] = "りょ"
+            // Ӈ (velar nasal) - use for ん
+            newMapping["Ӈ"] = "ん"
+            // Ў (short u) - use for う
+            newMapping["Ў"] = "う"
+        }
+
+        // Chukchi specific characters (Ӄ, Ԓ, Ӈ, ʼ/Ь)
+        if currentProfile == .chukchi {
+            // Ӄ (voiceless uvular plosive) - use for く
+            newMapping["Ӄ"] = "く"
+            newMapping["ӀА"] = "か"
+            newMapping["ӀИ"] = "き"
+            newMapping["ӀУ"] = "く"
+            newMapping["ӀЕ"] = "け"
+            newMapping["ӀО"] = "こ"
+            // Ԓ (voiceless lateral fricative) - use for る
+            newMapping["Ԓ"] = "る"
+            newMapping["ԒА"] = "ら"
+            newMapping["ԒИ"] = "り"
+            newMapping["ԒУ"] = "る"
+            newMapping["ԒЕ"] = "れ"
+            newMapping["ԒО"] = "ろ"
+            // Ӈ (velar nasal/ng) - use for ん
+            newMapping["Ӈ"] = "ん"
+            // ʼ (glottal stop/apostrophe) - use for っ (sokuon)
+            newMapping["ʼ"] = "っ"
+        }
+
+        // Abkhaz specific characters (Ҕ, Ӡ, Ҙ, Ҟ, Ԥ, Ҧ, Ҽ, Ҿ, Ҳ, Ҵ, Ҷ, Ҩ, Ә)
+        // Complex consonant system of Caucasian language
+        if currentProfile == .abkhaz {
+            // Ә (schwa) - use for え
+            newMapping["Ә"] = "え"
+            // Ҕ (voiced uvular fricative) - use for が行
+            newMapping["Ҕ"] = "が"
+            newMapping["ҔА"] = "が"
+            newMapping["ҔИ"] = "ぎ"
+            newMapping["ҔУ"] = "ぐ"
+            newMapping["ҔЕ"] = "げ"
+            newMapping["ҔО"] = "ご"
+            // Ӡ (voiced alveolar affricate) - use for ざ行
+            newMapping["Ӡ"] = "ず"
+            newMapping["ӠА"] = "ざ"
+            newMapping["ӠИ"] = "じ"
+            newMapping["ӠУ"] = "ず"
+            newMapping["ӠЕ"] = "ぜ"
+            newMapping["ӠО"] = "ぞ"
+            // Ҙ (voiced dental fricative) - use for ざ行
+            newMapping["Ҙ"] = "ざ"
+            newMapping["ҘА"] = "ざ"
+            newMapping["ҘИ"] = "じ"
+            newMapping["ҘУ"] = "ず"
+            newMapping["ҘЕ"] = "ぜ"
+            newMapping["ҘО"] = "ぞ"
+            // Ҟ (ejective k) - use for か行
+            newMapping["Ҟ"] = "か"
+            newMapping["ҞА"] = "か"
+            newMapping["ҞИ"] = "き"
+            newMapping["ҞУ"] = "く"
+            newMapping["ҞЕ"] = "け"
+            newMapping["ҞО"] = "こ"
+            // Ԥ (ejective p) - use for ぱ行
+            newMapping["Ԥ"] = "ぱ"
+            newMapping["ԤА"] = "ぱ"
+            newMapping["ԤИ"] = "ぴ"
+            newMapping["ԤУ"] = "ぷ"
+            newMapping["ԤЕ"] = "ぺ"
+            newMapping["ԤО"] = "ぽ"
+            // Ҧ (pe with middle hook) - use for ぱ行
+            newMapping["Ҧ"] = "ぱ"
+            // Ҽ (che with descender) - use for ちゃ行
+            newMapping["Ҽ"] = "ち"
+            newMapping["ҼА"] = "ちゃ"
+            newMapping["ҼИ"] = "ち"
+            newMapping["ҼУ"] = "ちゅ"
+            newMapping["ҼЕ"] = "ちぇ"
+            newMapping["ҼО"] = "ちょ"
+            // Ҿ (che with vertical stroke) - use for ち (variant)
+            newMapping["Ҿ"] = "ち"
+            // Ҳ (voiceless pharyngeal fricative) - use for は行
+            newMapping["Ҳ"] = "は"
+            newMapping["ҲА"] = "は"
+            newMapping["ҲИ"] = "ひ"
+            newMapping["ҲУ"] = "ふ"
+            newMapping["ҲЕ"] = "へ"
+            newMapping["ҲО"] = "ほ"
+            // Ҵ (ejective ts) - use for つ
+            newMapping["Ҵ"] = "つ"
+            newMapping["ҴА"] = "つぁ"
+            newMapping["ҴИ"] = "つぃ"
+            newMapping["ҴУ"] = "つ"
+            newMapping["ҴЕ"] = "つぇ"
+            newMapping["ҴО"] = "つぉ"
+            // Ҷ (che with descender variant) - use for ち
+            newMapping["Ҷ"] = "ち"
+            // Ҩ (o-hook) - use for お
+            newMapping["Ҩ"] = "お"
         }
 
         self.mapping = newMapping

@@ -65,7 +65,7 @@ struct ThemeShareView: View {
         }.sheet(isPresented: self.$showActivityView, content: {
             if let image = shareImage.image {
                 ActivityView(
-                    activityItems: [TextActivityItem("Pismoで着せ替えました！", hashtags: ["#Pismo"], links: ["https://apps.apple.com/jp/app/azookey/id1542709230"]), ImageActivityItem(image)],
+                    activityItems: [TextActivityItem("Pismoで着せ替えました！", hashtags: ["#Pismo"], links: ["https://apps.apple.com/jp/app/pismo-%D0%BF%D0%B8%D1%81%D0%BC%D0%BE/id6754819613"]), ImageActivityItem(image)],
                     applicationActivities: nil
                 )
             }
@@ -75,7 +75,7 @@ struct ThemeShareView: View {
     @MainActor private func shareOnTwitter() {
         let parameters = [
             "text": "Pismoで着せ替えました！",
-            "url": "https://apps.apple.com/jp/app/azookey/id1542709230",
+            "url": "https://apps.apple.com/jp/app/pismo-%D0%BF%D0%B8%D1%81%D0%BC%D0%BE/id6754819613",
             "hashtags": "Pismo",
             "related": "Pismo_dev",
         ]
