@@ -25,39 +25,39 @@ public extension Custard {
             keys: [
                 // Row 1: й ц у к е н г ш щ з х
                 .gridFit(.init(x: 0, y: 0)): .custom(.input("й")),
-                .gridFit(.init(x: 1, y: 0)): .custom(.input("ц").withLongPress("ҵ")), // ц with ҵ (ejective ts)
+                .gridFit(.init(x: 1, y: 0)): .custom(.inputWithVariation("ц", variation: "ҵ")), // ц with ҵ (ejective ts)
                 .gridFit(.init(x: 2, y: 0)): .custom(.input("у")),
-                .gridFit(.init(x: 3, y: 0)): .custom(.input("к").withLongPress("ҟ")), // к with ҟ (ejective k)
+                .gridFit(.init(x: 3, y: 0)): .custom(.inputWithVariation("к", variation: "ҟ")), // к with ҟ (ejective k)
                 .gridFit(.init(x: 4, y: 0)): .custom(.inputWithVariation("ё", variation: "е")),
                 .gridFit(.init(x: 5, y: 0)): .custom(.input("н")),
-                .gridFit(.init(x: 6, y: 0)): .custom(.input("г").withLongPress("ҕ")), // г with ҕ (voiced uvular fricative)
-                .gridFit(.init(x: 7, y: 0)): .custom(.input("ш").withLongPress("ҩ")), // ш with ҩ (o-hook)
+                .gridFit(.init(x: 6, y: 0)): .custom(.inputWithVariation("г", variation: "ҕ")), // г with ҕ (voiced uvular fricative)
+                .gridFit(.init(x: 7, y: 0)): .custom(.inputWithVariation("ш", variation: "ҩ")), // ш with ҩ (o-hook)
                 .gridFit(.init(x: 8, y: 0)): .custom(.input("щ")),
-                .gridFit(.init(x: 9, y: 0)): .custom(.input("з").withLongPress("ӡ")), // з with ӡ (voiced alveolar affricate)
-                .gridFit(.init(x: 10, y: 0)): .custom(.input("х").withLongPress("ҳ")), // х with ҳ (voiceless pharyngeal fricative)
+                .gridFit(.init(x: 9, y: 0)): .custom(.inputWithVariation("з", variation: "ӡ")), // з with ӡ (voiced alveolar affricate)
+                .gridFit(.init(x: 10, y: 0)): .custom(.inputWithVariation("х", variation: "ҳ")), // х with ҳ (voiceless pharyngeal fricative)
 
                 // Row 2: ф ы в а п р о л д ж э
                 .gridFit(.init(x: 0, y: 1)): .custom(.input("ф")),
                 .gridFit(.init(x: 1, y: 1)): .custom(.input("ы")),
                 .gridFit(.init(x: 2, y: 1)): .custom(.input("в")),
-                .gridFit(.init(x: 3, y: 1)): .custom(.input("а").withLongPress("ә")), // а with ә (schwa)
-                .gridFit(.init(x: 4, y: 1)): .custom(.input("п").withLongPress("ԥ")), // п with ԥ (ejective p)
+                .gridFit(.init(x: 3, y: 1)): .custom(.inputWithVariation("а", variation: "ә")), // а with ә (schwa)
+                .gridFit(.init(x: 4, y: 1)): .custom(.inputWithVariation("п", variation: "ԥ")), // п with ԥ (ejective p)
                 .gridFit(.init(x: 5, y: 1)): .custom(.input("р")),
                 .gridFit(.init(x: 6, y: 1)): .custom(.input("о")),
                 .gridFit(.init(x: 7, y: 1)): .custom(.input("л")),
-                .gridFit(.init(x: 8, y: 1)): .custom(.input("д").withLongPress("ҙ")), // д with ҙ (voiced dental fricative)
-                .gridFit(.init(x: 9, y: 1)): .custom(.input("ж").withLongPress("ҽ")), // ж with ҽ (che with descender)
+                .gridFit(.init(x: 8, y: 1)): .custom(.inputWithVariation("д", variation: "ҙ")), // д with ҙ (voiced dental fricative)
+                .gridFit(.init(x: 9, y: 1)): .custom(.inputWithVariation("ж", variation: "ҽ")), // ж with ҽ (che with descender)
                 .gridFit(.init(x: 10, y: 1)): .custom(.input("э")),
 
                 // Row 3: Shift я ч с м и т ь б ю Del
                 .gridFit(.init(x: 0, y: 2)): .custom(.shiftKey()),
                 .gridFit(.init(x: 1, y: 2)): .custom(.input("я")),
-                .gridFit(.init(x: 2, y: 2)): .custom(.input("ч").withLongPress("ҷ")), // ч with ҷ (che with descender)
+                .gridFit(.init(x: 2, y: 2)): .custom(.inputWithVariation("ч", variation: "ҷ")), // ч with ҷ (che with descender)
                 .gridFit(.init(x: 3, y: 2)): .custom(.input("с")),
                 .gridFit(.init(x: 4, y: 2)): .custom(.input("м")),
                 .gridFit(.init(x: 5, y: 2)): .custom(.input("и")),
-                .gridFit(.init(x: 6, y: 2)): .custom(.input("т").withLongPress("ҿ")), // т with ҿ (che with vertical stroke)
-                .gridFit(.init(x: 7, y: 2)): .custom(.input("ь").withLongPress("ҧ")), // ь with ҧ (pe with middle hook)
+                .gridFit(.init(x: 6, y: 2)): .custom(.inputWithVariation("т", variation: "ҿ")), // т with ҿ (che with vertical stroke)
+                .gridFit(.init(x: 7, y: 2)): .custom(.inputWithVariation("ь", variation: "ҧ")), // ь with ҧ (pe with middle hook)
                 .gridFit(.init(x: 8, y: 2)): .custom(.input("б")),
                 .gridFit(.init(x: 9, y: 2)): .custom(.input("ю")),
                 .gridFit(.init(x: 10, y: 2)): .custom(.flickDelete()),
@@ -99,12 +99,6 @@ private extension CustardInterfaceCustomKey {
                 )
             ]
         )
-    }
-
-    func withLongPress(_ char: String) -> CustardInterfaceCustomKey {
-        var copy = self
-        copy.longpress_actions.start = [.input(char)]
-        return copy
     }
 
     static func shiftKey() -> CustardInterfaceCustomKey {

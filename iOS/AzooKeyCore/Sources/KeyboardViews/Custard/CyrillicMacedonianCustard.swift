@@ -40,10 +40,10 @@ public extension Custard {
                 .gridFit(.init(x: 1, y: 1)): .custom(.input("с")),
                 .gridFit(.init(x: 2, y: 1)): .custom(.input("д")),
                 .gridFit(.init(x: 3, y: 1)): .custom(.input("ф")),
-                .gridFit(.init(x: 4, y: 1)): .custom(.input("г").withLongPress("ѓ")), // г with ѓ
+                .gridFit(.init(x: 4, y: 1)): .custom(.inputWithVariation("г", variation: "ѓ")), // г with ѓ
                 .gridFit(.init(x: 5, y: 1)): .custom(.input("х")),
                 .gridFit(.init(x: 6, y: 1)): .custom(.input("ј")),
-                .gridFit(.init(x: 7, y: 1)): .custom(.input("к").withLongPress("ќ")), // к with ќ
+                .gridFit(.init(x: 7, y: 1)): .custom(.inputWithVariation("к", variation: "ќ")), // к with ќ
                 .gridFit(.init(x: 8, y: 1)): .custom(.input("л")),
                 .gridFit(.init(x: 9, y: 1)): .custom(.input("ч")),
                 .gridFit(.init(x: 10, y: 1)): .custom(.input("ќ")), // Ќ - unique to Macedonian
@@ -98,12 +98,6 @@ private extension CustardInterfaceCustomKey {
                 )
             ]
         )
-    }
-
-    func withLongPress(_ char: String) -> CustardInterfaceCustomKey {
-        var copy = self
-        copy.longpress_actions.start = [.input(char)]
-        return copy
     }
 
     static func shiftKey() -> CustardInterfaceCustomKey {

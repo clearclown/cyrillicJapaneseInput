@@ -27,9 +27,9 @@ public extension Custard {
                 .gridFit(.init(x: 0, y: 0)): .custom(.input("й")),
                 .gridFit(.init(x: 1, y: 0)): .custom(.input("ц")),
                 .gridFit(.init(x: 2, y: 0)): .custom(.input("у")),
-                .gridFit(.init(x: 3, y: 0)): .custom(.input("к").withLongPress("ӄ")), // к with ӄ (voiceless uvular plosive)
+                .gridFit(.init(x: 3, y: 0)): .custom(.inputWithVariation("к", variation: "ӄ")), // к with ӄ (voiceless uvular plosive)
                 .gridFit(.init(x: 4, y: 0)): .custom(.inputWithVariation("ё", variation: "е")),
-                .gridFit(.init(x: 5, y: 0)): .custom(.input("н").withLongPress("ӈ")), // н with ӈ (velar nasal)
+                .gridFit(.init(x: 5, y: 0)): .custom(.inputWithVariation("н", variation: "ӈ")), // н with ӈ (velar nasal)
                 .gridFit(.init(x: 6, y: 0)): .custom(.input("г")),
                 .gridFit(.init(x: 7, y: 0)): .custom(.input("ш")),
                 .gridFit(.init(x: 8, y: 0)): .custom(.input("щ")),
@@ -44,7 +44,7 @@ public extension Custard {
                 .gridFit(.init(x: 4, y: 1)): .custom(.input("п")),
                 .gridFit(.init(x: 5, y: 1)): .custom(.input("р")),
                 .gridFit(.init(x: 6, y: 1)): .custom(.input("о")),
-                .gridFit(.init(x: 7, y: 1)): .custom(.input("л").withLongPress("ԓ")), // л with ԓ (voiceless lateral fricative)
+                .gridFit(.init(x: 7, y: 1)): .custom(.inputWithVariation("л", variation: "ԓ")), // л with ԓ (voiceless lateral fricative)
                 .gridFit(.init(x: 8, y: 1)): .custom(.input("д")),
                 .gridFit(.init(x: 9, y: 1)): .custom(.input("ж")),
                 .gridFit(.init(x: 10, y: 1)): .custom(.input("э")),
@@ -57,7 +57,7 @@ public extension Custard {
                 .gridFit(.init(x: 4, y: 2)): .custom(.input("м")),
                 .gridFit(.init(x: 5, y: 2)): .custom(.input("и")),
                 .gridFit(.init(x: 6, y: 2)): .custom(.input("т")),
-                .gridFit(.init(x: 7, y: 2)): .custom(.input("ь").withLongPress("ʼ")), // ь with ʼ (glottal stop)
+                .gridFit(.init(x: 7, y: 2)): .custom(.inputWithVariation("ь", variation: "ʼ")), // ь with ʼ (glottal stop)
                 .gridFit(.init(x: 8, y: 2)): .custom(.input("б")),
                 .gridFit(.init(x: 9, y: 2)): .custom(.input("ю")),
                 .gridFit(.init(x: 10, y: 2)): .custom(.flickDelete()),
@@ -99,12 +99,6 @@ private extension CustardInterfaceCustomKey {
                 )
             ]
         )
-    }
-
-    func withLongPress(_ char: String) -> CustardInterfaceCustomKey {
-        var copy = self
-        copy.longpress_actions.start = [.input(char)]
-        return copy
     }
 
     static func shiftKey() -> CustardInterfaceCustomKey {

@@ -26,10 +26,10 @@ public extension Custard {
                 // Row 1: й ц у к е н г ш щ з х
                 .gridFit(.init(x: 0, y: 0)): .custom(.input("й")),
                 .gridFit(.init(x: 1, y: 0)): .custom(.input("ц")),
-                .gridFit(.init(x: 2, y: 0)): .custom(.input("у").withLongPress("ў")), // у with ў
+                .gridFit(.init(x: 2, y: 0)): .custom(.inputWithVariation("у", variation: "ў")), // у with ў
                 .gridFit(.init(x: 3, y: 0)): .custom(.input("к")),
-                .gridFit(.init(x: 4, y: 0)): .custom(.input("е").withLongPress("є")), // е with є (Ukrainian ye)
-                .gridFit(.init(x: 5, y: 0)): .custom(.input("н").withLongPress("ӈ")), // н with ӈ (velar nasal)
+                .gridFit(.init(x: 4, y: 0)): .custom(.inputWithVariation("е", variation: "є")), // е with є (Ukrainian ye)
+                .gridFit(.init(x: 5, y: 0)): .custom(.inputWithVariation("н", variation: "ӈ")), // н with ӈ (velar nasal)
                 .gridFit(.init(x: 6, y: 0)): .custom(.input("г")),
                 .gridFit(.init(x: 7, y: 0)): .custom(.input("ш")),
                 .gridFit(.init(x: 8, y: 0)): .custom(.input("щ")),
@@ -40,14 +40,14 @@ public extension Custard {
                 .gridFit(.init(x: 0, y: 1)): .custom(.input("ф")),
                 .gridFit(.init(x: 1, y: 1)): .custom(.input("ы")),
                 .gridFit(.init(x: 2, y: 1)): .custom(.input("в")),
-                .gridFit(.init(x: 3, y: 1)): .custom(.input("а").withLongPress("ә")), // а with ә (schwa)
+                .gridFit(.init(x: 3, y: 1)): .custom(.inputWithVariation("а", variation: "ә")), // а with ә (schwa)
                 .gridFit(.init(x: 4, y: 1)): .custom(.input("п")),
                 .gridFit(.init(x: 5, y: 1)): .custom(.input("р")),
-                .gridFit(.init(x: 6, y: 1)): .custom(.input("о").withLongPress("ԑ")), // о with ԑ (open e)
-                .gridFit(.init(x: 7, y: 1)): .custom(.input("л").withLongPress("ӆ")), // л with ӆ (palatal l)
+                .gridFit(.init(x: 6, y: 1)): .custom(.inputWithVariation("о", variation: "ԑ")), // о with ԑ (open e)
+                .gridFit(.init(x: 7, y: 1)): .custom(.inputWithVariation("л", variation: "ӆ")), // л with ӆ (palatal l)
                 .gridFit(.init(x: 8, y: 1)): .custom(.input("д")),
                 .gridFit(.init(x: 9, y: 1)): .custom(.input("ж")),
-                .gridFit(.init(x: 10, y: 1)): .custom(.input("э").withLongPress("ӛ")), // э with ӛ (umlaut schwa)
+                .gridFit(.init(x: 10, y: 1)): .custom(.inputWithVariation("э", variation: "ӛ")), // э with ӛ (umlaut schwa)
 
                 // Row 3: Shift я ч с м и т ь б ю Del
                 .gridFit(.init(x: 0, y: 2)): .custom(.shiftKey()),
@@ -99,12 +99,6 @@ private extension CustardInterfaceCustomKey {
                 )
             ]
         )
-    }
-
-    func withLongPress(_ char: String) -> CustardInterfaceCustomKey {
-        var copy = self
-        copy.longpress_actions.start = [.input(char)]
-        return copy
     }
 
     static func shiftKey() -> CustardInterfaceCustomKey {
