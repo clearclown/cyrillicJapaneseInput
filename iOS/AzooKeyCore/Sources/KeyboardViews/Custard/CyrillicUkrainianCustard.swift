@@ -34,7 +34,7 @@ public extension Custard {
                 .gridFit(.init(x: 3, y: 0)): .custom(.input("к")),
                 .gridFit(.init(x: 4, y: 0)): .custom(.inputWithVariation("е", variation: "ё")), // е with ё on flick up
                 .gridFit(.init(x: 5, y: 0)): .custom(.input("н")),
-                .gridFit(.init(x: 6, y: 0)): .custom(.input("г").withLongPress("ґ")), // г with ґ
+                .gridFit(.init(x: 6, y: 0)): .custom(.inputWithVariation("г", variation: "ґ")), // г with ґ on flick
                 .gridFit(.init(x: 7, y: 0)): .custom(.input("ш")),
                 .gridFit(.init(x: 8, y: 0)): .custom(.input("щ")),
                 .gridFit(.init(x: 9, y: 0)): .custom(.input("з")),
@@ -59,7 +59,7 @@ public extension Custard {
                 .gridFit(.init(x: 2, y: 2)): .custom(.input("ч")),
                 .gridFit(.init(x: 3, y: 2)): .custom(.input("с")),
                 .gridFit(.init(x: 4, y: 2)): .custom(.input("м")),
-                .gridFit(.init(x: 5, y: 2)): .custom(.input("и").withLongPress("ї")), // и, ї on longpress
+                .gridFit(.init(x: 5, y: 2)): .custom(.inputWithVariation("и", variation: "ї")), // и with ї on flick
                 .gridFit(.init(x: 6, y: 2)): .custom(.input("т")),
                 .gridFit(.init(x: 7, y: 2)): .custom(.inputWithVariation("ь", variation: "ъ")), // ь with ъ on flick up
                 .gridFit(.init(x: 8, y: 2)): .custom(.input("б")),
@@ -104,12 +104,6 @@ private extension CustardInterfaceCustomKey {
                 )
             ]
         )
-    }
-
-    func withLongPress(_ char: String) -> CustardInterfaceCustomKey {
-        var copy = self
-        copy.longpress_actions.start = [.input(char)]
-        return copy
     }
 
     static func shiftKey() -> CustardInterfaceCustomKey {

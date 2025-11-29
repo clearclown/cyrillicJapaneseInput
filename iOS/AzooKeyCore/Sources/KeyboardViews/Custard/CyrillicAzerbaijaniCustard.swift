@@ -26,11 +26,11 @@ public extension Custard {
                 // Row 1: й ц у к е н г ш щ з х
                 .gridFit(.init(x: 0, y: 0)): .custom(.input("й")),
                 .gridFit(.init(x: 1, y: 0)): .custom(.input("ц")),
-                .gridFit(.init(x: 2, y: 0)): .custom(.input("у").withLongPress("ү")), // у with ү
+                .gridFit(.init(x: 2, y: 0)): .custom(.inputWithVariation("у", variation: "ү")), // у with ү
                 .gridFit(.init(x: 3, y: 0)): .custom(.input("к")),
                 .gridFit(.init(x: 4, y: 0)): .custom(.inputWithVariation("ё", variation: "е")),
                 .gridFit(.init(x: 5, y: 0)): .custom(.input("н")),
-                .gridFit(.init(x: 6, y: 0)): .custom(.input("г").withLongPressMultiple(["ғ", "ҝ"])), // г with ғ, ҝ
+                .gridFit(.init(x: 6, y: 0)): .custom(.inputWithMultipleVariations("г", variations: ["ғ", "ҝ"])), // г with ғ (top), ҝ (left)
                 .gridFit(.init(x: 7, y: 0)): .custom(.input("ш")),
                 .gridFit(.init(x: 8, y: 0)): .custom(.input("щ")),
                 .gridFit(.init(x: 9, y: 0)): .custom(.input("з")),
@@ -40,19 +40,19 @@ public extension Custard {
                 .gridFit(.init(x: 0, y: 1)): .custom(.input("ф")),
                 .gridFit(.init(x: 1, y: 1)): .custom(.input("ы")),
                 .gridFit(.init(x: 2, y: 1)): .custom(.input("в")),
-                .gridFit(.init(x: 3, y: 1)): .custom(.input("а").withLongPress("ә")), // а with ә
+                .gridFit(.init(x: 3, y: 1)): .custom(.inputWithVariation("а", variation: "ә")), // а with ә
                 .gridFit(.init(x: 4, y: 1)): .custom(.input("п")),
                 .gridFit(.init(x: 5, y: 1)): .custom(.input("р")),
-                .gridFit(.init(x: 6, y: 1)): .custom(.input("о").withLongPress("ө")), // о with ө
+                .gridFit(.init(x: 6, y: 1)): .custom(.inputWithVariation("о", variation: "ө")), // о with ө
                 .gridFit(.init(x: 7, y: 1)): .custom(.input("л")),
                 .gridFit(.init(x: 8, y: 1)): .custom(.input("д")),
-                .gridFit(.init(x: 9, y: 1)): .custom(.input("ж").withLongPress("ҹ")), // ж with ҹ
+                .gridFit(.init(x: 9, y: 1)): .custom(.inputWithVariation("ж", variation: "ҹ")), // ж with ҹ
                 .gridFit(.init(x: 10, y: 1)): .custom(.input("э")),
 
                 // Row 3: Shift я ч с м и т ь б ю Del
                 .gridFit(.init(x: 0, y: 2)): .custom(.shiftKey()),
                 .gridFit(.init(x: 1, y: 2)): .custom(.input("я")),
-                .gridFit(.init(x: 2, y: 2)): .custom(.input("ч").withLongPress("ҷ")), // ч with ҷ
+                .gridFit(.init(x: 2, y: 2)): .custom(.inputWithVariation("ч", variation: "ҷ")), // ч with ҷ
                 .gridFit(.init(x: 3, y: 2)): .custom(.input("с")),
                 .gridFit(.init(x: 4, y: 2)): .custom(.input("м")),
                 .gridFit(.init(x: 5, y: 2)): .custom(.input("и")),
@@ -101,31 +101,27 @@ private extension CustardInterfaceCustomKey {
         )
     }
 
-    func withLongPress(_ char: String) -> CustardInterfaceCustomKey {
-        var copy = self
-        copy.longpress_actions.start = [.input(char)]
-        return copy
-    }
+    static func inputWithMultipleVariations(_ char: String, variations: [String]) -> CustardInterfaceCustomKey {
+        let flickDirections: [FlickDirection] = [.top, .left, .right, .bottom]
+        var flickVariations: [CustardInterfaceVariation] = []
 
-    func withLongPressMultiple(_ chars: [String]) -> CustardInterfaceCustomKey {
-        var copy = self
-        if let first = chars.first {
-            copy.longpress_actions.start = [.input(first)]
-        }
-        // Add remaining chars as variations
-        var variations = copy.variations
-        if chars.count > 1 {
-            variations.append(CustardInterfaceVariation(
-                type: .flickVariation(.top),
+        for (index, variation) in variations.enumerated() where index < flickDirections.count {
+            flickVariations.append(CustardInterfaceVariation(
+                type: .flickVariation(flickDirections[index]),
                 key: CustardInterfaceVariationKey(
-                    design: CustardVariationKeyDesign(label: .text(chars[1])),
-                    press_actions: [.input(chars[1])],
+                    design: CustardVariationKeyDesign(label: .text(variation)),
+                    press_actions: [.input(variation)],
                     longpress_actions: .none
                 )
             ))
         }
-        copy.variations = variations
-        return copy
+
+        return CustardInterfaceCustomKey(
+            design: .init(label: .text(char), color: .normal),
+            press_actions: [.input(char)],
+            longpress_actions: .init(start: [], repeat: []),
+            variations: flickVariations
+        )
     }
 
     static func shiftKey() -> CustardInterfaceCustomKey {

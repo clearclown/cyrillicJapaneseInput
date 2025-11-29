@@ -42,7 +42,7 @@ public extension Custard {
                 .gridFit(.init(x: 3, y: 1)): .custom(.input("а")),
                 .gridFit(.init(x: 4, y: 1)): .custom(.input("п")),
                 .gridFit(.init(x: 5, y: 1)): .custom(.input("р")),
-                .gridFit(.init(x: 6, y: 1)): .custom(.input("о").withLongPress("ө")), // о with ө
+                .gridFit(.init(x: 6, y: 1)): .custom(.inputWithVariation("о", variation: "ө")), // о with ө
                 .gridFit(.init(x: 7, y: 1)): .custom(.input("л")),
                 .gridFit(.init(x: 8, y: 1)): .custom(.input("д")),
                 .gridFit(.init(x: 9, y: 1)): .custom(.input("ж")),
@@ -58,7 +58,7 @@ public extension Custard {
                 .gridFit(.init(x: 6, y: 2)): .custom(.input("т")),
                 .gridFit(.init(x: 7, y: 2)): .custom(.inputWithVariation("ь", variation: "ъ")),
                 .gridFit(.init(x: 8, y: 2)): .custom(.input("б")),
-                .gridFit(.init(x: 9, y: 2)): .custom(.input("ю").withLongPress("ү")), // ю with ү
+                .gridFit(.init(x: 9, y: 2)): .custom(.inputWithVariation("ю", variation: "ү")), // ю with ү
                 .gridFit(.init(x: 10, y: 2)): .custom(.flickDelete()),
 
                 // Row 4: ☆123 Globe Space ー Enter
@@ -98,12 +98,6 @@ private extension CustardInterfaceCustomKey {
                 )
             ]
         )
-    }
-
-    func withLongPress(_ char: String) -> CustardInterfaceCustomKey {
-        var copy = self
-        copy.longpress_actions.start = [.input(char)]
-        return copy
     }
 
     static func shiftKey() -> CustardInterfaceCustomKey {
