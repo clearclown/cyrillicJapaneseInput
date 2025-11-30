@@ -133,6 +133,8 @@ class PismoInputMethodService : InputMethodService() {
         keyboardBinding.vKeyboard.setKeyboard(cyrillicKeyboard)
         keyboardBinding.vKeyboard.addCallback(keyboardActionListener)
         keyboardBinding.vKeyboard.setShifted(info.initialCapsMode != 0)
+        // Set popup container for flick input overlay
+        keyboardBinding.vKeyboard.setPopupContainer(keyboardBinding.flickPopupContainer)
     }
 
     override fun onFinishInputView(finishingInput: Boolean) {

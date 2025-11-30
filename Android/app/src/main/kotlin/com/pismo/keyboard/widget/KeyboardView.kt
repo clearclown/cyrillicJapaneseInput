@@ -32,6 +32,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import com.pismo.keyboard.PismoApp
 import com.pismo.keyboard.R
 import java.util.Locale
@@ -89,6 +91,13 @@ class KeyboardView @JvmOverloads constructor(
     private var flickStartX = 0f
     private var flickStartY = 0f
     private var currentFlickDirection = FlickDirection.CENTER
+
+    // Flick popup overlay
+    private var flickPopupView: FlickPopupView? = null
+    private var popupContainer: FrameLayout? = null
+    private val popupWidth = (80 * resources.displayMetrics.density).toInt()
+    private val popupHeight = (100 * resources.displayMetrics.density).toInt()
+    private var activeFlickKey: Keyboard.Key? = null
 
     private val callbacks: ArrayList<KeyboardActionListener> = ArrayList()
 
@@ -174,6 +183,15 @@ class KeyboardView @JvmOverloads constructor(
 
     fun isShifted(): Boolean {
         return keyboard?.isShifted ?: false
+    }
+
+    /**
+     * Sets the popup container for flick input overlay.
+     * This should be called from the InputMethodService after inflating the layout.
+     */
+    fun setPopupContainer(container: FrameLayout) {
+        PismoApp.printLog(TAG, "setPopupContainer: container=$container")
+        this.popupContainer = container
     }
 
     fun getLocale(): Locale = resources.configuration.locales[0]
@@ -387,6 +405,14 @@ class KeyboardView @JvmOverloads constructor(
                 isPressed = true
                 currentKey.onPressed()
                 invalidateKey(currentKeyIndex)
+
+                // Show flick popup if key has flick mappings
+                PismoApp.printLog(TAG, "hasFlickMappings=${currentKey.hasFlickMappings()} popupChars='${currentKey.popupKeyboardChars}'")
+                if (currentKey.hasFlickMappings()) {
+                    PismoApp.printLog(TAG, "Showing flick popup for key '${currentKey.label}'")
+                    showFlickPopup(currentKey, currentKey.x, currentKey.y)
+                }
+
                 postDelayed(performLongPress, ViewConfiguration.getLongPressTimeout().toLong())
                 if (currentKey.isRepeatable) {
                     sendKeyEvent()
@@ -403,6 +429,9 @@ class KeyboardView @JvmOverloads constructor(
                 currentFlickDirection = FlickDirection.fromCoordinates(
                     flickStartX, flickStartY, event.x, event.y
                 )
+
+                // Update popup direction indicator
+                updateFlickPopup(currentFlickDirection)
 
                 if (currentKey.isPressed) {
                     if (currentKey.isInside(touchX, touchY)) {
@@ -438,7 +467,8 @@ class KeyboardView @JvmOverloads constructor(
                         sendKeyEvent()
                     }
                 }
-                // Reset flick state
+                // Hide popup and reset flick state
+                hideFlickPopup()
                 currentFlickDirection = FlickDirection.CENTER
             }
         }
@@ -470,8 +500,91 @@ class KeyboardView @JvmOverloads constructor(
         removeCallbacks(performRepeatKey)
     }
 
+    /**
+     * Shows the flick popup for a key with flick mappings.
+     */
+    private fun showFlickPopup(key: Keyboard.Key, keyX: Int, keyY: Int) {
+        PismoApp.printLog(TAG, "showFlickPopup: keyX=$keyX keyY=$keyY container=$popupContainer")
+        if (!key.hasFlickMappings()) return
+
+        val container = popupContainer
+        if (container == null) {
+            PismoApp.printLog(TAG, "showFlickPopup: no popup container set!")
+            return
+        }
+
+        // Create popup view if needed
+        if (flickPopupView == null) {
+            flickPopupView = FlickPopupView(context)
+            PismoApp.printLog(TAG, "showFlickPopup: created new FlickPopupView")
+        }
+
+        val popupView = flickPopupView ?: return
+
+        // Set labels from key's popup characters
+        val center = key.label.toString()
+        val chars = key.popupKeyboardChars
+        val top = if (chars.isNotEmpty()) chars[0].toString() else ""
+        val left = if (chars.length > 1) chars[1].toString() else ""
+        val right = if (chars.length > 2) chars[2].toString() else ""
+        val bottom = if (chars.length > 3) chars[3].toString() else ""
+
+        popupView.setLabels(center, top, left, right, bottom)
+        popupView.setDirection(FlickDirection.CENTER)
+
+        // Calculate popup position centered above the key
+        // Use keyboard view dimensions since container might not be laid out yet
+        val popupX = keyX + key.width / 2 - popupWidth / 2
+        val popupY = keyY - popupHeight - (10 * resources.displayMetrics.density).toInt()
+
+        // Ensure popup stays within keyboard view bounds
+        val maxX = width - popupWidth
+        val adjustedX = if (maxX > 0) popupX.coerceIn(0, maxX) else popupX.coerceAtLeast(0)
+        val adjustedY = popupY.coerceAtLeast(0)
+
+        // Remove from parent if already added
+        (popupView.parent as? ViewGroup)?.removeView(popupView)
+
+        // Create layout params for positioning
+        val params = FrameLayout.LayoutParams(popupWidth, popupHeight).apply {
+            leftMargin = adjustedX
+            topMargin = adjustedY
+        }
+
+        // Add to container and make visible
+        container.addView(popupView, params)
+        container.visibility = View.VISIBLE
+        activeFlickKey = key
+
+        PismoApp.printLog(TAG, "showFlickPopup: popup added at ($adjustedX, $adjustedY)")
+    }
+
+    /**
+     * Updates the flick popup direction indicator.
+     */
+    private fun updateFlickPopup(direction: FlickDirection) {
+        flickPopupView?.setDirection(direction)
+    }
+
+    /**
+     * Hides the flick popup.
+     */
+    private fun hideFlickPopup() {
+        val popupView = flickPopupView ?: return
+        val container = popupContainer ?: return
+
+        (popupView.parent as? ViewGroup)?.removeView(popupView)
+        container.visibility = View.GONE
+        activeFlickKey = null
+
+        PismoApp.printLog(TAG, "hideFlickPopup: popup hidden")
+    }
+
     private fun close() {
         removeCallbacks()
+        hideFlickPopup()
+        popupContainer = null
+        flickPopupView = null
         buffer = null
         canvas = null
     }

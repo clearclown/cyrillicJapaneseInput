@@ -428,8 +428,8 @@ class Keyboard(context: Context, layoutRes: Int) {
         /**
          * Gets the character code for a given flick direction.
          * Uses popupKeyboardChars as flick mappings:
-         * - Index 0: LEFT
-         * - Index 1: TOP
+         * - Index 0: TOP (most common alternative, e.g. ё→е)
+         * - Index 1: LEFT
          * - Index 2: RIGHT
          * - Index 3: BOTTOM
          *
@@ -442,8 +442,8 @@ class Keyboard(context: Context, layoutRes: Int) {
             }
 
             val index = when (direction) {
-                FlickDirection.LEFT -> 0
-                FlickDirection.TOP -> 1
+                FlickDirection.TOP -> 0     // Primary alternative (up swipe)
+                FlickDirection.LEFT -> 1
                 FlickDirection.RIGHT -> 2
                 FlickDirection.BOTTOM -> 3
                 else -> return if (codes.isNotEmpty()) codes[0] else 0
@@ -468,8 +468,8 @@ class Keyboard(context: Context, layoutRes: Int) {
             }
 
             val index = when (direction) {
-                FlickDirection.LEFT -> 0
-                FlickDirection.TOP -> 1
+                FlickDirection.TOP -> 0     // Primary alternative (up swipe)
+                FlickDirection.LEFT -> 1
                 FlickDirection.RIGHT -> 2
                 FlickDirection.BOTTOM -> 3
                 else -> return label.toString()
