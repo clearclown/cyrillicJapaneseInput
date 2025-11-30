@@ -424,5 +424,67 @@ class Keyboard(context: Context, layoutRes: Int) {
          * Returns true if this key has the EDGE_RIGHT flag set.
          */
         fun hasEdgeRight(): Boolean = edgeFlags and EDGE_RIGHT > 0
+
+        /**
+         * Gets the character code for a given flick direction.
+         * Uses popupKeyboardChars as flick mappings:
+         * - Index 0: LEFT
+         * - Index 1: TOP
+         * - Index 2: RIGHT
+         * - Index 3: BOTTOM
+         *
+         * @param direction The flick direction
+         * @return The character code, or the primary code if no flick mapping exists
+         */
+        fun getCodeForFlickDirection(direction: FlickDirection): Int {
+            if (direction == FlickDirection.CENTER || popupKeyboardChars.isEmpty()) {
+                return if (codes.isNotEmpty()) codes[0] else 0
+            }
+
+            val index = when (direction) {
+                FlickDirection.LEFT -> 0
+                FlickDirection.TOP -> 1
+                FlickDirection.RIGHT -> 2
+                FlickDirection.BOTTOM -> 3
+                else -> return if (codes.isNotEmpty()) codes[0] else 0
+            }
+
+            return if (index < popupKeyboardChars.length) {
+                popupKeyboardChars[index].code
+            } else {
+                // No mapping for this direction, use primary code
+                if (codes.isNotEmpty()) codes[0] else 0
+            }
+        }
+
+        /**
+         * Gets the label for a given flick direction.
+         * @param direction The flick direction
+         * @return The label character, or the primary label if no flick mapping exists
+         */
+        fun getLabelForFlickDirection(direction: FlickDirection): String {
+            if (direction == FlickDirection.CENTER || popupKeyboardChars.isEmpty()) {
+                return label.toString()
+            }
+
+            val index = when (direction) {
+                FlickDirection.LEFT -> 0
+                FlickDirection.TOP -> 1
+                FlickDirection.RIGHT -> 2
+                FlickDirection.BOTTOM -> 3
+                else -> return label.toString()
+            }
+
+            return if (index < popupKeyboardChars.length) {
+                popupKeyboardChars[index].toString()
+            } else {
+                label.toString()
+            }
+        }
+
+        /**
+         * Returns true if this key has any flick mappings.
+         */
+        fun hasFlickMappings(): Boolean = popupKeyboardChars.isNotEmpty()
     }
 }

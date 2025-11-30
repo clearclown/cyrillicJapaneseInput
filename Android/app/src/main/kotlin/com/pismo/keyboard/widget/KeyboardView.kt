@@ -85,6 +85,11 @@ class KeyboardView @JvmOverloads constructor(
     private var lastPointerX = 0f
     private var lastPointerY = 0f
 
+    // Flick gesture tracking
+    private var flickStartX = 0f
+    private var flickStartY = 0f
+    private var currentFlickDirection = FlickDirection.CENTER
+
     private val callbacks: ArrayList<KeyboardActionListener> = ArrayList()
 
     private val performLongPress = Runnable {
@@ -373,6 +378,12 @@ class KeyboardView @JvmOverloads constructor(
 
                 val currentKey = keys[currentKeyIndex]
                 PismoApp.printLog(TAG, "ACTION_DOWN: key label='${currentKey.label}' codes=${currentKey.codes.toList()}")
+
+                // Initialize flick tracking
+                flickStartX = event.x
+                flickStartY = event.y
+                currentFlickDirection = FlickDirection.CENTER
+
                 isPressed = true
                 currentKey.onPressed()
                 invalidateKey(currentKeyIndex)
@@ -387,6 +398,12 @@ class KeyboardView @JvmOverloads constructor(
                 if (currentKeyIndex == Keyboard.NOT_A_KEY) return true
 
                 val currentKey = keys[currentKeyIndex]
+
+                // Update flick direction based on current position
+                currentFlickDirection = FlickDirection.fromCoordinates(
+                    flickStartX, flickStartY, event.x, event.y
+                )
+
                 if (currentKey.isPressed) {
                     if (currentKey.isInside(touchX, touchY)) {
                         postDelayed(
@@ -407,6 +424,12 @@ class KeyboardView @JvmOverloads constructor(
 
                 val currentKey = keys[currentKeyIndex]
                 if (currentKey.isPressed) {
+                    // Calculate final flick direction
+                    currentFlickDirection = FlickDirection.fromCoordinates(
+                        flickStartX, flickStartY, event.x, event.y
+                    )
+                    PismoApp.printLog(TAG, "ACTION_UP: flick direction=$currentFlickDirection")
+
                     val isInside = currentKey.isInside(touchX, touchY)
                     isPressed = false
                     currentKey.onReleased(isInside)
@@ -415,6 +438,8 @@ class KeyboardView @JvmOverloads constructor(
                         sendKeyEvent()
                     }
                 }
+                // Reset flick state
+                currentFlickDirection = FlickDirection.CENTER
             }
         }
         return true
@@ -429,8 +454,15 @@ class KeyboardView @JvmOverloads constructor(
         if (currentKeyIndex == Keyboard.NOT_A_KEY) return
         val keyboard = this.keyboard ?: return
         val key = keyboard.keys[currentKeyIndex]
-        PismoApp.printLog(TAG, "sendKeyEvent: keyIndex=$currentKeyIndex label='${key.label}' codes=${key.codes.toList()}")
-        callbacks.forEach { it.onKey(key.codes[0]) }
+
+        // Use flick direction to get the appropriate character code
+        val code = key.getCodeForFlickDirection(currentFlickDirection)
+        val flickLabel = key.getLabelForFlickDirection(currentFlickDirection)
+
+        PismoApp.printLog(TAG, "sendKeyEvent: keyIndex=$currentKeyIndex label='${key.label}' " +
+            "flickDirection=$currentFlickDirection flickLabel='$flickLabel' code=$code")
+
+        callbacks.forEach { it.onKey(code) }
     }
 
     private fun removeCallbacks() {
