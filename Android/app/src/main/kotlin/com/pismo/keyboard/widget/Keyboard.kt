@@ -305,7 +305,7 @@ class Keyboard(context: Context, layoutRes: Int) {
         private val sticky: Boolean
         internal var isOn = false
         internal val isRepeatable: Boolean
-        private var label: CharSequence = ""
+        internal var label: CharSequence = ""
         internal val icon: Drawable?
         private var _isPressed = false
         internal val isPressed get() = _isPressed
@@ -354,6 +354,10 @@ class Keyboard(context: Context, layoutRes: Int) {
             icon?.applyTheme(theme)
             if (codes.isEmpty() && label.isNotEmpty()) {
                 codes = intArrayOf(label[0].code)
+            }
+            // Debug: log key codes for special keys
+            if (codes.isNotEmpty() && codes[0] < 0) {
+                android.util.Log.d("Pismo/Keyboard", "Key parsed: label='$label' codes=${codes.toList()}")
             }
             ta.recycle()
         }

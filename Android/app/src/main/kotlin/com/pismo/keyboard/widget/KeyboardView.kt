@@ -151,7 +151,11 @@ class KeyboardView @JvmOverloads constructor(
         abortKey = true
         keyboardChanged = true
         currentKeyIndex = Keyboard.NOT_A_KEY
+        // Request parent to not intercept touch events during keyboard switch
+        parent?.requestDisallowInterceptTouchEvent(true)
         invalidateAllKeys()
+        // Reset after a short delay
+        postDelayed({ parent?.requestDisallowInterceptTouchEvent(false) }, 100)
     }
 
     fun setShifted(shifted: Boolean): Boolean {
@@ -360,11 +364,15 @@ class KeyboardView @JvmOverloads constructor(
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
+                // Prevent parent from intercepting touch events
+                parent?.requestDisallowInterceptTouchEvent(true)
                 abortKey = false
                 currentKeyIndex = keyboard.getKeyIndex(touchX, touchY)
+                PismoApp.printLog(TAG, "ACTION_DOWN: touchX=$touchX touchY=$touchY keyIndex=$currentKeyIndex")
                 if (currentKeyIndex == Keyboard.NOT_A_KEY) return true
 
                 val currentKey = keys[currentKeyIndex]
+                PismoApp.printLog(TAG, "ACTION_DOWN: key label='${currentKey.label}' codes=${currentKey.codes.toList()}")
                 isPressed = true
                 currentKey.onPressed()
                 invalidateKey(currentKeyIndex)
@@ -421,6 +429,7 @@ class KeyboardView @JvmOverloads constructor(
         if (currentKeyIndex == Keyboard.NOT_A_KEY) return
         val keyboard = this.keyboard ?: return
         val key = keyboard.keys[currentKeyIndex]
+        PismoApp.printLog(TAG, "sendKeyEvent: keyIndex=$currentKeyIndex label='${key.label}' codes=${key.codes.toList()}")
         callbacks.forEach { it.onKey(key.codes[0]) }
     }
 

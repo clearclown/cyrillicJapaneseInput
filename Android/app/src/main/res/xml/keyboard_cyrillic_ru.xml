@@ -16,15 +16,16 @@
     app:keyHorizontalGap="0dp"
     app:keyVerticalGap="4dp">
 
-    <!-- Row 1: Й Ц У К Е Н Г Ш Щ З Х (11 keys) -->
+    <!-- Row 1: Й Ц У К Ё Н Г Ш Щ З Х (11 keys) -->
+    <!-- ё is default (maps to よ), е available via long-press -->
     <Row app:rowEdgeFlags="top">
-        <Key app:keyLabel="й" app:keyEdgeFlags="left" />
+        <Key app:keyLabel="й" app:keyEdgeFlags="left" app:popupCharacters="ј" />
         <Key app:keyLabel="ц" />
-        <Key app:keyLabel="у" />
+        <Key app:keyLabel="у" app:popupCharacters="ў" />
         <Key app:keyLabel="к" />
-        <Key app:keyLabel="е" />
-        <Key app:keyLabel="н" />
-        <Key app:keyLabel="г" />
+        <Key app:keyLabel="ё" app:popupCharacters="е" />
+        <Key app:keyLabel="н" app:popupCharacters="њ" />
+        <Key app:keyLabel="г" app:popupCharacters="ґ" />
         <Key app:keyLabel="ш" />
         <Key app:keyLabel="щ" />
         <Key app:keyLabel="з" />
@@ -32,18 +33,19 @@
     </Row>
 
     <!-- Row 2: Ф Ы В А П Р О Л Д Ж Э (11 keys) -->
+    <!-- Long-press for Ukrainian/Serbian variants -->
     <Row>
         <Key app:keyLabel="ф" app:keyEdgeFlags="left" />
-        <Key app:keyLabel="ы" />
+        <Key app:keyLabel="ы" app:popupCharacters="і" />
         <Key app:keyLabel="в" />
         <Key app:keyLabel="а" />
         <Key app:keyLabel="п" />
         <Key app:keyLabel="р" />
         <Key app:keyLabel="о" />
-        <Key app:keyLabel="л" />
-        <Key app:keyLabel="д" />
+        <Key app:keyLabel="л" app:popupCharacters="љ" />
+        <Key app:keyLabel="д" app:popupCharacters="ђ" />
         <Key app:keyLabel="ж" />
-        <Key app:keyLabel="э" app:keyEdgeFlags="right" />
+        <Key app:keyLabel="э" app:popupCharacters="є" app:keyEdgeFlags="right" />
     </Row>
 
     <!-- Row 3: Shift + 9 letters + Backspace = 11 keys -->
@@ -57,12 +59,12 @@
             app:isSticky="true"
             app:isModifier="true" />
         <Key app:keyLabel="я" app:keyWidth="8.5%p" />
-        <Key app:keyLabel="ч" app:keyWidth="8.5%p" />
+        <Key app:keyLabel="ч" app:keyWidth="8.5%p" app:popupCharacters="ћ" />
         <Key app:keyLabel="с" app:keyWidth="8.5%p" />
         <Key app:keyLabel="м" app:keyWidth="8.5%p" />
-        <Key app:keyLabel="и" app:keyWidth="8.5%p" />
+        <Key app:keyLabel="и" app:keyWidth="8.5%p" app:popupCharacters="іїй" />
         <Key app:keyLabel="т" app:keyWidth="8.5%p" />
-        <Key app:keyLabel="ь" app:keyWidth="8.5%p" />
+        <Key app:keyLabel="ь" app:keyWidth="8.5%p" app:popupCharacters="ъ" />
         <Key app:keyLabel="б" app:keyWidth="8.5%p" />
         <Key app:keyLabel="ю" app:keyWidth="8.5%p" />
         <Key

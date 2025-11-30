@@ -171,11 +171,15 @@ class PismoInputMethodService : InputMethodService() {
                 }
                 Keyboard.KEYCODE_MODE_CHANGE -> {
                     // Switch between Cyrillic and Symbol keyboard
+                    PismoApp.printLog(TAG, "MODE_CHANGE: current=${keyboardView.keyboard} cyrillic=$cyrillicKeyboard symbol=$symbolKeyboard")
                     if (keyboardView.keyboard === cyrillicKeyboard) {
+                        PismoApp.printLog(TAG, "MODE_CHANGE: switching to symbol keyboard")
                         keyboardView.setKeyboard(symbolKeyboard)
                     } else {
+                        PismoApp.printLog(TAG, "MODE_CHANGE: switching to cyrillic keyboard")
                         keyboardView.setKeyboard(cyrillicKeyboard)
                     }
+                    PismoApp.printLog(TAG, "MODE_CHANGE: done, new keyboard=${keyboardView.keyboard}")
                 }
                 Keyboard.KEYCODE_DONE -> {
                     val action = _editorInfo?.let { it.imeOptions and EditorInfo.IME_MASK_ACTION } ?: return
