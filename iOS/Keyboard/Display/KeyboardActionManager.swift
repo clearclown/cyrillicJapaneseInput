@@ -762,8 +762,8 @@ final class KeyboardActionManager: UserActionManager, @unchecked Sendable {
         self.registerActions(actions, variableStates: variableStates)
     }
 
-    private func hideLearningMemory() {
-        // TODO: Provide up-to-date implementation
+    @MainActor private func hideLearningMemory() {
+        MemoryResetCondition.set(value: .need)
     }
 
     /// 文字列がキリル文字のみで構成されているかチェック
