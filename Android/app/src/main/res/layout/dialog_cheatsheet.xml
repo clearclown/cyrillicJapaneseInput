@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cheatsheet_title"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="12dp" />
+
+        <!-- Vowels Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cheatsheet_vowels"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/candidate_background_selected"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp" />
+
+        <TableLayout
+            android:id="@+id/table_vowels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*" />
+
+        <!-- Consonants Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cheatsheet_consonants"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/candidate_background_selected"
+            android:paddingTop="12dp"
+            android:paddingBottom="4dp" />
+
+        <TableLayout
+            android:id="@+id/table_consonants"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*" />
+
+        <!-- Special Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cheatsheet_special"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/candidate_background_selected"
+            android:paddingTop="12dp"
+            android:paddingBottom="4dp" />
+
+        <TableLayout
+            android:id="@+id/table_special"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*" />
+
+    </LinearLayout>
+</ScrollView>

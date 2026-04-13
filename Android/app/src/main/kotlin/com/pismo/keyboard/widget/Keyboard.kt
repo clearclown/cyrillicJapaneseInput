@@ -46,7 +46,18 @@ class Keyboard(context: Context, layoutRes: Int) {
         /** Keyboard layout types */
         const val DEF_TYPE = "xml"
         const val LAYOUT_KEYBOARD_CYRILLIC_RU = "keyboard_cyrillic_ru"
+        const val LAYOUT_KEYBOARD_CYRILLIC_UK = "keyboard_cyrillic_uk"
+        const val LAYOUT_KEYBOARD_CYRILLIC_BG = "keyboard_cyrillic_bg"
+        const val LAYOUT_KEYBOARD_CYRILLIC_SR = "keyboard_cyrillic_sr"
         const val LAYOUT_KEYBOARD_SYMBOL = "keyboard_symbol"
+
+        /** Locale → layout name mapping */
+        fun layoutForLocale(locale: String): String = when {
+            locale.startsWith("uk") -> LAYOUT_KEYBOARD_CYRILLIC_UK
+            locale.startsWith("bg") -> LAYOUT_KEYBOARD_CYRILLIC_BG
+            locale.startsWith("sr") -> LAYOUT_KEYBOARD_CYRILLIC_SR
+            else -> LAYOUT_KEYBOARD_CYRILLIC_RU
+        }
 
         /** XML layout tags */
         const val TAG_KEYBOARD = "Keyboard"
@@ -69,6 +80,7 @@ class Keyboard(context: Context, layoutRes: Int) {
         const val KEYCODE_ALT = -6
         const val KEYCODE_MAIN_KEYBOARD = -8
         const val KEYCODE_CLOSE_KEYBOARD = -99
+        const val KEYCODE_CHEATSHEET = -10
 
         const val NOT_A_KEY = -1
 

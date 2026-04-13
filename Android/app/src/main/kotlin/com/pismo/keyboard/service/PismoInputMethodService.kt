@@ -54,6 +54,7 @@ class PismoInputMethodService : InputMethodService() {
 
     private lateinit var cyrillicKeyboard: Keyboard
     private lateinit var symbolKeyboard: Keyboard
+    private var currentLocale: String = "ru"
 
     private var _binding: LayoutKeyboardViewBinding? = null
     private val binding: LayoutKeyboardViewBinding get() = _binding!!
@@ -88,8 +89,31 @@ class PismoInputMethodService : InputMethodService() {
     }
 
     private fun parseKeyboardLayoutFromXml() {
-        cyrillicKeyboard = createKeyboard(Keyboard.LAYOUT_KEYBOARD_CYRILLIC_RU)
+        val layout = Keyboard.layoutForLocale(currentLocale)
+        cyrillicKeyboard = createKeyboard(layout)
         symbolKeyboard = createKeyboard(Keyboard.LAYOUT_KEYBOARD_SYMBOL)
+        syncConverterProfile()
+    }
+
+    override fun onCurrentInputMethodSubtypeChanged(newSubtype: android.view.inputmethod.InputMethodSubtype?) {
+        super.onCurrentInputMethodSubtypeChanged(newSubtype)
+        val locale = newSubtype?.locale ?: "ru"
+        PismoApp.printLog(TAG, "onCurrentInputMethodSubtypeChanged: locale=$locale")
+        currentLocale = locale
+        parseKeyboardLayoutFromXml()
+        _binding?.vKeyboard?.setKeyboard(cyrillicKeyboard)
+    }
+
+    private fun syncConverterProfile() {
+        val profile = when {
+            currentLocale.startsWith("uk") -> CyrillicKanaConverter.Profile.UKRAINIAN
+            currentLocale.startsWith("bg") -> CyrillicKanaConverter.Profile.BULGARIAN
+            currentLocale.startsWith("sr") -> CyrillicKanaConverter.Profile.SERBIAN
+            currentLocale.startsWith("be") -> CyrillicKanaConverter.Profile.BELARUSIAN
+            else -> CyrillicKanaConverter.Profile.STANDARD
+        }
+        converter.setProfile(profile)
+        PismoApp.printLog(TAG, "syncConverterProfile: $profile")
     }
 
     private fun createKeyboard(layoutXml: String): Keyboard {
@@ -158,10 +182,39 @@ class PismoInputMethodService : InputMethodService() {
         super.onDestroy()
     }
 
+    // MARK: - Cheat Sheet
+
+    private fun showCheatSheet() {
+        val dialogContext = android.view.ContextThemeWrapper(this, android.R.style.Theme_DeviceDefault_Dialog)
+        val dialog = com.pismo.keyboard.ui.CheatSheetHelper.createDialog(dialogContext)
+        dialog.window?.let { window ->
+            window.setType(android.view.WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG)
+            val token = _binding?.root?.windowToken
+            if (token != null) {
+                window.attributes = window.attributes.apply {
+                    this.token = token
+                }
+            }
+        }
+        dialog.show()
+    }
+
+    // MARK: - Haptic & Sound Feedback
+
+    private fun performKeyFeedback() {
+        _binding?.vKeyboard?.performHapticFeedback(
+            android.view.HapticFeedbackConstants.KEYBOARD_TAP,
+            android.view.HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
+        )
+    }
+
+    // MARK: - Keyboard Action Listener
+
     private val keyboardActionListener = object : KeyboardView.KeyboardActionListener {
 
         override fun onKey(primaryCode: Int) {
             PismoApp.printLog(TAG, "onKey: $primaryCode")
+            performKeyFeedback()
             val keyboardView = _binding?.vKeyboard ?: return
 
             when (primaryCode) {
@@ -183,6 +236,9 @@ class PismoInputMethodService : InputMethodService() {
                 }
                 Keyboard.KEYCODE_DELETE -> {
                     handleDelete()
+                }
+                Keyboard.KEYCODE_CHEATSHEET -> {
+                    showCheatSheet()
                 }
                 Keyboard.KEYCODE_MAIN_KEYBOARD -> {
                     keyboardView.setKeyboard(cyrillicKeyboard)
