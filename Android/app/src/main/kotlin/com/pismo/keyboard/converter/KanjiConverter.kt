@@ -47,9 +47,9 @@ class KanjiConverter(private val context: Context) {
     // Single character dictionary: hiragana -> list of kanji characters
     private val singleKanjiDict = mutableMapOf<String, List<String>>()
 
-    // Loading state
-    private var isLoaded = false
-    private var isLoading = false
+    // Loading state - @Volatile for cross-thread visibility
+    @Volatile private var isLoaded = false
+    @Volatile private var isLoading = false
 
     /**
      * Load dictionary data asynchronously.

@@ -260,10 +260,9 @@ final class KeyboardActionManager: UserActionManager, @unchecked Sendable {
             variableStates.setTab(type)
 
             // タブ移動時にキリル文字プロファイルを同期する
-            if let existentialTab = try? variableStates.tabManager.existentialTab() {
-                if case let .custard(custard) = existentialTab {
-                    self.inputManager.setCyrillicProfile(for: custard.identifier)
-                }
+            let existentialTab = variableStates.tabManager.existentialTab()
+            if case let .custard(custard) = existentialTab {
+                self.inputManager.setCyrillicProfile(for: custard.identifier)
             }
 
         case let .setUpsideComponent(type):
@@ -466,7 +465,11 @@ final class KeyboardActionManager: UserActionManager, @unchecked Sendable {
                 pendingReportDismissTask?.cancel()
                 pendingReportDismissTask = Task { @MainActor [weak self, weak variableStates] in
                     // 3秒程度表示しておく
-                    try? await Task.sleep(for: .seconds(3))
+                    do {
+                        try await Task.sleep(for: .seconds(3))
+                    } catch {
+                        return // Task was cancelled
+                    }
                     guard let self, let variableStates else {
                         return
                     }
@@ -536,7 +539,7 @@ final class KeyboardActionManager: UserActionManager, @unchecked Sendable {
     override func notifySomethingWillChange(left: String, center: String, right: String) {
         // self.tempTextDataが`nil`でない場合、上書きせず終了する
         guard self.tempTextData == nil else {
-            debug("notifySomethingWillChange: There is already `tempTextData`: \(tempTextData!)")
+            debug("notifySomethingWillChange: There is already `tempTextData`: \(tempTextData.debugDescription)")
             return
         }
         self.tempTextData = (left: left, center: center, right: right)

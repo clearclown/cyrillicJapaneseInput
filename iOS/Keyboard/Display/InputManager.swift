@@ -165,7 +165,7 @@ final class InputManager {
             case .katakana:
                 text = text.toKatakana()
             case .halfwidthKatakana:
-                text = text.toKatakana().applyingTransform(.fullwidthToHalfwidth, reverse: false)!
+                text = text.toKatakana().applyingTransform(.fullwidthToHalfwidth, reverse: false) ?? text.toKatakana()
             case .uppercase:
                 text = text.uppercased()
             case .lowercase:
@@ -182,21 +182,21 @@ final class InputManager {
     private static let zenzXsmallWeightURL = Bundle.main.bundleURL.appendingPathComponent("zenz-v3.1-xsmall-gguf/ggml-model-Q5_K_M.gguf", isDirectory: false)
 
     @MainActor private func getConvertRequestOptions(inputStylePreference: InputStyle? = nil) -> ConvertRequestOptions {
-        let requireJapanesePrediction: Bool
-        let requireEnglishPrediction: Bool
+        let requireJapanesePrediction: ConvertRequestOptions.PredictionMode
+        let requireEnglishPrediction: ConvertRequestOptions.PredictionMode
         switch (isSelected, inputStylePreference ?? .direct) {
         case (true, _):
-            requireJapanesePrediction = false
-            requireEnglishPrediction = false
+            requireJapanesePrediction = .disabled
+            requireEnglishPrediction = .disabled
         case (false, .direct):
-            requireJapanesePrediction = true
-            requireEnglishPrediction = true
+            requireJapanesePrediction = .autoMix
+            requireEnglishPrediction = .autoMix
         case (false, .roman2kana):
-            requireJapanesePrediction = keyboardLanguage == .ja_JP
-            requireEnglishPrediction = keyboardLanguage == .en_US
+            requireJapanesePrediction = keyboardLanguage == .ja_JP ? .autoMix : .disabled
+            requireEnglishPrediction = keyboardLanguage == .en_US ? .autoMix : .disabled
         case (false, .mapped):
-            requireJapanesePrediction = keyboardLanguage == .ja_JP
-            requireEnglishPrediction = false
+            requireJapanesePrediction = keyboardLanguage == .ja_JP ? .autoMix : .disabled
+            requireEnglishPrediction = .disabled
         }
         @KeyboardSetting(.typographyLetter) var typographyLetterCandidate
         @KeyboardSetting(.englishCandidate) var englishCandidateInRoman2KanaInput
@@ -1045,7 +1045,11 @@ final class InputManager {
                 outputText.append(original)
             } else if let romaji = CFStringTokenizerCopyCurrentTokenAttribute(tokenizer, kCFStringTokenizerAttributeLatinTranscription) as? NSString {
                 // ローマ字をまず得て、そのあとでカタカナにする
-                let reading: NSMutableString = romaji.mutableCopy() as! NSMutableString  // swiftlint:disable:this force_cast
+                guard let reading = romaji.mutableCopy() as? NSMutableString else {
+                    outputText.append(original)
+                    tokenType = CFStringTokenizerAdvanceToNextToken(tokenizer)
+                    continue
+                }
                 CFStringTransform(reading as CFMutableString, nil, kCFStringTransformLatinKatakana, false)
                 outputText.append(reading as String)
             } else {

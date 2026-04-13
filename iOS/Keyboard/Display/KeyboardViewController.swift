@@ -194,9 +194,9 @@ final class KeyboardViewController: UIInputViewController {
         self.hostViewWidthConstraint = self.hostViewWidthConstraint ?? host.view.widthAnchor.constraint(equalTo: self.view.widthAnchor)
         self.hostViewHeightConstraint = self.hostViewHeightConstraint ?? host.view.heightAnchor.constraint(equalTo: self.view.heightAnchor)
         self.hostViewBottomConstraint = self.hostViewBottomConstraint ?? host.view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
-        NSLayoutConstraint.activate([
-            self.hostViewWidthConstraint!, self.hostViewHeightConstraint!, self.hostViewBottomConstraint!
-        ])
+        NSLayoutConstraint.activate(
+            [self.hostViewWidthConstraint, self.hostViewHeightConstraint, self.hostViewBottomConstraint].compactMap { $0 }
+        )
         KeyboardViewController.keyboardViewHost = host
         KeyboardViewController.action.setDelegateViewController(self)
         KeyboardViewController.action.setResultViewUpdateCallback(Self.variableStates)
@@ -261,11 +261,11 @@ final class KeyboardViewController: UIInputViewController {
         }
 
         // viewDidAppearで実施する
-        let window = self.view.window!
-        let gr0 = window.gestureRecognizers![0] as UIGestureRecognizer
-        let gr1 = window.gestureRecognizers![1] as UIGestureRecognizer
-        gr0.delaysTouchesBegan = false
-        gr1.delaysTouchesBegan = false
+        if let window = self.view.window, let recognizers = window.gestureRecognizers {
+            for recognizer in recognizers {
+                recognizer.delaysTouchesBegan = false
+            }
+        }
     }
 
     override func viewDidLayoutSubviews() {

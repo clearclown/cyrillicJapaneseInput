@@ -120,7 +120,8 @@ class CyrillicKanaConverterTest {
     @Test
     fun `test W-row conversion`() {
         assertEquals("わ", processAndFlush("Ва"))
-        assertEquals("を", processAndFlush("О"))
+        // Во maps to を (unified with iOS mapping)
+        assertEquals("を", processAndFlush("Во"))
     }
 
     @Test
@@ -412,10 +413,10 @@ class CyrillicKanaConverterTest {
         converter.processInput('С')
         assertEquals("С", converter.getComposingText())
 
-        converter.processInput('а')
+        val result = converter.processInput('а')
         // After Са is recognized, should commit さ
         assertEquals("", converter.getComposingText())
-        assertEquals("さ", converter.flush())
+        assertEquals("さ", result.committed)
     }
 
     @Test
@@ -503,7 +504,7 @@ class CyrillicKanaConverterTest {
 
     private fun processAndFlush(input: String): String {
         converter.clearBuffer()
-        converter.processInput(input)
-        return converter.flush()
+        val result = converter.processInput(input)
+        return result.committed + converter.flush()
     }
 }

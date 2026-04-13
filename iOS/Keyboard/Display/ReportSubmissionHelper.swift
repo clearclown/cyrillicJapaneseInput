@@ -177,7 +177,7 @@ struct ReportSubmissionHelper {
         case .qwerty_hira:
             return "qwerty"
         case .custard:
-            return "custurd"
+            return "custard"
         default:
             return "other"
         }
