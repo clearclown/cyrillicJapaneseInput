@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Pismo - Ukrainian Cyrillic Keyboard Layout (ЙЦУКЕН)
+
+  Row 1: Й Ц У К Е Н Г Ш Щ З Х (11 keys)
+  Row 2: Ф І В А П Р О Л Д Ж Є (11 keys)
+  Row 3: [Shift] Я Ч С М Ї Т Ь Б Ю [Backspace]
+  Row 4: [123] Ґ [Space] . [Enter]
+-->
+<Keyboard xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:keyWidth="9.09%p"
+    app:keyHeight="52dp"
+    app:keyHorizontalGap="0dp"
+    app:keyVerticalGap="4dp">
+
+    <Row app:rowEdgeFlags="top">
+        <Key app:keyLabel="й" app:keyEdgeFlags="left" />
+        <Key app:keyLabel="ц" />
+        <Key app:keyLabel="у" />
+        <Key app:keyLabel="к" />
+        <Key app:keyLabel="е" />
+        <Key app:keyLabel="н" />
+        <Key app:keyLabel="г" />
+        <Key app:keyLabel="ш" />
+        <Key app:keyLabel="щ" />
+        <Key app:keyLabel="з" />
+        <Key app:keyLabel="х" app:keyEdgeFlags="right" />
+    </Row>
+
+    <Row>
+        <Key app:keyLabel="ф" app:keyEdgeFlags="left" />
+        <Key app:keyLabel="і" />
+        <Key app:keyLabel="в" />
+        <Key app:keyLabel="а" />
+        <Key app:keyLabel="п" />
+        <Key app:keyLabel="р" />
+        <Key app:keyLabel="о" />
+        <Key app:keyLabel="л" />
+        <Key app:keyLabel="д" />
+        <Key app:keyLabel="ж" />
+        <Key app:keyLabel="є" app:keyEdgeFlags="right" />
+    </Row>
+
+    <Row>
+        <Key
+            app:codes="-1"
+            app:keyIcon="@drawable/ic_shift"
+            app:keyWidth="12%p"
+            app:keyEdgeFlags="left"
+            app:isSticky="true"
+            app:isModifier="true" />
+        <Key app:keyLabel="я" app:keyWidth="8.5%p" />
+        <Key app:keyLabel="ч" app:keyWidth="8.5%p" />
+        <Key app:keyLabel="с" app:keyWidth="8.5%p" />
+        <Key app:keyLabel="м" app:keyWidth="8.5%p" />
+        <Key app:keyLabel="ї" app:keyWidth="8.5%p" />
+        <Key app:keyLabel="т" app:keyWidth="8.5%p" />
+        <Key app:keyLabel="ь" app:keyWidth="8.5%p" />
+        <Key app:keyLabel="б" app:keyWidth="8.5%p" />
+        <Key app:keyLabel="ю" app:keyWidth="8.5%p" />
+        <Key
+            app:codes="-5"
+            app:keyIcon="@drawable/ic_backspace"
+            app:keyWidth="11.5%p"
+            app:keyEdgeFlags="right"
+            app:isRepeatable="true" />
+    </Row>
+
+    <Row app:rowEdgeFlags="bottom">
+        <Key
+            app:codes="-2"
+            app:keyLabel="123"
+            app:keyWidth="15%p"
+            app:keyEdgeFlags="left" />
+        <Key
+            app:keyLabel="ґ"
+            app:keyWidth="10%p" />
+        <Key
+            app:codes="32"
+            app:keyLabel="@string/label_space"
+            app:keyWidth="50%p"
+            app:isRepeatable="true" />
+        <Key
+            app:keyLabel="."
+            app:keyWidth="10%p" />
+        <Key
+            app:codes="-4"
+            app:keyIcon="@drawable/ic_enter"
+            app:keyWidth="15%p"
+            app:keyEdgeFlags="right" />
+    </Row>
+
+</Keyboard>

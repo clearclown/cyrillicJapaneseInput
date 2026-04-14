@@ -5,16 +5,10 @@ on:
     branches: [ "main", "develop" ]
     paths:
       - 'iOS/**'
-      - 'AzooKeyCore/**'
-      - '*.xcodeproj/**'
-      - 'Package.swift'
   pull_request:
     branches: [ "main", "develop" ]
     paths:
       - 'iOS/**'
-      - 'AzooKeyCore/**'
-      - '*.xcodeproj/**'
-      - 'Package.swift'
 
 jobs:
   build:
@@ -39,4 +33,4 @@ jobs:
           ${{ runner.os }}-swift-
 
     - name: Build
-      run: swift build --package-path AzooKeyCore --target SwiftUIUtils;swift build --package-path AzooKeyCore --target KeyboardThemes
+      run: swift build --package-path iOS/AzooKeyCore --target SwiftUIUtils;swift build --package-path iOS/AzooKeyCore --target KeyboardThemes

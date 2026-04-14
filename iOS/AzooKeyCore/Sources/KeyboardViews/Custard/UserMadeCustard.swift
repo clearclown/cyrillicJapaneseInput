@@ -111,7 +111,7 @@ public struct UserMadeGridScrollCustard: Codable, Sendable {
         if container.contains(.keys) {
             self.keys = try container.decode([UserMadeKeyData].self, forKey: UserMadeGridScrollCustard.CodingKeys.keys)
         } else {
-            let words = try container.decode(String.self, forKey: UserMadeGridScrollCustard.CodingKeys.words)
+            let words = try container.decode(String.self, forKey: UserMadeGridScrollCustard.CodingKeys.words)  // Legacy format uses "words" JSON key
             self.keys = Self.wordsToKeys(words)
         }
         self.addTabBarAutomatically = try container.decode(Bool.self, forKey: UserMadeGridScrollCustard.CodingKeys.addTabBarAutomatically)

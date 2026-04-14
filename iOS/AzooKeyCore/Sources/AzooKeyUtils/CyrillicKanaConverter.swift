@@ -65,9 +65,11 @@ public final class CyrillicKanaConverter {
     ///   - composingText: 現在の入力バッファ
     /// - Returns: 実行すべき操作 (削除数と挿入テキスト)
     public func process(input: String, composingText: String) -> InputOperation {
-        let inputUpper = input.uppercased()
+        // NFC正規化: 合成済みキリル文字と分解形式の不一致を防ぐ
+        let normalizedInput = input.precomposedStringWithCanonicalMapping
+        let inputUpper = normalizedInput.uppercased()
         let maxSuffixLength = 4
-        let buffer = composingText
+        let buffer = composingText.precomposedStringWithCanonicalMapping
         let lastChar = buffer.last.map { String($0) }
 
         // Debug: バッファの内容を確認
@@ -957,11 +959,11 @@ public final class CyrillicKanaConverter {
         if currentProfile == .chukchi {
             // Ӄ (voiceless uvular plosive) - use for く
             newMapping["Ӄ"] = "く"
-            newMapping["ӀА"] = "か"
-            newMapping["ӀИ"] = "き"
-            newMapping["ӀУ"] = "く"
-            newMapping["ӀЕ"] = "け"
-            newMapping["ӀО"] = "こ"
+            newMapping["ӃА"] = "か"
+            newMapping["ӃИ"] = "き"
+            newMapping["ӃУ"] = "く"
+            newMapping["ӃЕ"] = "け"
+            newMapping["ӃО"] = "こ"
             // Ԓ (voiceless lateral fricative) - use for る
             newMapping["Ԓ"] = "る"
             newMapping["ԒА"] = "ら"

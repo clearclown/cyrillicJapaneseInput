@@ -17,7 +17,18 @@ import OrderedCollections
 import SwiftUtils
 import UIKit
 
+/// キーボード拡張の入力処理を一元管理するクラス。
+///
+/// 責務:
+/// - テキスト入力・削除・カーソル移動 (input/delete/moveCursor)
+/// - かな漢字変換リクエストと結果管理 (setResult/complete)
+/// - キリル文字→かな変換の前処理 (cyrillicConverter)
+/// - ライブ変換・予測変換の管理 (liveConversionManager/predictionManager)
+/// - 再変換用ルビログの管理 (rubyLog)
 final class InputManager {
+
+    // MARK: - Properties
+
     // 入力中の文字列を管理する構造体
     private(set) var composingText = ComposingText()
     // 表示される文字列を管理するクラス
@@ -47,64 +58,43 @@ final class InputManager {
         self.kanaKanjiConverter.setKeyboardLanguage(value)
     }
 
-    /// キリル文字プロファイルを更新するAPI
+    /// Custard 識別子 → CyrillicKanaConverter.Profile の対応表
+    nonisolated(unsafe) private static let cyrillicProfileMap: [String: CyrillicKanaConverter.Profile] = [
+        "cyrillic_standard": .standard,
+        "cyrillic_ukrainian": .ukrainian,
+        "cyrillic_belarusian": .belarusian,
+        "cyrillic_bulgarian": .bulgarian,
+        "cyrillic_serbian": .serbian,
+        "cyrillic_macedonian": .macedonian,
+        "cyrillic_kazakh": .kazakh,
+        "cyrillic_kyrgyz": .kyrgyz,
+        "cyrillic_mongolian": .mongolian,
+        "cyrillic_tajik": .tajik,
+        "cyrillic_uzbek": .uzbek,
+        "cyrillic_tatar": .tatar,
+        "cyrillic_bashkir": .bashkir,
+        "cyrillic_chuvash": .chuvash,
+        "cyrillic_sakha": .sakha,
+        "cyrillic_buryat": .buryat,
+        "cyrillic_kalmyk": .kalmyk,
+        "cyrillic_azerbaijani": .azerbaijani,
+        "cyrillic_church_slavonic": .churchSlavonic,
+        "cyrillic_komi": .komi,
+        "cyrillic_khanty": .khanty,
+        "cyrillic_chukchi": .chukchi,
+        "cyrillic_abkhaz": .abkhaz,
+    ]
+
+    /// キリル文字プロファイルを Custard 識別子から設定する
     @MainActor func setCyrillicProfile(for identifier: String) {
-        switch identifier {
-        case "cyrillic_standard":
+        if let profile = Self.cyrillicProfileMap[identifier] {
+            self.cyrillicConverter.setProfile(profile)
+        } else if identifier.starts(with: "cyrillic_") {
             self.cyrillicConverter.setProfile(.standard)
-        case "cyrillic_ukrainian":
-            self.cyrillicConverter.setProfile(.ukrainian)
-        case "cyrillic_belarusian":
-            self.cyrillicConverter.setProfile(.belarusian)
-        case "cyrillic_bulgarian":
-            self.cyrillicConverter.setProfile(.bulgarian)
-        case "cyrillic_serbian":
-            self.cyrillicConverter.setProfile(.serbian)
-        case "cyrillic_macedonian":
-            self.cyrillicConverter.setProfile(.macedonian)
-        case "cyrillic_kazakh":
-            self.cyrillicConverter.setProfile(.kazakh)
-        case "cyrillic_kyrgyz":
-            self.cyrillicConverter.setProfile(.kyrgyz)
-        case "cyrillic_mongolian":
-            self.cyrillicConverter.setProfile(.mongolian)
-        case "cyrillic_tajik":
-            self.cyrillicConverter.setProfile(.tajik)
-        case "cyrillic_uzbek":
-            self.cyrillicConverter.setProfile(.uzbek)
-        case "cyrillic_tatar":
-            self.cyrillicConverter.setProfile(.tatar)
-        case "cyrillic_bashkir":
-            self.cyrillicConverter.setProfile(.bashkir)
-        case "cyrillic_chuvash":
-            self.cyrillicConverter.setProfile(.chuvash)
-        case "cyrillic_sakha":
-            self.cyrillicConverter.setProfile(.sakha)
-        case "cyrillic_buryat":
-            self.cyrillicConverter.setProfile(.buryat)
-        case "cyrillic_kalmyk":
-            self.cyrillicConverter.setProfile(.kalmyk)
-        case "cyrillic_azerbaijani":
-            self.cyrillicConverter.setProfile(.azerbaijani)
-        case "cyrillic_church_slavonic":
-            self.cyrillicConverter.setProfile(.churchSlavonic)
-        case "cyrillic_komi":
-            self.cyrillicConverter.setProfile(.komi)
-        case "cyrillic_khanty":
-            self.cyrillicConverter.setProfile(.khanty)
-        case "cyrillic_chukchi":
-            self.cyrillicConverter.setProfile(.chukchi)
-        case "cyrillic_abkhaz":
-            self.cyrillicConverter.setProfile(.abkhaz)
-        default:
-            // Default to standard if unknown cyrillic identifier, or ignore if not cyrillic
-            if identifier.starts(with: "cyrillic_") {
-                self.cyrillicConverter.setProfile(.standard)
-            }
         }
     }
 
-    // キリル文字プロファイルの更新用API (Private)
+    /// キリル文字プロファイルを直接設定する
     @MainActor func setCyrillicProfile(_ profile: CyrillicKanaConverter.Profile) {
         self.cyrillicConverter.setProfile(profile)
     }
@@ -131,6 +121,8 @@ final class InputManager {
     private var liveConversionEnabled: Bool {
         liveConversionManager.enabled && !self.isSelected
     }
+
+    // MARK: - State Accessors
 
     func getEnterKeyState() -> RoughEnterKeyState {
         if !self.isSelected && !self.composingText.isEmpty {
@@ -165,7 +157,7 @@ final class InputManager {
             case .katakana:
                 text = text.toKatakana()
             case .halfwidthKatakana:
-                text = text.toKatakana().applyingTransform(.fullwidthToHalfwidth, reverse: false)!
+                text = text.toKatakana().applyingTransform(.fullwidthToHalfwidth, reverse: false) ?? text.toKatakana()
             case .uppercase:
                 text = text.uppercased()
             case .lowercase:
@@ -182,21 +174,21 @@ final class InputManager {
     private static let zenzXsmallWeightURL = Bundle.main.bundleURL.appendingPathComponent("zenz-v3.1-xsmall-gguf/ggml-model-Q5_K_M.gguf", isDirectory: false)
 
     @MainActor private func getConvertRequestOptions(inputStylePreference: InputStyle? = nil) -> ConvertRequestOptions {
-        let requireJapanesePrediction: Bool
-        let requireEnglishPrediction: Bool
+        let requireJapanesePrediction: ConvertRequestOptions.PredictionMode
+        let requireEnglishPrediction: ConvertRequestOptions.PredictionMode
         switch (isSelected, inputStylePreference ?? .direct) {
         case (true, _):
-            requireJapanesePrediction = false
-            requireEnglishPrediction = false
+            requireJapanesePrediction = .disabled
+            requireEnglishPrediction = .disabled
         case (false, .direct):
-            requireJapanesePrediction = true
-            requireEnglishPrediction = true
+            requireJapanesePrediction = .autoMix
+            requireEnglishPrediction = .autoMix
         case (false, .roman2kana):
-            requireJapanesePrediction = keyboardLanguage == .ja_JP
-            requireEnglishPrediction = keyboardLanguage == .en_US
+            requireJapanesePrediction = keyboardLanguage == .ja_JP ? .autoMix : .disabled
+            requireEnglishPrediction = keyboardLanguage == .en_US ? .autoMix : .disabled
         case (false, .mapped):
-            requireJapanesePrediction = keyboardLanguage == .ja_JP
-            requireEnglishPrediction = false
+            requireJapanesePrediction = keyboardLanguage == .ja_JP ? .autoMix : .disabled
+            requireEnglishPrediction = .disabled
         }
         @KeyboardSetting(.typographyLetter) var typographyLetterCandidate
         @KeyboardSetting(.englishCandidate) var englishCandidateInRoman2KanaInput
@@ -325,6 +317,8 @@ final class InputManager {
         }
     })
 
+    // MARK: - Configuration
+
     func setTextDocumentProxy(_ proxy: AnyTextDocumentProxy) {
         self.displayedTextManager.setTextDocumentProxy(proxy)
     }
@@ -422,6 +416,8 @@ final class InputManager {
     }
 
     /// 変換を選択した場合に呼ばれる
+    // MARK: - Conversion & Completion
+
     @MainActor func complete(candidate: Candidate) {
         self.updateLog(candidate: candidate)
         self.composingText.prefixComplete(composingCount: candidate.composingCount)
@@ -548,6 +544,8 @@ final class InputManager {
     ///   - requireSetResult: `View`のアップデートを、この呼び出しで実施するべきか。この後さらに別の呼び出しを行う場合は、`false`にする。
     ///   - simpleInsert: `ComposingText`を作るのではなく、直接文字を入力し、変換候補を表示しない。
     ///   - inputStyle: 入力スタイル
+    // MARK: - Text Input
+
     @MainActor func input(text: String, requireSetResult: Bool = true, simpleInsert: Bool = false, inputStyle: InputStyle) {
         // キリル文字入力のインターセプト
         if !simpleInsert && text.range(of: "\\p{Cyrillic}", options: .regularExpression) != nil {
@@ -635,6 +633,8 @@ final class InputManager {
     /// - Parameters:
     ///   - convertTargetCount: `convertTarget`の文字数。`displayedText`の文字数ではない。
     ///   - requireSetResult: `setResult()`の呼び出しを要求するか。
+    // MARK: - Deletion
+
     @MainActor func deleteBackward(convertTargetCount: Int, requireSetResult: Bool = true) {
         if convertTargetCount == 0 {
             return
@@ -944,6 +944,8 @@ final class InputManager {
     }
 
     /// キーボード経由でのカーソル移動
+    // MARK: - Cursor Movement
+
     @MainActor func moveCursor(count: Int, requireSetResult: Bool = true) {
         if self.isSelected {
             // ただ横に動かす(選択解除)
@@ -1023,6 +1025,8 @@ final class InputManager {
     }
 
     // Reference: https://teratail.com/questions/57039?link=qa_related_pc
+    // MARK: - System API & Utilities
+
     func getReadingFromSystemAPI(_ text: String) -> String {
         let inputText = text as NSString
         let outputText = NSMutableString()
@@ -1045,7 +1049,11 @@ final class InputManager {
                 outputText.append(original)
             } else if let romaji = CFStringTokenizerCopyCurrentTokenAttribute(tokenizer, kCFStringTokenizerAttributeLatinTranscription) as? NSString {
                 // ローマ字をまず得て、そのあとでカタカナにする
-                let reading: NSMutableString = romaji.mutableCopy() as! NSMutableString  // swiftlint:disable:this force_cast
+                guard let reading = romaji.mutableCopy() as? NSMutableString else {
+                    outputText.append(original)
+                    tokenType = CFStringTokenizerAdvanceToNextToken(tokenizer)
+                    continue
+                }
                 CFStringTransform(reading as CFMutableString, nil, kCFStringTransformLatinKatakana, false)
                 outputText.append(reading as String)
             } else {
@@ -1085,6 +1093,8 @@ final class InputManager {
     }
 
     /// 変換リクエストを送信し、結果をDisplayed Textにも反映する関数
+    // MARK: - Conversion Result Management
+
     @MainActor func setResult() {
         let inputData = composingText.prefixToCursorPosition()
         debug("InputManager.setResult: value to be input", inputData)

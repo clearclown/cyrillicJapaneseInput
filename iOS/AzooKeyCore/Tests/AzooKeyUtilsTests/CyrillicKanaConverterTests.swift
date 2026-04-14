@@ -636,6 +636,150 @@ final class CyrillicKanaConverterTests: XCTestCase {
         XCTAssertEqual(res.buffer, "Кa", "Mixed scripts should likely not convert unless mapped")
     }
 
+    // MARK: - Chukchi Profile Tests
+
+    func testChukchiProfile() {
+        converter.setProfile(.chukchi)
+        print("Testing Chukchi Profile")
+
+        // Ӄ (voiceless uvular plosive) - K-row
+        assertConversion("Ӄ", "く")       // Single Ӄ = く
+        assertConversion("ӄА", "か")      // Ӄ + vowel compounds
+        assertConversion("ӄИ", "き")
+        assertConversion("ӄУ", "く")
+        assertConversion("ӄЕ", "け")
+        assertConversion("ӄО", "こ")
+
+        // Ԓ (el with descender) - R-row
+        assertConversion("Ԓ", "る")       // Single Ԓ = る
+        assertConversion("ԒА", "ら")      // Ԓ + vowel compounds
+        assertConversion("ԒИ", "り")
+        assertConversion("ԒУ", "る")
+        assertConversion("ԒЕ", "れ")
+        assertConversion("ԒО", "ろ")
+
+        // Ӈ (velar nasal) - ん
+        assertConversion("Ӈ", "ん")
+
+        // Standard characters still work
+        assertConversion("А", "あ")
+        assertConversion("Ка", "か")
+    }
+
+    // MARK: - Additional Language Profile Tests
+
+    func testMacedonianProfile() {
+        converter.setProfile(.macedonian)
+        print("Testing Macedonian Profile")
+
+        // Basic conversion (falls back to Serbian for some)
+        assertConversion("А", "あ")
+        assertConversion("Ка", "か")
+    }
+
+    func testKazakhProfile() {
+        converter.setProfile(.kazakh)
+        print("Testing Kazakh Profile")
+
+        // Standard characters work
+        assertConversion("А", "あ")
+        assertConversion("Ка", "か")
+
+        // Kazakh-specific characters
+        assertConversion("Ә", "え")       // Schwa -> え
+        assertConversion("Ғ", "が")       // Ghe with stroke -> が
+    }
+
+    func testKyrgyzProfile() {
+        converter.setProfile(.kyrgyz)
+        print("Testing Kyrgyz Profile")
+
+        assertConversion("А", "あ")
+        assertConversion("Ка", "か")
+    }
+
+    func testTatarProfile() {
+        converter.setProfile(.tatar)
+        print("Testing Tatar Profile")
+
+        assertConversion("А", "あ")
+        assertConversion("Ка", "か")
+    }
+
+    func testBashkirProfile() {
+        converter.setProfile(.bashkir)
+        print("Testing Bashkir Profile")
+
+        assertConversion("А", "あ")
+        assertConversion("Ка", "か")
+    }
+
+    func testKomiProfile() {
+        converter.setProfile(.komi)
+        print("Testing Komi Profile")
+
+        assertConversion("А", "あ")
+        assertConversion("Ка", "か")
+    }
+
+    func testAbkhazProfile() {
+        converter.setProfile(.abkhaz)
+        print("Testing Abkhaz Profile")
+
+        assertConversion("А", "あ")
+        assertConversion("Ка", "か")
+    }
+
+    // MARK: - Edge Cases
+
+    func testLowercaseCyrillicInput() {
+        converter.setProfile(.standard)
+        print("Testing Lowercase Cyrillic Input")
+
+        // Lowercase single vowels
+        assertConversion("а", "あ")
+        assertConversion("и", "い")
+        assertConversion("у", "う")
+        assertConversion("э", "え")
+        assertConversion("о", "お")
+
+        // Lowercase consonant + vowel
+        assertConversion("ка", "か")
+        assertConversion("са", "さ")
+        assertConversion("та", "た")
+    }
+
+    func testMixedCaseCyrillicInput() {
+        converter.setProfile(.standard)
+        print("Testing Mixed Case Cyrillic Input")
+
+        // Mixed case should work due to uppercasing
+        assertConversion("кА", "か")
+        assertConversion("Ка", "か")
+        assertConversion("ка", "か")
+        assertConversion("КА", "か")
+    }
+
+    func testEmptyInput() {
+        converter.setProfile(.standard)
+        print("Testing Empty Input")
+
+        let res = simulateInput("")
+        XCTAssertEqual(res.buffer, "", "Empty input produces empty result")
+    }
+
+    func testSingleCharacterInput() {
+        converter.setProfile(.standard)
+        print("Testing Single Character Input")
+
+        // Single vowel
+        assertConversion("А", "あ")
+
+        // Single consonant (should wait)
+        let res = simulateInput("К")
+        XCTAssertEqual(res.buffer, "К", "Single consonant should wait")
+    }
+
     func testTypingCorrectionSimulation() {
         converter.setProfile(.standard)
         print("Testing Correction (Backspace Simulation)")

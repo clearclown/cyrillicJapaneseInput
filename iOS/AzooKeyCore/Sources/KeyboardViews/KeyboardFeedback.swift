@@ -89,9 +89,8 @@ public enum KeyboardFeedback<Extension: ApplicationSpecificKeyboardViewExtension
     /// systemSoundの再生のラッパー
     /// - Note: `AudioServicesPlaySystemSound`は非同期で呼び出さないと爆音が鳴ることがある
     public static func playSystemSound(_ id: SystemSoundID) {
-        Task {
-            if await enableSound {
-                // 再生自体は非同期で実行される
+        Task { @MainActor in
+            if enableSound {
                 AudioServicesPlaySystemSound(id)
             }
         }

@@ -21,9 +21,9 @@ android {
     signingConfigs {
         create("release") {
             storeFile = file("keystore/pismo-release.jks")
-            storePassword = "pismo123"
+            storePassword = System.getenv("PISMO_STORE_PASSWORD") ?: project.findProperty("PISMO_STORE_PASSWORD") as? String ?: ""
             keyAlias = "pismo"
-            keyPassword = "pismo123"
+            keyPassword = System.getenv("PISMO_KEY_PASSWORD") ?: project.findProperty("PISMO_KEY_PASSWORD") as? String ?: ""
         }
     }
 

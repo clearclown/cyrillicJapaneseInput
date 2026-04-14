@@ -25,4 +25,10 @@
     <string name="label_search">Search</string>
     <string name="label_space">пробел</string>
     <string name="label_return">Return</string>
+
+    <!-- Cheat Sheet -->
+    <string name="cheatsheet_title">キリル文字 → かな 対応表</string>
+    <string name="cheatsheet_vowels">母音 (Гласные)</string>
+    <string name="cheatsheet_consonants">子音 (Согласные)</string>
+    <string name="cheatsheet_special">特殊 (Специальные)</string>
 </resources>

@@ -64,7 +64,7 @@ let package = Package(
         // MARK: `_: .upToNextMinor(Version)` or `exact: Version` or `revision: Version`.
         // MARK: For develop branch, you can use `revision:` specification.
         // MARK: For main branch, you must use `upToNextMinor` specification.
-        .package(url: "https://github.com/ensan-hcl/AzooKeyKanaKanjiConverter", revision: "fa3eeddeb8e7cfa881e725359ae6fe158b89721f", traits: ["ZenzaiCPU"]),
+        .package(url: "https://github.com/ensan-hcl/AzooKeyKanaKanjiConverter", revision: "ba06b31", traits: ["ZenzaiCPU"]),
         .package(url: "https://github.com/ensan-hcl/CustardKit", revision: "563635caf1213dd6b2baff63ed1b0cf254b9d78a"),
     ],
     targets: [

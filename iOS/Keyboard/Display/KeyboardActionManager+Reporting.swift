@@ -96,7 +96,7 @@ extension KeyboardActionManager {
         ) else {
             return
         }
-        variableStates.reportSuggestionState!.registerPresentation(
+        variableStates.reportSuggestionState?.registerPresentation(
             topDisplayText: topSummary.displayText,
             selectedDisplayText: selectedSummary.displayText,
             textChangedCount: variableStates.textChangedCount,

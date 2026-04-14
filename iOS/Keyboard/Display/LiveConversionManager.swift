@@ -54,6 +54,10 @@ final class LiveConversionManager {
                 self.headClauseCandidateHistories.append([clause])
             } else {
                 self.headClauseCandidateHistories[count].append(clause)
+                // 履歴が肥大化しないよう上限を設ける
+                if self.headClauseCandidateHistories[count].count > 20 {
+                    self.headClauseCandidateHistories[count].removeFirst()
+                }
             }
             data = data.dropFirst(clause.data.count)
             count += 1
@@ -145,9 +149,9 @@ final class LiveConversionManager {
         // 過去十分な回数変動がなければ、prefixを確定して良い
         debug("History", history)
         let texts = history.suffix(strength.threshold).mapSet { $0.text }
-        if texts.count == 1 {
+        if texts.count == 1, let candidate = history.last {
             self.isFirstClauseCompletion = true
-            return history.last!
+            return candidate
         } else {
             return nil
         }

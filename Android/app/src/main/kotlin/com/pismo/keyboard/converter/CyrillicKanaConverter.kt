@@ -16,7 +16,6 @@
  */
 package com.pismo.keyboard.converter
 
-import android.util.Log
 
 /**
  * Converts Cyrillic text to Japanese Hiragana.
@@ -105,7 +104,7 @@ class CyrillicKanaConverter {
         listOf("wa", "わ", "Ва", "Ва", "Ўа", "Ва", "Ва"),
         listOf("wi", "ゐ", "Ви", "Ві", "Ўі", "Ви", "Ви"),
         listOf("we", "ゑ", "Вэ", "Вэ", "Ўэ", "Ве", "Вэ"),
-        listOf("wo", "を", "О", "О", "Ўо", "О", "О"),
+        listOf("wo", "を", "Во", "Во", "Ўо", "Во", "Во"),
         // N
         listOf("n", "ん", "Н", "Н", "Н", "Н", "Н")
     )
@@ -214,6 +213,30 @@ class CyrillicKanaConverter {
         listOf("je", "じぇ", "Дзье", "Дзье", "Дзье", "Дзье", "Џе"),
         listOf("che", "ちぇ", "Чье", "Чье", "Чье", "Чье", "Ће"),
         listOf("tse", "つぇ", "Цье", "Цье", "Цье", "Цье", "Цје"),
+        // ふゅ/てゅ/でゅ
+        listOf("fyu", "ふゅ", "Фю", "Фю", "Фю", "Фю", "Фю"),
+        listOf("tyu", "てゅ", "Тю", "Тю", "Тю", "Тю", "Тю"),
+        listOf("dyu", "でゅ", "Дю", "Дю", "Дю", "Дю", "Дю"),
+        // ツァ行
+        listOf("tsa", "つぁ", "Ца", "Ца", "Ца", "Ца", "Ца"),
+        listOf("tsi", "つぃ", "Ци", "Ци", "Ци", "Ци", "Ци"),
+        listOf("tso", "つぉ", "Цо", "Цо", "Цо", "Цо", "Цо"),
+        // スィ/ズィ
+        listOf("si_g", "すぃ", "Сьи", "Сьі", "Сьі", "Сьи", "Сьи"),
+        listOf("zi_g", "ずぃ", "Дзьи", "Дзьі", "Дзьі", "Дзьи", "Дзьи"),
+        // イェ
+        listOf("ye", "いぇ", "Йэ", "Йэ", "Йэ", "Йе", "Јэ"),
+        // ウァ
+        listOf("wa_m", "うぁ", "Уа", "Уа", "Уа", "Уа", "Уа"),
+        // にぇ/ひぇ/etc.
+        listOf("nye", "にぇ", "Нье", "Нье", "Нье", "Нье", "Нье"),
+        listOf("hye", "ひぇ", "Хье", "Хье", "Хье", "Хье", "Хье"),
+        listOf("mye", "みぇ", "Мье", "Мье", "Мье", "Мье", "Мье"),
+        listOf("rye", "りぇ", "Рье", "Рье", "Рье", "Рье", "Рье"),
+        listOf("kye", "きぇ", "Кье", "Кье", "Кье", "Кье", "Кье"),
+        listOf("gye", "ぎぇ", "Гье", "Гье", "Гье", "Гье", "Гье"),
+        listOf("bye", "びぇ", "Бье", "Бье", "Бье", "Бье", "Бье"),
+        listOf("pye", "ぴぇ", "Пье", "Пье", "Пье", "Пье", "Пье"),
         // ヴ行 (v sound)
         listOf("va", "ゔぁ", "Вуа", "Вуа", "Вуа", "Въа", "Вуа"),
         listOf("vi", "ゔぃ", "Вуи", "Вуі", "Вуі", "Въи", "Вуи"),
@@ -233,7 +256,9 @@ class CyrillicKanaConverter {
         listOf("xyu", "ゅ", "ъю", "ъю", "ъю", "ъю", "ъју"),
         listOf("xyo", "ょ", "ъё", "ъё", "ъё", "ъё", "ъјо"),
         listOf("xwa", "ゎ", "ъва", "ъва", "ъўа", "ъва", "ъва"),
-        listOf("xtu", "っ", "ъц", "ъц", "ъц", "ъц", "ъц")
+        listOf("xtu", "っ", "ъц", "ъц", "ъц", "ъц", "ъц"),
+        listOf("xka", "ゕ", "ъка", "ъка", "ъка", "ъка", "ъка"),
+        listOf("xke", "ゖ", "ъкэ", "ъкэ", "ъкэ", "ъке", "ъкэ")
     )
 
     // Sokuon consonants (doubles that become っ)
@@ -243,6 +268,48 @@ class CyrillicKanaConverter {
     )
 
     // Buffer for composing text
+    // Cached mapping data per profile (invalidated on profile change)
+    private var cachedAllData: List<List<String>>? = null
+    private var cachedMappingLookup: Map<String, String>? = null
+    private var cachedMappingList: List<Pair<String, String>>? = null
+    private var cachedProfile: Profile? = null
+
+    private fun getAllData(): List<List<String>> {
+        if (cachedAllData == null || cachedProfile != currentProfile) {
+            cachedAllData = seionData + dakuonData + handakuonData + youonData + gairaigo + smallKana
+            cachedProfile = currentProfile
+            cachedMappingLookup = null
+            cachedMappingList = null
+        }
+        return cachedAllData!!
+    }
+
+    private fun getMappingLookup(): Map<String, String> {
+        if (cachedMappingLookup == null || cachedProfile != currentProfile) {
+            val profileIndex = currentProfile.index + 2
+            val map = mutableMapOf<String, String>()
+            for (entry in getAllData()) {
+                val key = entry[profileIndex].uppercase()
+                // Keep first occurrence to preserve priority (e.g., お before を for О)
+                if (key !in map) {
+                    map[key] = entry[1]
+                }
+            }
+            cachedMappingLookup = map
+        }
+        return cachedMappingLookup!!
+    }
+
+    private fun getMappingList(): List<Pair<String, String>> {
+        if (cachedMappingList == null || cachedProfile != currentProfile) {
+            val profileIndex = currentProfile.index + 2
+            cachedMappingList = getAllData().map { entry ->
+                Pair(entry[profileIndex].uppercase(), entry[1])
+            }
+        }
+        return cachedMappingList!!
+    }
+
     private var composingBuffer = StringBuilder()
 
     fun setProfile(profile: Profile) {
@@ -312,6 +379,11 @@ class CyrillicKanaConverter {
 
                 committed.append(hiragana)
                 remaining = remaining.substring(matchLength)
+
+                // After matching ん, consume apostrophe separator if present
+                if (hiragana == "ん" && remaining.startsWith("'")) {
+                    remaining = remaining.substring(1)
+                }
             } else {
                 // Check for sokuon (っ) - doubled consonant
                 if (remaining.length >= 2 && isSokuonPattern(remaining)) {
@@ -417,24 +489,11 @@ class CyrillicKanaConverter {
     }
 
     private fun getHiragana(cyrillic: String): String? {
-        val upper = cyrillic.uppercase()
-        val profileIndex = currentProfile.index + 2
-
-        val allData = seionData + dakuonData + handakuonData + youonData + gairaigo + smallKana
-        for (entry in allData) {
-            if (entry[profileIndex].uppercase() == upper) {
-                return entry[1]
-            }
-        }
-        return null
+        return getMappingLookup()[cyrillic.uppercase()]
     }
 
     private fun getAllMappings(): List<Pair<String, String>> {
-        val profileIndex = currentProfile.index + 2
-        val allData = seionData + dakuonData + handakuonData + youonData + gairaigo + smallKana
-        return allData.map { entry ->
-            Pair(entry[profileIndex].uppercase(), entry[1])
-        }
+        return getMappingList()
     }
 
     private fun convertBuffer(text: String): String {
@@ -446,6 +505,11 @@ class CyrillicKanaConverter {
             if (matchResult != null) {
                 result.append(matchResult.first)
                 remaining = remaining.substring(matchResult.second)
+
+                // After matching ん, consume apostrophe separator if present
+                if (matchResult.first == "ん" && remaining.startsWith("'")) {
+                    remaining = remaining.substring(1)
+                }
             } else {
                 // Check sokuon
                 if (remaining.length >= 2 && isSokuonPattern(remaining)) {

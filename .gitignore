@@ -40,3 +40,11 @@ build/
 
 # Critical files - DO NOT COMMIT
 important/
+
+# AI model files (download from Hugging Face)
+iOS/zenz-v3.1-small-gguf/
+iOS/zenz-v3.1-xsmall-gguf/
+*.gguf
+
+# Gradle build cache
+Android/.gradle/
